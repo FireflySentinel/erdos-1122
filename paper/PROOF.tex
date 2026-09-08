@@ -257,15 +257,17 @@ Here $M$ is fixed in the term $o(1)$.
 \end{lemma}
 
 \begin{proof}
-Write $P(y)=\sum_{p\le y}1/p$. We use Mertens' estimate and
-Chebyshev's bound in the forms
-\[
- |P(y)-\log\log y-B|\le\frac A{\log y},\qquad
- \vartheta(y):=\sum_{p\le y}\log p\le Dy\quad(y\ge2),
-\]
-where $A\ge0$ and $B$ are absolute constants, and $D=\log4$ is
-admissible; see \cite{Tenenbaum}. Take $X$ large enough that $X^M\ge2$.
-Interchanging the sums, the expression in \eqref{eq:tail-weight} is
+Write $P(y)=\sum_{p\le y}1/p$. Chebyshev's bound gives
+$\vartheta(t):=\sum_{p\le t}\log p\le Dt$ with $D=\log4$;
+see \cite{Tenenbaum}. Abel summation therefore gives, for $2\le y\le z$,
+\begin{align*}
+ P(z)-P(y)
+ &=\frac{\vartheta(z)}{z\log z}-\frac{\vartheta(y)}{y\log y}
+   +\int_y^z\frac{\vartheta(t)(\log t+1)}{t^2(\log t)^2}\,dt\\
+ &\le D\left(\log\frac{\log z}{\log y}+\frac1{\log y}\right).
+\end{align*}
+Take $X$ large enough that $X^M\ge2$. Interchanging the sums, the
+expression in \eqref{eq:tail-weight} is
 \[
  \sum_{q\le X}\frac1q
        \sum_{\substack{p\in\mathcal T\\X/q<p}}\frac1p.
@@ -273,31 +275,31 @@ Interchanging the sums, the expression in \eqref{eq:tail-weight} is
 For $q>X^M$, bound the inner sum by $M$. This part is at most
 \[
  M\bigl(P(X)-P(X^M)\bigr)
- \le M\log(1/M)+\frac{A(M+1)}{\log X}.
+ \le DM\log(1/M)+\frac D{\log X}.
 \]
 For $2\le q\le X^M$, put $v=\log q/\log X\le M<1/4$ and
 discard the restriction $p\in\mathcal T$. Since
-$\log(X/q)\ge\tfrac12\log X$ and $X/q\ge2$, Mertens' estimate gives
+$\log(X/q)\ge\tfrac12\log X$ and $X/q\ge2$, the same estimate gives
 \begin{align*}
  P(X)-P(X/q)
- &\le-\log(1-v)+\frac{3A}{\log X}\\
- &\le\left(2+\frac{3A}{\log2}\right)\frac{\log q}{\log X}.
+ &\le D\left(-\log(1-v)+\frac2{\log X}\right)\\
+ &\le D\left(2+\frac2{\log2}\right)\frac{\log q}{\log X}.
 \end{align*}
 Here we used $-\log(1-v)\le2v$ and $\log q\ge\log2$.
-Partial summation gives
+Partial summation also gives
 \[
  \sum_{q\le y}\frac{\log q}{q}
  =\frac{\vartheta(y)}y+\int_2^y\frac{\vartheta(t)}{t^2}\,dt
  \le D(1+\log y).
 \]
 Thus the part with $q\le X^M$ is at most
-$\left(2+3A/\log2\right)D\left(1+1/\log2\right)M$.
-Combining the two parts proves the explicit bound
+$D^2\left(2+2/\log2\right)\left(1+1/\log2\right)M$.
+Combining the two parts proves
 \[
  \sum_{p\in\mathcal T}\frac1p\sum_{X/p<q\le X}\frac1q
- \le C M\log(2/M)+\frac{A(M+1)}{\log X},
+ \le C M\log(2/M)+\frac D{\log X},
  \qquad
- C=1+\frac{(2+3A/\log2)D(1+1/\log2)}{\log2}.
+ C=D+\frac{(2+2/\log2)D^2(1+1/\log2)}{\log2}.
 \]
 In particular, $C$ is independent of $M$, $X$, and $\mathcal T$.
 \end{proof}

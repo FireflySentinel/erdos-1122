@@ -1,21 +1,14 @@
 import Erdos1122.PrimeTail
-import Erdos1122.PrimeMoment
+import Erdos1122.PrimeReciprocal
 import Erdos1122.Constants
 
-/-! # Explicit prime-harmonic estimates from a Mertens hypothesis -/
+/-! # Unconditional prime-harmonic estimates -/
 
 namespace Erdos1122
 
 open Finset Real
 
 noncomputable section
-
-def primeHarmonic (y : ℝ) : ℝ := ∑ p ∈ Nat.primesLE ⌊y⌋₊, 1 / (p : ℝ)
-
-/-- The precise external Mertens input. This is a proposition supplied as a
-hypothesis, not an axiom or an assertion that mathlib proves Mertens' theorem. -/
-def MertensBound (A B : ℝ) : Prop :=
-  ∀ y : ℝ, 2 ≤ y → |primeHarmonic y - log (log y) - B| ≤ A / log y
 
 theorem primes_restrict (X Y : ℝ) (hY : 0 ≤ Y) (hYX : Y ≤ X) :
     (Nat.primesLE ⌊X⌋₊).filter (fun p : ℕ => (p : ℝ) ≤ Y) = Nat.primesLE ⌊Y⌋₊ := by
@@ -38,15 +31,6 @@ theorem primeHarmonic_tail (X Y : ℝ) (hY : 0 ≤ Y) (hYX : Y ≤ X) :
   intro p _
   by_cases h : (p : ℝ) ≤ Y <;> simp [h, not_lt.mpr, lt_of_not_ge]
 
-theorem primeHarmonic_difference (A B X Y : ℝ) (hmertens : MertensBound A B)
-    (hX : 2 ≤ X) (hY : 2 ≤ Y) :
-    primeHarmonic X - primeHarmonic Y ≤
-      log (log X / log Y) + A / log X + A / log Y := by
-  rw [log_div (ne_of_gt (log_pos (by linarith))) (ne_of_gt (log_pos (by linarith)))]
-  have h₁ := (abs_le.mp (hmertens X hX)).2
-  have h₂ := (abs_le.mp (hmertens Y hY)).1
-  linarith
-
 theorem normalized_log_le_iff (X p M : ℝ) (hX : 1 < X) (hp : 0 < p) :
     log p / log X ≤ M ↔ p ≤ X ^ M := by
   rw [div_le_iff₀ (log_pos hX), ← log_rpow (by linarith : 0 < X) M,
@@ -61,10 +45,10 @@ theorem normalized_log_cross_iff (X p q : ℝ) (hX : 1 < X) (hp : 0 < p) (hq : 0
     log X < log p + log q ↔ log X - log q < log p).trans hlog
 
 /-- The large-prime tail has an error tending to zero for each fixed `M`. -/
-theorem primeHarmonic_large_tail (A B X M : ℝ) (hmertens : MertensBound A B)
+theorem primeHarmonic_large_tail (X M : ℝ)
     (hX : 2 ≤ X) (hM : 0 < M) (hM1 : M ≤ 1) (hXM : 2 ≤ X ^ M) :
     (∑ p ∈ Nat.primesLE ⌊X⌋₊, if M < log p / log X then 1 / (p : ℝ) else 0) ≤
-      log (1 / M) + A / log X + A / (M * log X) := by
+      log 4 * log (1 / M) + log 4 / (M * log X) := by
   have hxpos : 0 < X := by linarith
   have hlog : 0 < log X := log_pos (by linarith)
   have heq : (∑ p ∈ Nat.primesLE ⌊X⌋₊,
@@ -78,19 +62,20 @@ theorem primeHarmonic_large_tail (A B X M : ℝ) (hmertens : MertensBound A B)
     have hiff := normalized_log_le_iff X p M (by linarith) hp0
     simp only [← not_le, hiff]
   rw [heq]
-  have h := primeHarmonic_difference A B X (X ^ M) hmertens hX hXM
+  have h := primeHarmonic_difference X (X ^ M) hXM
+    (rpow_le_self_of_one_le (by linarith) hM1)
   rw [log_rpow hxpos M] at h
   have hcancel : log X / (M * log X) = 1 / M := by field_simp
-  rwa [hcancel] at h
+  simpa [hcancel, mul_add, div_eq_mul_inv] using h
 
 /-- Uniformity down to the smallest prime is explicit: `log q ≥ log 2`
-absorbs the Mertens errors into a multiple of `log q / log X`. -/
-theorem primeHarmonic_small_tail (A B X M q : ℝ) (hA : 0 ≤ A)
-    (hmertens : MertensBound A B) (hX : 2 ≤ X) (hM : 0 < M)
+absorbs the endpoint error into a multiple of `log q / log X`. -/
+theorem primeHarmonic_small_tail (X M q : ℝ) (hX : 2 ≤ X) (hM : 0 < M)
     (hMquarter : M < 1 / 4) (hXM : 2 ≤ X ^ M)
     (hq : 2 ≤ q) (hqM : log q / log X ≤ M) :
     primeHarmonic X - primeHarmonic (X / q) ≤
-      (2 + 3 * A / log 2) * (log q / log X) := by
+      (2 * log 4 + 2 * log 4 / log 2) * (log q / log X) := by
+  have hD : 0 ≤ log (4 : ℝ) := (log_pos (by norm_num)).le
   have hxpos : 0 < X := by linarith
   have hqpos : 0 < q := by linarith
   have hlog : 0 < log X := log_pos (by linarith)
@@ -108,7 +93,7 @@ theorem primeHarmonic_small_tail (A B X M q : ℝ) (hA : 0 ≤ A)
     rw [log_div hxpos.ne' hqpos.ne']
     nlinarith
   have hylog : 0 < log (X / q) := log_pos (by linarith)
-  have hmain := primeHarmonic_difference A B X (X / q) hmertens hX hy
+  have hmain := primeHarmonic_difference X (X / q) hy (div_le_self hxpos.le (by linarith))
   have hratio : log X / log (X / q) = 1 / (1 - log q / log X) := by
     rw [log_div hxpos.ne' hqpos.ne']
     have hne : log X - log q ≠ 0 := by
@@ -118,16 +103,17 @@ theorem primeHarmonic_small_tail (A B X M q : ℝ) (hA : 0 ≤ A)
   rw [hratio] at hmain
   have hsmall : 0 ≤ log q / log X := div_nonneg (hlog2.le.trans hlogq) hlog.le
   have hlogbound := log_reciprocal_one_sub_le (log q / log X) hsmall (by linarith)
-  have herr : A / log (X / q) ≤ 2 * A / log X := by
+  have hlogmul := mul_le_mul_of_nonneg_left hlogbound hD
+  have herr : log 4 / log (X / q) ≤ 2 * log 4 / log X := by
     calc
-      _ ≤ A / (log X / 2) := div_le_div_of_nonneg_left hA (by positivity) hhalf
+      _ ≤ log 4 / (log X / 2) := div_le_div_of_nonneg_left hD (by positivity) hhalf
       _ = _ := by ring
   have hqscaled : log 2 / log X ≤ log q / log X := div_le_div_of_nonneg_right hlogq hlog.le
-  have hmul := mul_le_mul_of_nonneg_left hqscaled (show 0 ≤ 3 * A / log 2 by positivity)
-  have hcancel : (3 * A / log 2) * (log 2 / log X) = 3 * A / log X := by field_simp
+  have hmul := mul_le_mul_of_nonneg_left hqscaled (show 0 ≤ 2 * log 4 / log 2 by positivity)
+  have hcancel : (2 * log 4 / log 2) * (log 2 / log X) = 2 * log 4 / log X := by field_simp
   rw [hcancel] at hmul
-  simp only [div_eq_mul_inv] at hmain hlogbound herr hmul ⊢
-  nlinarith only [hmain, hlogbound, herr, hmul]
+  simp only [div_eq_mul_inv] at hmain hlogmul herr hmul ⊢
+  nlinarith only [hmain, hlogmul, herr, hmul]
 
 /-- The small-prime logarithmic moment; the coefficient is independent of `M`. -/
 theorem normalized_primeLogMoment_bound (X M : ℝ)
@@ -178,20 +164,18 @@ theorem primeTailKernel_eq_harmonicKernel (T : Finset ℕ) (X : ℝ) (hX : 1 < X
   have hq0 : (0 : ℝ) < q := by exact_mod_cast (Nat.prime_of_mem_primesLE hq).pos
   simp only [add_comm (log p / log X), normalized_log_cross_iff X q p hX hq0 hp0]
 
-/-- Lemma 3.1 with explicit error and constants, conditional only on the
-stated Mertens bound; Chebyshev’s inequality is proved in mathlib. -/
-theorem primeTailKernel_bound (A B X M : ℝ) (T : Finset ℕ)
-    (hA : 0 ≤ A) (hmertens : MertensBound A B)
+/-- Lemma 3.1 from Chebyshev and Abel summation, with no external input. -/
+theorem primeTailKernel_bound (X M : ℝ) (T : Finset ℕ)
     (hX : 2 ≤ X) (hM : 0 < M) (hMquarter : M < 1 / 4) (hXM : 2 ≤ X ^ M)
     (hT : T ⊆ Nat.primesLE ⌊X⌋₊) (hmass : ∑ p ∈ T, 1 / (p : ℝ) ≤ M) :
     primeTailKernel T X ≤
-      M * (log (1 / M) + A / log X + A / (M * log X)) +
-        (2 + 3 * A / log 2) * ((log 4) * (1 + 1 / log 2)) * M := by
+      M * (log 4 * log (1 / M) + log 4 / (M * log X)) +
+        (2 * log 4 + 2 * log 4 / log 2) * ((log 4) * (1 + 1 / log 2)) * M := by
   rw [primeTailKernel_eq_harmonicKernel T X (by linarith) hT]
   apply harmonicKernel_bound T (Nat.primesLE ⌊X⌋₊)
     (fun p => 1 / (p : ℝ)) (fun p => log p / log X) hT
     (fun _ _ => by positivity) M _ _ _ hM.le (by positivity) hmass
-    (primeHarmonic_large_tail A B X M hmertens hX hM (by linarith) hXM) _
+    (primeHarmonic_large_tail X M hX hM (by linarith) hXM) _
     (normalized_primeLogMoment_bound X M hX (by linarith) hXM)
   intro q hq hqM
   have hq2 : (2 : ℝ) ≤ q := by exact_mod_cast (Nat.prime_of_mem_primesLE hq).two_le
@@ -207,56 +191,49 @@ theorem primeTailKernel_bound (A B X M : ℝ) (T : Finset ℕ)
     have hp0 : (0 : ℝ) < p := by exact_mod_cast (Nat.prime_of_mem_primesLE hp).pos
     simp only [normalized_log_cross_iff X p q (by linarith) hp0 hqpos]
   rw [heq]
-  exact primeHarmonic_small_tail A B X M q hA hmertens hX hM hMquarter hXM hq2 hqM
+  exact primeHarmonic_small_tail X M q hX hM hMquarter hXM hq2 hqM
 
-/-- An explicit version of `O(M log(2/M)) + o_X(1)`. The displayed constant
-depends only on the Mertens constant, and is independent of both `M` and `T`. -/
-theorem primeTailKernel_bound_log (A B X M : ℝ) (T : Finset ℕ)
-    (hA : 0 ≤ A) (hmertens : MertensBound A B)
+/-- An explicit `O(M log(2/M)) + o_X(1)` bound with absolute constants. -/
+def primeTailConstant : ℝ :=
+  log 4 + (2 * log 4 + 2 * log 4 / log 2) * (log 4 * (1 + 1 / log 2)) / log 2
+
+theorem primeTailKernel_bound_log (X M : ℝ) (T : Finset ℕ)
     (hX : 2 ≤ X) (hM : 0 < M) (hMquarter : M < 1 / 4) (hXM : 2 ≤ X ^ M)
     (hT : T ⊆ Nat.primesLE ⌊X⌋₊) (hmass : ∑ p ∈ T, 1 / (p : ℝ) ≤ M) :
-    primeTailKernel T X ≤
-      (1 + (2 + 3 * A / log 2) * ((log 4) * (1 + 1 / log 2)) / log 2) *
-        M * log (2 / M) + A * (M + 1) / log X := by
-  have h := primeTailKernel_bound A B X M T hA hmertens hX hM hMquarter hXM hT hmass
+    primeTailKernel T X ≤ primeTailConstant * M * log (2 / M) + log 4 / log X := by
+  have h := primeTailKernel_bound X M T hX hM hMquarter hXM hT hmass
   have hlog2 : 0 < log (2 : ℝ) := log_pos (by norm_num)
   have hlogX : 0 < log X := log_pos (by linarith)
-  let R := (2 + 3 * A / log 2) * ((log 4) * (1 + 1 / log 2))
+  have hD : 0 ≤ log (4 : ℝ) := (log_pos (by norm_num)).le
+  let R := (2 * log 4 + 2 * log 4 / log 2) * (log 4 * (1 + 1 / log 2))
   have hR : 0 ≤ R := by dsimp [R]; positivity
   have hratio : 2 ≤ 2 / M := (le_div_iff₀ hM).2 (by linarith)
   have hloglarge : log 2 ≤ log (2 / M) := log_le_log (by norm_num) hratio
   have hlogsmall : log (1 / M) ≤ log (2 / M) :=
     log_le_log (by positivity) (div_le_div_of_nonneg_right (by norm_num) hM.le)
-  have hmain := mul_le_mul_of_nonneg_left hlogsmall hM.le
+  have hmain := mul_le_mul_of_nonneg_left hlogsmall (mul_nonneg hM.le hD)
   have hratio' : 1 ≤ log (2 / M) / log 2 := (le_div_iff₀ hlog2).2 (by simpa using hloglarge)
   have hrest := mul_le_mul_of_nonneg_left hratio' (mul_nonneg hR hM.le)
-  have herr : M * (A / log X + A / (M * log X)) = A * (M + 1) / log X := by
-    field_simp
-  change primeTailKernel T X ≤ (1 + R / log 2) * M * log (2 / M) + A * (M + 1) / log X
-  change primeTailKernel T X ≤ M * (log (1 / M) + A / log X + A / (M * log X)) + R * M at h
-  rw [mul_add, mul_add] at h
-  have he : M * (A / log X) + M * (A / (M * log X)) = A * (M + 1) / log X := by
-    simpa only [mul_add] using herr
-  simp only [div_eq_mul_inv] at h hmain he hrest ⊢
-  nlinarith only [h, he, hmain, hrest]
+  have herr : M * (log 4 / (M * log X)) = log 4 / log X := by field_simp
+  change primeTailKernel T X ≤ (log 4 + R / log 2) * M * log (2 / M) + log 4 / log X
+  change primeTailKernel T X ≤ M * (log 4 * log (1 / M) + log 4 / (M * log X)) + R * M at h
+  rw [mul_add, herr] at h
+  simp only [div_eq_mul_inv] at h hmain hrest ⊢
+  nlinarith only [h, hmain, hrest]
 
-theorem primeTailKernel_error_tendsto (A M : ℝ) :
-    Filter.Tendsto (fun X : ℝ => A * (M + 1) / log X) Filter.atTop (nhds 0) :=
-  tendsto_log_atTop.const_div_atTop (A * (M + 1))
+theorem primeTailKernel_error_tendsto :
+    Filter.Tendsto (fun X : ℝ => log 4 / log X) Filter.atTop (nhds 0) :=
+  tendsto_log_atTop.const_div_atTop (log 4)
 
-/-- Uniformity over `T` is inside the eventual quantifier. `M` is fixed first. -/
-theorem primeTailKernel_eventually (A B : ℝ) (hA : 0 ≤ A)
-    (hmertens : MertensBound A B)
-    (M : ℝ) (hM : 0 < M) (hMquarter : M < 1 / 4) :
+/-- `M` is fixed before the cutoff; all prime sets are quantified after it. -/
+theorem primeTailKernel_eventually (M : ℝ) (hM : 0 < M) (hMquarter : M < 1 / 4) :
     ∀ᶠ X : ℝ in Filter.atTop, ∀ T : Finset ℕ,
       T ⊆ Nat.primesLE ⌊X⌋₊ → (∑ p ∈ T, 1 / (p : ℝ)) ≤ M →
-      primeTailKernel T X ≤
-        (1 + (2 + 3 * A / log 2) * ((log 4) * (1 + 1 / log 2)) / log 2) *
-          M * log (2 / M) + A * (M + 1) / log X := by
+      primeTailKernel T X ≤ primeTailConstant * M * log (2 / M) + log 4 / log X := by
   filter_upwards [Filter.eventually_ge_atTop (2 : ℝ),
     (tendsto_rpow_atTop hM).eventually (Filter.eventually_ge_atTop (2 : ℝ))] with X hX hXM
   intro T hT hmass
-  exact primeTailKernel_bound_log A B X M T hA hmertens hX hM hMquarter hXM hT hmass
+  exact primeTailKernel_bound_log X M T hX hM hMquarter hXM hT hmass
 
 end
 

@@ -15,7 +15,7 @@ open Finset Filter Topology
 
 noncomputable section
 
-variable {ι : Type*}
+variable {ι α : Type*} [Preorder α] [NeBot (atTop : Filter α)]
 
 theorem weighted_second_moment_bound (t : Finset ι) (w f : ι → ℝ)
     (hw : ∀ i ∈ t, 0 ≤ w i) (W C : ℝ) (hW : 0 ≤ W)
@@ -55,19 +55,19 @@ theorem restricted_second_moment_bound (s t : Finset ι) (w f : ι → ℝ)
 `H`, another on `X`; both tend to zero. Its constant is fixed for the family.
 `hfourth` is the uniform fourth-moment bound. -/
 theorem uniform_first_fourth_moment_transfer
-    (t : ℕ → Finset ι) (w : ℕ → ι → ℝ) (F : ℕ → ℕ → ι → ℝ)
+    (t : α → Finset ι) (w : α → ι → ℝ) (F : ℕ → α → ι → ℝ)
     (W C : ℝ) (hW : 0 ≤ W)
     (hw : ∀ X i, i ∈ t X → 0 ≤ w X i)
     (hmass : ∀ X, ∑ i ∈ t X, w X i ≤ W)
     (hfourth : ∀ H, ∀ᶠ X in atTop, ∑ i ∈ t X, w X i * F H X i ^ 4 ≤ C)
-    (a b : ℕ → ℝ) (H₀ : ℕ)
+    (a : ℕ → ℝ) (b : α → ℝ) (H₀ : ℕ)
     (ha : Tendsto a atTop (𝓝 0)) (hb : Tendsto b atTop (𝓝 0))
     (hfirst : ∀ H, H₀ ≤ H → ∀ᶠ X in atTop,
       ∑ i ∈ t X, w X i * |F H X i| ≤ a H + b X) :
     Tendsto (fun H => limsup (fun X => ∑ i ∈ t X, w X i * F H X i ^ 2) atTop)
       atTop (𝓝 0) := by
   let S₂ := fun H X => ∑ i ∈ t X, w X i * F H X i ^ 2
-  have hn (H X : ℕ) : 0 ≤ S₂ H X :=
+  have hn (H : ℕ) (X : α) : 0 ≤ S₂ H X :=
     sum_nonneg fun i hi => mul_nonneg (hw X i hi) (sq_nonneg _)
   have hbounded (H : ℕ) : IsBoundedUnder (· ≤ ·) atTop (S₂ H) := by
     refine ⟨W * C + 1, ?_⟩
@@ -107,8 +107,8 @@ theorem uniform_first_fourth_moment_transfer
 
 /-- Passing from finitely many bands to their union, with a vanishing center or
 endpoint error. The number of bands is fixed before taking the `X` limit. -/
-theorem finite_band_limsup_bound (s : Finset ι) (F : ℕ → ℝ)
-    (band : ι → ℕ → ℝ) (error : ℕ → ℝ) (tail : ℝ)
+theorem finite_band_limsup_bound (s : Finset ι) (F : α → ℝ)
+    (band : ι → α → ℝ) (error : α → ℝ) (tail : ℝ)
     (hF : ∀ X, 0 ≤ F X)
     (hband : ∀ i ∈ s, IsBoundedUnder (· ≤ ·) atTop (band i))
     (herror : Tendsto error atTop (𝓝 0))
@@ -134,8 +134,8 @@ theorem finite_band_limsup_bound (s : Finset ι) (F : ℕ → ℝ)
 obtained by `uniform_first_fourth_moment_transfer`; the cover and center error
 are separate, explicit hypotheses. -/
 theorem full_interval_from_finite_bands
-    (F : ℕ → ℕ → ℝ) (band : ℕ → ℕ → ℕ → ℝ)
-    (s : ℝ → Finset ℕ) (error : ℝ → ℕ → ℕ → ℝ) (tail : ℝ → ℝ)
+    (F : ℕ → α → ℝ) (band : ℕ → ℕ → α → ℝ)
+    (s : ℝ → Finset ℕ) (error : ℝ → ℕ → α → ℝ) (tail : ℝ → ℝ)
     (hF : ∀ H X, 0 ≤ F H X)
     (hbounded : ∀ H, IsBoundedUnder (· ≤ ·) atTop (F H))
     (hbandBounded : ∀ j H, IsBoundedUnder (· ≤ ·) atTop (band j H))

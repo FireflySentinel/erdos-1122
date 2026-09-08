@@ -12,3 +12,5 @@ import Erdos1122.PrimePowers
 import Erdos1122.Statements
 import Erdos1122.Scale
 import Erdos1122.FiniteCounting
+import Erdos1122.ShortIntervalTheorem
+import Erdos1122.Normalization

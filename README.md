@@ -37,8 +37,8 @@ decreases is only assumed to have density zero, with no rate.
 This is a partial formalization: Theorem 1.1 itself is not proved in Lean. The cited
 analytic results enter as explicit hypotheses of the formalized statements.
 [FORMALIZATION.md](FORMALIZATION.md) states those hypotheses and lists what remains
-outside Lean. Chebyshev’s bound now comes from mathlib; Mertens remains an
-explicit input of the prime-tail lemma. [Check.lean](Check.lean) guards the axiom dependencies of the formalized
+outside Lean. Lemma 3.1 is unconditional, using Chebyshev’s bound from mathlib.
+Lemma 2.1 is proved with Mangerel and Elliott as its only external inputs. [Check.lean](Check.lean) guards the axiom dependencies of the formalized
 lemmas to `propext`, `Classical.choice`, and `Quot.sound`.
 
 ## Proof correspondence
@@ -46,11 +46,12 @@ lemmas to `propext`, `Classical.choice`, and `Quot.sound`.
 | Manuscript | Lean source |
 |---|---|
 | Theorem 1.1 and the five cited inputs: proposition definitions and unproved assembly target | [Statements.lean](Erdos1122/Statements.lean) |
-| Lemma 2.1, first-to-second-moment transfer and assembly from dyadic bands | [ShortIntervals.lean](Erdos1122/ShortIntervals.lean) |
+| Lemma 2.1 in full, conditional on Mangerel and Elliott | [ShortIntervalTheorem.lean](Erdos1122/ShortIntervalTheorem.lean), [DyadicShortIntervals.lean](Erdos1122/DyadicShortIntervals.lean), [DyadicCover.lean](Erdos1122/DyadicCover.lean) |
 | Lemma 2.1, first- and fourth-moment interpolation | [Interpolation.lean](Erdos1122/Interpolation.lean) |
-| Lemma 3.1, prime-tail weight, conditional only on an explicit Mertens bound | [PrimeHarmonic.lean](Erdos1122/PrimeHarmonic.lean), [PrimeTail.lean](Erdos1122/PrimeTail.lean), [PrimeMoment.lean](Erdos1122/PrimeMoment.lean) |
+| Lemma 3.1, unconditional prime-tail weight | [PrimeHarmonic.lean](Erdos1122/PrimeHarmonic.lean), [PrimeReciprocal.lean](Erdos1122/PrimeReciprocal.lean), [PrimeMoment.lean](Erdos1122/PrimeMoment.lean) |
 | Lemma 4.1, finite minimizer and the stationary identity | [Minimizer.lean](Erdos1122/Minimizer.lean) |
 | Lemma 4.1, scale continuity, monotonicity, and intermediate-value attainment | [Scale.lean](Erdos1122/Scale.lean) |
+| Lemma 4.1, fixed-scale divergence and $s_X\to\infty$, conditional on Erdős V | [Normalization.lean](Erdos1122/Normalization.lean) |
 | (2.7), exact floor identity; (5.4), prime-divisor factorial moment | [FiniteCounting.lean](Erdos1122/FiniteCounting.lean) |
 | (2.8), fourth-power Jensen and window contraction | [Averaging.lean](Erdos1122/Averaging.lean) |
 | §5, weighted quadratic projection and its lower bound | [Projection.lean](Erdos1122/Projection.lean) |

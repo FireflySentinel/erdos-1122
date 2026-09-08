@@ -1,4 +1,5 @@
-import Erdos1122.PrimeHarmonic
+import Mathlib.NumberTheory.PrimeCounting
+import Erdos1122.Variation
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 
@@ -43,9 +44,6 @@ def initialMean (f : ℕ → ℝ) (X : ℝ) : ℝ :=
 def dyadicMean (f : ℕ → ℝ) (X : ℝ) : ℝ :=
   (2 / X) * ∑ n ∈ Ioc ⌊X / 2⌋₊ ⌊X⌋₊, f n
 
-def backwardMean (f : ℕ → ℝ) (H n : ℕ) : ℝ :=
-  (∑ j ∈ range H, f (n - j)) / (H : ℝ)
-
 def primePowerIndices (X : ℝ) : Finset (ℕ × ℕ) :=
   ((Nat.primesLE ⌊X⌋₊).product (Icc 1 ⌊X⌋₊)).filter
     (fun q => ((q.1 ^ q.2 : ℕ) : ℝ) ≤ X)
@@ -67,7 +65,7 @@ Thus it also applies when the additive function varies with the cutoff. -/
 def Mangerel : Prop :=
   ∃ C : ℝ, 0 < C ∧ ∀ f : ℕ → ℝ, IsAdditive f →
     ∀ X : ℝ, 2 ≤ X → ∀ H : ℕ, 10 ≤ H → (H : ℝ) ≤ X / 100 →
-      dyadicMean (fun n => |backwardMean f H n - dyadicMean f X|) X ≤
+      dyadicMean (fun n => |backwardWindowAverage H f n - dyadicMean f X|) X ≤
         C * (sqrt (log (log H) / log H) + (log X) ^ (-(1 : ℝ) / 800)) *
           sqrt (primePowerMoment f X 2)
 
@@ -123,12 +121,6 @@ def ErdosX : Prop :=
 /-- A target proposition, not a proved theorem. -/
 def main_of_cited : Prop :=
   Mangerel → Ruzsa → Elliott → ErdosV → ErdosX → ErdosProblem1122
-
-/-- Mertens is still an explicit input of the implemented prime-tail lemma.
-This records that extra dependency until Mertens itself is discharged. -/
-def Mertens : Prop := ∃ A B : ℝ, 0 ≤ A ∧ Erdos1122.MertensBound A B
-
-def main_of_cited_and_mertens : Prop := Mertens → main_of_cited
 
 end
 

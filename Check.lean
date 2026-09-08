@@ -172,3 +172,51 @@ an admitted proof or adding an unlisted axiom makes this file fail to compile.
 /-- info: 'Erdos1122.primeLogMoment_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms Erdos1122.primeLogMoment_le
+
+/-- info: 'Erdos1122.primeHarmonic_partial_summation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.primeHarmonic_partial_summation
+
+/-- info: 'Erdos1122.primeHarmonic_difference' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.primeHarmonic_difference
+
+/-- info: 'Erdos1122.primeTailKernel_bound_log' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.primeTailKernel_bound_log
+
+/-- info: 'Erdos1122.primeCounting_ratio_tendsto_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.primeCounting_ratio_tendsto_zero
+
+/-- info: 'Erdos1122.IsStronglyAdditive.dyadic_center_identity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.IsStronglyAdditive.dyadic_center_identity
+
+/-- info: 'Erdos1122.stronglyAdditive_fourth_moment' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.stronglyAdditive_fourth_moment
+
+/-- info: 'Erdos1122.backward_fourth_contraction' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.backward_fourth_contraction
+
+/-- info: 'Erdos1122.finite_dyadic_cover' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.finite_dyadic_cover
+
+/-- info: 'Erdos1122.lemma_2_1' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.lemma_2_1
+
+/-- info: 'Erdos1122.normalizationValue_tendsto_atTop' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.normalizationValue_tendsto_atTop
+
+/-- info: 'Erdos1122.normalization_level_eventually' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.normalization_level_eventually
+
+/-- info: 'Erdos1122.normalization_scales_tendsto_atTop' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.normalization_scales_tendsto_atTop

@@ -15,7 +15,9 @@ open Filter Topology
 
 noncomputable section
 
-theorem limsup_nonneg {u : ℕ → ℝ} (hu : ∀ n, 0 ≤ u n)
+variable {α : Type*} [Preorder α] [NeBot (atTop : Filter α)]
+
+theorem limsup_nonneg {u : α → ℝ} (hu : ∀ n, 0 ≤ u n)
     (hb : IsBoundedUnder (· ≤ ·) atTop u) : 0 ≤ limsup u atTop := by
   apply le_limsup_of_le hb
   intro b h
@@ -64,7 +66,7 @@ theorem variance_limsup_bound
 For each fixed positive `η`, the band error tends to zero only as `H → ∞`.
 Its rate may depend on `η`. -/
 theorem iterated_limsup_zero
-    (F : ℕ → ℕ → ℝ) (band : ℝ → ℕ → ℝ) (tail : ℝ → ℝ)
+    (F : ℕ → α → ℝ) (band : ℝ → ℕ → ℝ) (tail : ℝ → ℝ)
     (hF : ∀ H X, 0 ≤ F H X)
     (hbounded : ∀ H, IsBoundedUnder (· ≤ ·) atTop (F H))
     (hband : ∀ η, 0 < η → Tendsto (band η) atTop (𝓝 0))

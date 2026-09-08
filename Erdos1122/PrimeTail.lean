@@ -75,19 +75,6 @@ theorem harmonicKernel_bound (T P : Finset ι) (w x : ι → ℝ)
       have h₂ := mul_le_mul_of_nonneg_left hmoment hC
       nlinarith
 
-/-- Subtracting two Mertens estimates in logarithmic coordinates.
-For prime harmonic sums, `H t` denotes the sum over primes at most `exp t`.
-The additive constant cancels; both error terms remain explicit. -/
-theorem mertens_difference_bound (H : ℝ → ℝ) (B A s t : ℝ)
-    (hs : 0 < s) (ht : 0 < t)
-    (h₁ : |H t - Real.log t - B| ≤ A / t)
-    (h₂ : |H s - Real.log s - B| ≤ A / s) :
-    H t - H s ≤ Real.log (t / s) + A / t + A / s := by
-  rw [Real.log_div ht.ne' hs.ne']
-  have h₁' := (abs_le.mp h₁).2
-  have h₂' := (abs_le.mp h₂).1
-  linarith
-
 /-- The local logarithmic bound used when `q ≤ X^M` and `M < 1/4`. -/
 theorem log_reciprocal_one_sub_le (x : ℝ) (hx : 0 ≤ x) (hx' : x ≤ 1 / 2) :
     Real.log (1 / (1 - x)) ≤ 2 * x := by
