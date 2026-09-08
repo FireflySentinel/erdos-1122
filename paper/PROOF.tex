@@ -88,13 +88,16 @@ Theorem~X of the same paper implies that, under
 $f(n+1)-f(n)$ has no mass on $(-\infty,0)$ only when
 $f(n)=c\log n$ for all $n$. Both results apply to general additive
 functions, with no restriction on their values at higher prime powers.
+Theorem~X is stated without proof in \cite[p.~17]{Erdos}; the source
+of this final distribution implication is discussed below.
 
 It therefore suffices to prove finite concentration. Assuming the
 contrary, we normalize $f$ and subtract a logarithmic term so that the
 truncated quadratic mass of its prime values is fixed. After clipping,
 the Ruzsa--Elliott moment estimates give a positive variance for a
 strongly additive approximation, while the density hypothesis and
-Mangerel's short-interval theorem force the same variance to vanish.
+Mangerel's short-interval theorem force the same variance to satisfy an
+incompatible upper bound.
 
 \subsection*{Notation}
 Letters $p,q$ denote primes. We write
@@ -442,7 +445,8 @@ Writing $y=X/p$, for $y\ge2$ equation \eqref{eq:bounded-moments} gives
  &\ll\frac1p\left(M+
            |a_X-\mu_{S_0}(y)|^2\right).
 \end{align*}
-The case $y=1$ is immediate. By Cauchy--Schwarz,
+For $1\le y<2$, the same bound follows directly from
+$S_0(1)=\mu_{S_0}(y)=0$. By Cauchy--Schwarz,
 \[
  |a_X-\mu_{S_0}(X/p)|^2
  \le M\sum_{X/p<q\le X}\frac1q.
@@ -530,9 +534,12 @@ On $p\notin\mathcal T$ we have $v_p=u_p$, so
  \left|\sum_{p\le X}\frac{v_p\log p}{p}\right|
  \le |c_X|+KM\log X.
 \end{equation}
-Using the standard estimate
-$\sum_{p\le X}(\log p)^2/p\sim\tfrac12(\log X)^2$
-\cite{Tenenbaum}, we obtain
+Only the lower bound
+$\sum_{p\le X}(\log p)^2/p\gg(\log X)^2$ is needed here.
+Indeed, Chebyshev's bound $\vartheta(t)\gg t$, followed by partial
+summation with $\log t/t$, gives this bound from
+$\int^X(\log t-1)\,dt/t\asymp(\log X)^2$.
+The quadratic projection identity therefore gives
 \begin{align}
  \inf_{b\in\R}\sum_{p\le X}\frac{(v_p-b\log p)^2}{p}
  &=\sum_{p\le X}\frac{v_p^2}{p}
@@ -615,8 +622,7 @@ remainder $r(n)=f(n)-c\log n$ satisfies
 \]
 Erd\H{o}s's Theorem~X gives a limiting distribution for
 $f(n+1)-f(n)$, and absence of mass on $(-\infty,0)$ forces $r$ to be
-identically zero; see also Hildebrand's later Erd\H{o}s--Wintner theorem
-for differences of additive functions \cite{Hildebrand}. For each
+identically zero. For each
 $\varepsilon>0$, the hypothesis gives
 \[
  \frac1X\#\{n\le X:f(n+1)-f(n)<-\varepsilon\}
@@ -626,11 +632,29 @@ The limiting distribution therefore has no mass on $(-\infty,0)$.
 It follows that $f(n)=c\log n$ for all $n$. Finally, $c<0$ would
 give a decrease at every integer, so $c\ge0$.\qed
 
+\begin{remark}
+All estimates for prime sums used above follow from Chebyshev's bounds;
+neither Mertens's theorem nor the prime number theorem is needed.
+\end{remark}
+
+\begin{remark}
+Erd\H{o}s states Theorems~IX and~X without proof on page~17 of
+\cite{Erdos}; Theorem~XI subsequently uses Theorem~X.
+A later source for the distribution argument is Hildebrand's
+Erd\H{o}s--Wintner theorem for differences \cite{Hildebrand}.
+Its limiting distribution is symmetric, so absence of mass on
+$(-\infty,0)$ makes it a point mass at zero. Hildebrand's density-one
+characterization of the logarithm then gives the required conclusion.
+\end{remark}
+
 \section*{Declaration of generative AI use}
 GPT-6 Astra was used to generate the mathematical proofs and draft the
 manuscript. GPT-5.6 Sol and Claude Opus 5 were used only for editorial
 review of the exposition. The author reviewed the final manuscript and
-takes full responsibility for its content.
+takes full responsibility for its content. The accompanying Lean~4
+formalization checks the implication from the five cited results, which
+remain explicit hypotheses; it does not formalize their proofs.
+The Lean code was generated with OpenAI Codex (GPT-6).
 
 \begin{thebibliography}{99}
 

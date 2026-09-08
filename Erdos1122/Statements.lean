@@ -118,10 +118,6 @@ def ErdosX : Prop :=
     ∃ D : ℝ → ℝ, IsLimitingDistribution (fun n => f (n + 1) - f n) D ∧
       ((∀ x : ℝ, x < 0 → D x = 0) ↔ ∀ n : ℕ, 0 < n → f n = c * log n)
 
-/-- A target proposition, not a proved theorem. -/
-def main_of_cited : Prop :=
-  Mangerel → Ruzsa → Elliott → ErdosV → ErdosX → ErdosProblem1122
-
 end
 
 end Erdos1122.Statements

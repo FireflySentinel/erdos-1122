@@ -14,3 +14,4 @@ import Erdos1122.Scale
 import Erdos1122.FiniteCounting
 import Erdos1122.ShortIntervalTheorem
 import Erdos1122.Normalization
+import Erdos1122.Main

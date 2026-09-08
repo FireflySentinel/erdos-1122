@@ -12,7 +12,7 @@ fixed length holds a positive proportion of the values $f(n)$, $n\le X$, for arb
 large $X$. Ruzsa's second-moment estimate and Elliott's high-power Turán–Kubilius
 inequality give a positive variance for a clipped strongly additive comparison, while the
 density hypothesis and Mangerel's first-moment theorem for short intervals force the same
-variance to vanish.
+variance to satisfy an incompatible upper bound.
 
 ## Build and check
 
@@ -34,31 +34,41 @@ that $f(n)=c\log n$ for every $n\in\mathbb N$.
 No restriction is placed on the values of $f$ at higher prime powers, and the set of
 decreases is only assumed to have density zero, with no rate.
 
-This is a partial formalization: Theorem 1.1 itself is not proved in Lean. The cited
-analytic results enter as explicit hypotheses of the formalized statements.
-[FORMALIZATION.md](FORMALIZATION.md) states those hypotheses and lists what remains
-outside Lean. Lemma 3.1 is unconditional, using Chebyshev’s bound from mathlib.
-Lemma 2.1 is proved with Mangerel and Elliott as its only external inputs. [Check.lean](Check.lean) guards the axiom dependencies of the formalized
-lemmas to `propext`, `Classical.choice`, and `Quot.sound`.
+Lean proves the full implication from the five cited results to Theorem 1.1:
+`main_of_cited` takes `Mangerel`, `Ruzsa`, `Elliott`, `ErdosV`, and `ErdosX`
+as hypotheses. No intermediate arithmetic hypothesis remains. The cited
+theorems themselves are not proved in this repository.
+[FORMALIZATION.md](FORMALIZATION.md) gives their exact scope and source
+conventions, including the fact that Erdős stated Theorem X without proof.
+Lemma 3.1 and the prime-sum lower bound in (5.10) use Chebyshev alone;
+there is no Mertens input. [Check.lean](Check.lean) checks the complete
+five-input interface and guards its axiom dependencies to `propext`,
+`Classical.choice`, and `Quot.sound`. CI also runs the builtin Lean 4
+`leanchecker` to replay the project declarations.
 
 ## Proof correspondence
 
 | Manuscript | Lean source |
 |---|---|
-| Theorem 1.1 and the five cited inputs: proposition definitions and unproved assembly target | [Statements.lean](Erdos1122/Statements.lean) |
+| Theorem 1.1 from exactly the five cited inputs | [Main.lean](Erdos1122/Main.lean), [Statements.lean](Erdos1122/Statements.lean) |
 | Lemma 2.1 in full, conditional on Mangerel and Elliott | [ShortIntervalTheorem.lean](Erdos1122/ShortIntervalTheorem.lean), [DyadicShortIntervals.lean](Erdos1122/DyadicShortIntervals.lean), [DyadicCover.lean](Erdos1122/DyadicCover.lean) |
 | Lemma 2.1, first- and fourth-moment interpolation | [Interpolation.lean](Erdos1122/Interpolation.lean) |
 | Lemma 3.1, unconditional prime-tail weight | [PrimeHarmonic.lean](Erdos1122/PrimeHarmonic.lean), [PrimeReciprocal.lean](Erdos1122/PrimeReciprocal.lean), [PrimeMoment.lean](Erdos1122/PrimeMoment.lean) |
 | Lemma 4.1, finite minimizer and the stationary identity | [Minimizer.lean](Erdos1122/Minimizer.lean) |
 | Lemma 4.1, scale continuity, monotonicity, and intermediate-value attainment | [Scale.lean](Erdos1122/Scale.lean) |
-| Lemma 4.1, fixed-scale divergence and $s_X\to\infty$, conditional on Erdős V | [Normalization.lean](Erdos1122/Normalization.lean) |
+| Lemma 4.1 in full, including $s_X\to\infty$ and $c_X\to0$, from Erdős V | [Normalization.lean](Erdos1122/Normalization.lean), [NormalizedExistence.lean](Erdos1122/NormalizedExistence.lean) |
 | (2.7), exact floor identity; (5.4), prime-divisor factorial moment | [FiniteCounting.lean](Erdos1122/FiniteCounting.lean) |
 | (2.8), fourth-power Jensen and window contraction | [Averaging.lean](Erdos1122/Averaging.lean) |
-| §5, weighted quadratic projection and its lower bound | [Projection.lean](Erdos1122/Projection.lean) |
-| §5, clipping bounds and the finite tail error | [Clipping.lean](Erdos1122/Clipping.lean) |
-| §5, union bound over higher prime powers | [PrimePowers.lean](Erdos1122/PrimePowers.lean) |
-| §6, forward and backward window discrepancy from total variation | [Variation.lean](Erdos1122/Variation.lean), [Averaging.lean](Erdos1122/Averaging.lean) |
+| Lemma 5.2, actual prime projection and Ruzsa variance lower bound | [PrimeProjection.lean](Erdos1122/PrimeProjection.lean), [VarianceLower.lean](Erdos1122/VarianceLower.lean) |
+| (5.5), from Ruzsa; Lemma 5.1, complete clipping comparison | [MixedMoment.lean](Erdos1122/MixedMoment.lean), [ClippedComparison.lean](Erdos1122/ClippedComparison.lean) |
+| §5, additive expansion and vanishing higher-prime-power comparison | [AdditiveExpansion.lean](Erdos1122/AdditiveExpansion.lean), [HigherPowerComparison.lean](Erdos1122/HigherPowerComparison.lean) |
+| §6, density-zero decreases, total variation, and window assembly | [ObservableVariation.lean](Erdos1122/ObservableVariation.lean), [WindowAssembly.lean](Erdos1122/WindowAssembly.lean) |
 | §6, ordered choice of $K$ and $M$, and the variance contradiction | [Constants.lean](Erdos1122/Constants.lean), [Limits.lean](Erdos1122/Limits.lean) |
+
+The two cited moment centers and their conversion are proved in
+[CenterShift.lean](Erdos1122/CenterShift.lean),
+[SecondMoment.lean](Erdos1122/SecondMoment.lean), and
+[MovingCenters.lean](Erdos1122/MovingCenters.lean).
 
 ## Use of generative AI
 

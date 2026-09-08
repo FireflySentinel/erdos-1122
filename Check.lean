@@ -220,3 +220,81 @@ an admitted proof or adding an unlisted axiom makes this file fail to compile.
 /-- info: 'Erdos1122.normalization_scales_tendsto_atTop' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms Erdos1122.normalization_scales_tendsto_atTop
+
+/-- info: 'Erdos1122.Statements.main_of_cited' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.Statements.main_of_cited
+
+/-- info: 'Erdos1122.normalization_exists' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.normalization_exists
+
+/-- info: 'Erdos1122.estimate55_of_ruzsa' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.estimate55_of_ruzsa
+
+/-- info: 'Erdos1122.clipped_comparison' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.clipped_comparison
+
+/-- info: 'Erdos1122.projection_instance' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.projection_instance
+
+/-- info: 'Erdos1122.window_assembly_of_elliott' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.window_assembly_of_elliott
+
+/-- info: 'Erdos1122.center_shift' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.center_shift
+
+/-- info: 'Erdos1122.elliott_iff_weighted' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.elliott_iff_weighted
+
+/-- info: 'Erdos1122.ruzsa_second_moment_both_centers' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.ruzsa_second_moment_both_centers
+
+/-- info: 'Erdos1122.stronglyAdditive_second_moment_all_scales' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.stronglyAdditive_second_moment_all_scales
+
+/-- info: 'Erdos1122.Statements.IsAdditive.factorization_sum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.Statements.IsAdditive.factorization_sum
+
+/-- info: 'Erdos1122.additive_higher_prime_power_identity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.additive_higher_prime_power_identity
+
+/-- info: 'Erdos1122.higher_power_clipped_mean_tendsto' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.higher_power_clipped_mean_tendsto
+
+/-- info: 'Erdos1122.primeLogSquare_eventually_lower' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.primeLogSquare_eventually_lower
+
+/-- info: 'Erdos1122.NormalizedFamily.comparison_prime_projection' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.NormalizedFamily.comparison_prime_projection
+
+/-- info: 'Erdos1122.NormalizedFamily.comparison_center_tendsto' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.NormalizedFamily.comparison_center_tendsto
+
+/-- info: 'Erdos1122.NormalizedFamily.observable_window_tendsto' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.NormalizedFamily.observable_window_tendsto
+
+/-- info: 'Erdos1122.logarithmic_of_finite_concentration' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.logarithmic_of_finite_concentration
+
+-- This checks the complete interface as well as its axiom dependencies.
+example : Erdos1122.Statements.Mangerel → Erdos1122.Statements.Ruzsa →
+    Erdos1122.Statements.Elliott → Erdos1122.Statements.ErdosV →
+    Erdos1122.Statements.ErdosX → Erdos1122.Statements.ErdosProblem1122 :=
+  Erdos1122.Statements.main_of_cited

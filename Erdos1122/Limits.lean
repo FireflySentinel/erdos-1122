@@ -26,7 +26,7 @@ theorem limsup_nonneg {u : α → ℝ} (hu : ∀ n, 0 ≤ u n)
 
 /-- The finite four-term inequality, followed by the limit in `X` for fixed `H`. -/
 theorem four_term_limsup_bound
-    (A E V S B : ℕ → ℝ) (hA : ∀ X, 0 ≤ A X)
+    (A E V S B : α → ℝ) (hA : ∀ X, 0 ≤ A X)
     (hE : IsBoundedUnder (· ≤ ·) atTop E)
     (hS : IsBoundedUnder (· ≤ ·) atTop S)
     (hV : Tendsto V atTop (𝓝 0)) (hB : Tendsto B atTop (𝓝 0))
@@ -45,7 +45,7 @@ theorem four_term_limsup_bound
 
 /-- First `X → ∞` at fixed `H`, then `H → ∞`. The endpoint term is `B`. -/
 theorem variance_limsup_bound
-    (A E : ℕ → ℝ) (V S B : ℕ → ℕ → ℝ) (hA : ∀ X, 0 ≤ A X)
+    (A E : α → ℝ) (V S B : ℕ → α → ℝ) (hA : ∀ X, 0 ≤ A X)
     (hE : IsBoundedUnder (· ≤ ·) atTop E)
     (hS : ∀ H, 0 < H → IsBoundedUnder (· ≤ ·) atTop (S H))
     (hV : ∀ H, 0 < H → Tendsto (V H) atTop (𝓝 0))

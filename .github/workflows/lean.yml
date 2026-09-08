@@ -22,3 +22,7 @@ jobs:
           use-mathlib-cache: "true"
       - name: Check theorem dependencies
         run: lake env lean -DwarningAsError=true Check.lean
+      - name: Replay declarations with the Lean kernel
+        env:
+          LEAN_NUM_THREADS: 2
+        run: lake env leanchecker Erdos1122
