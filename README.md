@@ -1,10 +1,10 @@
 # Erdős Problem #1122: additive functions that decrease on a density-zero set
 
 Preprint answering [Erdős Problem #1122](https://www.erdosproblems.com/1122) in the
-affirmative. Mangerel [[Ma22](https://arxiv.org/abs/2108.12351)] proved the conclusion
-under the stronger bound $\lvert A\cap[1,X]\rvert\ll X/(\log X)^{2+c}$ together with a
-technical condition on the values $f(p)$. Both extra hypotheses are removed here, and the
-constant is shown to be nonnegative.
+affirmative. Mangerel [[Ma22](https://arxiv.org/abs/2108.12351)] proved the exact conclusion
+for completely additive functions under a stronger bound on the number of decreases,
+$D_f(X)\ll X/(\log X)^{2+c}$, together with a technical condition on the values $f(p)$.
+The manuscript treats general additive functions under the density-zero hypothesis.
 
 ## Exact statement
 
@@ -26,16 +26,22 @@ logarithmic coefficient gives an orthogonality identity. A bounded clipping of t
 normalized function is then compared with the strongly additive function obtained by
 clipping its prime values. Ruzsa's second-moment estimate and Elliott's high-power
 Turán–Kubilius inequality give the clipped function a positive variance, while the density
-hypothesis and Mangerel's first-moment theorem for short intervals force the same variance
-to vanish.
+hypothesis and Mangerel's first-moment theorem for short intervals give an incompatible
+upper bound for the same variance.
 
 ## Contents
 
-The manuscript is `paper/PROOF.tex`, compiled to `paper/PROOF.pdf`.
-This preprint carries no Lean formalization.
+The manuscript is available as [PDF](paper/PROOF.pdf) and [LaTeX source](paper/PROOF.tex).
+
+Lean proofs of the clipping estimates, quadratic projection, moment interpolation,
+averaging contraction, and total-variation bounds are included in
+[`Erdos1122/`](Erdos1122). See [FORMALIZATION.md](FORMALIZATION.md) for the precise
+statements and build instructions. **The full main theorem is not formalized in Lean.**
 
 ## Use of generative AI
 
 GPT-6 Astra was used to generate the mathematical proofs and draft the manuscript.
 GPT-5.6 Sol and Claude Opus 5 were used only for editorial review of the exposition.
 The author reviewed the final manuscript and takes full responsibility for its content.
+
+GPT-6 Astra also generated the Lean code and its documentation; Lean checked the proof terms.
