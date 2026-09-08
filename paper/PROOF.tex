@@ -1,0 +1,584 @@
+\documentclass[11pt]{amsart}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1.08in]{geometry}
+\usepackage{microtype}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{pdftitle={Almost everywhere monotone additive functions},pdfauthor={Qiyuan Gu}}
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\N}{\mathbb N}
+\newcommand{\R}{\mathbb R}
+\newcommand{\E}{\mathbb E}
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\clip}{\phi_K}
+
+\title[Monotonicity of additive functions]{Almost everywhere monotone additive functions}
+\author{Qiyuan Gu}
+\address{University of Chicago}
+\email{phoenix1203@uchicago.edu}
+\date{September 7, 2026}
+
+\begin{document}
+\begin{abstract}
+We prove that a real additive function which decreases on a set of
+natural density zero is a nonnegative constant multiple of the logarithm.
+This answers a conjecture of Erd\H{o}s from 1946, listed as Problem~1122
+on the Erd\H{o}s Problems website. The main step is to deduce finite
+concentration without a growth assumption on the values at prime powers.
+A truncated normalization and a bounded clipping reduce this step to
+Mangerel's first-moment theorem for short intervals and the moment
+estimates of Ruzsa and Hildebrand.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A function $f\colon\N\to\R$ is \emph{additive} if
+$f(ab)=f(a)+f(b)$ whenever $(a,b)=1$. Erd\H{o}s proved that an additive
+function which is nondecreasing on $\N$ must be a constant multiple of
+$\log n$. He asked whether the same conclusion follows when the set of
+decreases has natural density zero \cite[p.~3]{Erdos}. The question is
+also recorded as Erd\H{o}s Problem~1122 \cite{Problem1122}.
+
+\begin{theorem}\label{thm:main}
+Let $f\colon\N\to\R$ be additive. If
+\[
+ D_f(X):=\#\{n\le X:f(n+1)<f(n)\}=o(X),
+\]
+then there is a constant $c\ge0$ such that $f(n)=c\log n$ for every
+$n\in\N$.
+\end{theorem}
+
+Mangerel established an approximate logarithmic representation under the
+same density hypothesis \cite[Theorem~1.9]{Mangerel}. For completely
+additive functions, he obtained the exact conclusion with additional
+assumptions on the values at primes and the number of decreases
+\cite[Corollary~1.7]{Mangerel}. His short-interval theorem is the
+analytic input used here.
+
+We say that $f$ has \emph{finite concentration} if there are constants
+$d>0$ and $R<\infty$ such that, for arbitrarily large $X$, some interval
+of length $R$ contains at least $dX$ of the values $f(n)$, $n\le X$.
+The interval is allowed to depend on $X$. Two results of Erd\H{o}s reduce
+Theorem~\ref{thm:main} to finite concentration. Theorem~V of
+\cite{Erdos} states that finite concentration is equivalent to the
+existence of $c\in\R$ for which
+\begin{equation}\label{eq:classical-concentration}
+ \sum_p\frac{\min\{(f(p)-c\log p)^2,1\}}p<\infty.
+\end{equation}
+Theorem~X of the same paper implies that, under
+\eqref{eq:classical-concentration}, the limiting distribution of
+$f(n+1)-f(n)$ has no mass on $(-\infty,0)$ only when
+$f(n)=c\log n$ for all $n$. Both results apply to general additive
+functions, with no restriction on their values at higher prime powers.
+
+The proof below establishes finite concentration by contradiction.
+If it fails, we normalize $f$ and subtract a logarithm so that the
+truncated quadratic mass of the prime values is a small fixed number
+$M$. The minimizing logarithmic coefficient supplies an orthogonality
+identity. We then compare a bounded clipping of the normalized function
+with a strongly additive function obtained by clipping its prime values.
+Their mean-square difference is small enough to retain a positive
+variance. On the other hand, the density hypothesis makes the bounded
+function almost constant on a typical interval of any fixed length.
+Short-interval averaging forces the variance of the strongly additive
+function to be smaller than its moment lower bound permits.
+
+\subsection*{Notation}
+Letters $p,q$ denote primes. We write
+\[
+ \E_X F=\frac1X\sum_{n\le X}F(n),\qquad
+ \mathcal A_H F(n)=\frac1H\sum_{j=0}^{H-1}F(n-j)\quad(n\ge H).
+\]
+Restricted averages, such as $\E_X(F\ind_{n\ge H})$, retain the
+normalizing factor $1/X$. For a strongly additive function
+$z(n)=\sum_{p\mid n}a_p$, put
+\[
+ \mu_z(X)=\sum_{p\le X}\frac{a_p}{p}.
+\]
+All implicit constants are absolute unless a dependence is indicated.
+The constants $K$ and $M$ used in the proof are fixed before $X$ tends
+to infinity. In statements about a family $z_X$, the prime coefficients
+may depend on $X$.
+
+\section{Moment estimates and short intervals}
+
+For an additive function $z$, define
+\[
+ A_0(z,X)=\sum_{p^k\le X}\frac{z(p^k)}{p^k},\qquad
+ B_j(z,X)^j=\sum_{p^k\le X}\frac{|z(p^k)|^j}{p^k}\quad(j=2,4).
+\]
+We use the following consequences of Hildebrand's moment theorem
+\cite[Th\'eor\`eme~$1^*$, equation~(6)]{Hildebrand}:
+\begin{align}
+ \E_X|z-A_0(z,X)|^2
+ &\asymp\inf_{b\in\R}\left(b^2+
+       \sum_{p^k\le X}\frac{|z(p^k)-b\log(p^k)|^2}{p^k}\right),
+       \label{eq:ruzsa}\\
+ \E_X|z-A_0(z,X)|^4
+ &\ll B_2(z,X)^4+B_4(z,X)^4.\label{eq:fourth}
+\end{align}
+The second-moment equivalence \eqref{eq:ruzsa} is due to Ruzsa;
+Hildebrand's theorem includes it as the case of exponent~$2$.
+
+If $z$ is strongly additive, then
+\begin{equation}\label{eq:center-difference}
+ |A_0(z,X)-\mu_z(X)|
+ \le\sum_{p\le X}\frac{|a_p|}{p(p-1)}
+ \ll\left(\sum_{p\le X}\frac{a_p^2}p\right)^{1/2}.
+\end{equation}
+Also $B_2(z,X)^2\le2\sum_{p\le X}a_p^2/p$, with the analogous
+bound for $B_4$. Thus, if $|a_p|\le L$ and
+$\sum_{p\le X}a_p^2/p\le V$, then
+\begin{equation}\label{eq:bounded-moments}
+ \E_X|z-\mu_z(X)|^2\ll V,\qquad
+ \E_X|z-\mu_z(X)|^4\ll V^2+L^2V.
+\end{equation}
+If the coefficients are bounded and $a_p\to0$ for each fixed prime,
+dominated convergence in \eqref{eq:center-difference} gives
+$A_0(z,X)-\mu_z(X)\to0$.
+
+\begin{lemma}\label{lem:short}
+Let $z_X$ be strongly additive functions satisfying
+\[
+ |z_X(p)|\le L,\qquad
+ \sum_{p\le X}\frac{z_X(p)^2}{p}\le V
+\]
+for fixed $L,V<\infty$. Then
+\begin{equation}\label{eq:short-limit}
+ \lim_{H\to\infty}\limsup_{X\to\infty}
+ \frac1X\sum_{H\le n\le X}
+ |\mathcal A_Hz_X(n)-\mu_{z_X}(X)|^2=0,
+\end{equation}
+where $H$ runs through the positive integers.
+\end{lemma}
+
+\begin{proof}
+For $Y\le X$, write
+\[
+ d_Y=\frac2Y\sum_{Y/2<n\le Y}z_X(n),\qquad
+ F_Y(n)=\mathcal A_Hz_X(n)-d_Y.
+\]
+Mangerel's Theorem~1.1 \cite{Mangerel} gives, for every integer
+$10\le H\le Y/100$,
+\begin{equation}\label{eq:mangerel}
+ \frac2Y\sum_{Y/2<n\le Y}|F_Y(n)|
+ \ll\left(\sqrt{\frac{\log\log H}{\log H}}
+                +(\log Y)^{-1/800}\right)\sqrt{2V}.
+\end{equation}
+The estimate is uniform over all additive functions; in particular, it
+applies to the changing family $z_X$.
+
+Counting multiples of each prime gives
+\begin{equation}\label{eq:dyadic-center}
+ d_Y-\mu_{z_X}(Y)
+ =\sum_{p\le Y}z_X(p)
+ \left(\frac2Y\left(\left\lfloor\frac Yp\right\rfloor
+       -\left\lfloor\frac Y{2p}\right\rfloor\right)-\frac1p\right)
+ =O\left(\frac{L\pi(Y)}Y\right).
+\end{equation}
+Jensen's inequality and \eqref{eq:bounded-moments} at $Y$ imply
+\begin{equation}\label{eq:discrepancy-fourth}
+ \frac2Y\sum_{Y/2<n\le Y}|F_Y(n)|^4
+ \ll V^2+L^2V+O_L((\log Y)^{-4}).
+\end{equation}
+To see this, center the backward average at $\mu_{z_X}(Y)$.
+Every index in its inner sums lies in $[1,Y]$ and occurs at most $H$
+times. The remaining constant is estimated by
+\eqref{eq:dyadic-center}.
+H\"older's inequality now gives
+\[
+ \frac2Y\sum|F_Y|^2
+ \le\left(\frac2Y\sum|F_Y|\right)^{2/3}
+       \left(\frac2Y\sum|F_Y|^4\right)^{1/3}.
+\]
+Together with \eqref{eq:mangerel} and
+\eqref{eq:discrepancy-fourth}, this proves the required iterated limit
+on each fixed dyadic band $Y\asymp X$.
+
+For completeness, this dyadic conclusion extends to the whole interval
+as follows. On each of finitely many bands with $Y\asymp X$, we have
+\[
+ |\mu_{z_X}(X)-\mu_{z_X}(Y)|
+ \le L\sum_{Y<p\le X}\frac1p=o(1).
+\]
+The omitted initial segment $H\le n\le\eta X$ contributes
+$O_{L,V}(\sqrt\eta)$ to \eqref{eq:short-limit}: apply
+Cauchy--Schwarz and Jensen, using the fourth-moment bound
+\eqref{eq:bounded-moments} at $X$. First take $X\to\infty$,
+then $H\to\infty$, and finally $\eta\downarrow0$.
+\end{proof}
+
+\section{A weighted estimate for a set of primes}
+
+\begin{lemma}\label{lem:tail-weight}
+Suppose $0<M<1/4$ and $\mathcal T$ is a set of primes at most $X$
+such that $\sum_{p\in\mathcal T}1/p\le M$. Then, uniformly in
+$\mathcal T$,
+\begin{equation}\label{eq:tail-weight}
+ \sum_{p\in\mathcal T}\frac1p
+       \sum_{X/p<q\le X}\frac1q
+ \ll M\log(2/M)+o_{X\to\infty}(1).
+\end{equation}
+Here $M$ is fixed in the term $o(1)$.
+\end{lemma}
+
+\begin{proof}
+For $p\le X^{1-M}$, the inner sum is at most
+$\log(1/M)+o(1)$ by the prime harmonic-sum estimate. These primes
+contribute at most $M\log(1/M)+o(1)$.
+
+For $p>X^{1-M}$, discard the restriction $p\in\mathcal T$ and
+interchange the sums. The terms with $q>X^M$ are bounded by
+\[
+ \left(\sum_{X^{1-M}<p\le X}\frac1p\right)
+ \left(\sum_{X^M<q\le X}\frac1q\right)
+ \ll M\log(2/M)+o(1).
+\]
+For $q\le X^M$, the condition $X/p<q$ implies $p>X/q$.
+The bound $\pi(t)\ll t/\log t$ and partial summation give,
+uniformly for $2\le q\le X^M$,
+\[
+ \sum_{X/q<p\le X}\frac1p\ll\frac{\log q}{\log X}.
+\]
+Their total contribution is therefore
+\[
+ \ll\frac1{\log X}\sum_{q\le X^M}\frac{\log q}{q}\ll M.
+\]
+This proves \eqref{eq:tail-weight}.
+\end{proof}
+
+\section{Normalization}
+
+In the remainder of the proof, suppose that $f$ does not have finite
+concentration. For $s>0$ define
+\begin{equation}\label{eq:W}
+ W_X(s)=\min_{c\in\R}
+ \left\{c^2+\sum_{p\le X}
+       \frac{\min\{(f(p)/s-c\log p)^2,1\}}p\right\}.
+\end{equation}
+
+\begin{lemma}\label{lem:normalization}
+For each fixed $M>0$ and all sufficiently large $X$, there are
+$s_X>0$ and a minimizer $c_X$ in \eqref{eq:W} such that
+$W_X(s_X)=M$. They may be chosen so that $s_X\to\infty$; any
+such choices satisfy $c_X\to0$. If
+\[
+ u_p=\frac{f(p)}{s_X}-c_X\log p\quad(p\le X),
+\]
+then
+\begin{align}
+ \sum_{p\le X}\frac{\min\{u_p^2,1\}}p
+ &=M-c_X^2=M-o(1),\label{eq:mass}\\
+ \sum_{\substack{p\le X\\|u_p|<1}}
+       \frac{u_p\log p}{p}&=c_X.\label{eq:stationarity}
+\end{align}
+No $u_p$ has absolute value exactly $1$.
+\end{lemma}
+
+\begin{proof}
+The expression in braces in \eqref{eq:W} is continuous and coercive
+as a function of $c$, so its minimum is attained. The minimum is
+continuous in $s>0$, since minimizers remain bounded when $s$ varies
+over a compact subinterval. On writing $\lambda=sc$, the expression
+becomes
+\[
+ \frac{\lambda^2}{s^2}
+ +\sum_{p\le X}\frac{\min\{(f(p)-\lambda\log p)^2/s^2,1\}}p.
+\]
+It follows that $W_X(s)$ is nonincreasing in $s$, and it tends to
+zero as $s\to\infty$ for fixed $X$.
+
+For each fixed $s>0$, we claim that $W_X(s)\to\infty$. Otherwise
+some unbounded sequence of $X$ would have bounded $W_X(s)$ and
+bounded minimizers. Pass to a subsequence along which the minimizers
+converge to $c$. Fatou's lemma gives
+\[
+ \sum_p\frac{\min\{(f(p)/s-c\log p)^2,1\}}p<\infty.
+\]
+Rescaling by the fixed number $s$ preserves convergence of the
+truncated square sum. Erd\H{o}s's Theorem~V would therefore give
+finite concentration of $f$, contrary to the assumption.
+
+Continuity now supplies $s_X$ with $W_X(s_X)=M$. Monotonicity and
+the preceding claim imply $s_X\to\infty$. We have
+$|c_X|\le\sqrt M$. If a subsequential limit of $c_X$ were a
+nonzero number $c$, Fatou's lemma on the fixed primes would give
+\[
+ \sum_p\frac{\min\{(c\log p)^2,1\}}p\le M,
+\]
+which is impossible. Thus $c_X\to0$, and \eqref{eq:mass} follows.
+
+It remains to justify differentiation at the minimizer. At a point
+where $|f(p)/s_X-c\log p|=1$, the derivative of the corresponding
+summand has a downward jump of size $2\log p/p$ as $c$ increases.
+Coincident jumps add. A local minimum of a continuous piecewise
+differentiable function has left derivative at most zero and right
+derivative at least zero, so a downward jump excludes a local minimum.
+Consequently no such point is a minimizer. Differentiating
+\eqref{eq:W} at $c_X$ gives \eqref{eq:stationarity}.
+\end{proof}
+
+\section{Clipping the normalized function}
+
+Fix $K>1$ and $0<M<1/4$, and use Lemma~\ref{lem:normalization}.
+Let $\clip(t)=\max\{-K,\min\{t,K\}\}$ and set
+\begin{align*}
+ \mathcal T&=\{p\le X:|u_p|>1\},&
+ S_0(n)&=\sum_{\substack{p\mid n\\p\notin\mathcal T}}u_p,\\
+ a_X&=\sum_{\substack{p\le X\\p\notin\mathcal T}}\frac{u_p}{p},&
+ S(n)&=S_0(n)-a_X.
+\end{align*}
+Coefficients at primes greater than $X$ are set to zero. Define
+\begin{equation}\label{eq:Y-and-Z}
+ \begin{split}
+ z_X(n)&=\sum_{p\mid n}\clip(u_p),\qquad Z(n)=z_X(n)-a_X,\\
+ Y(n)&=\clip\left(\frac{f(n)}{s_X}-c_X\log n-a_X\right).
+ \end{split}
+\end{equation}
+The distinction is that $Y$ clips the value of the additive function,
+whereas $z_X$ clips each prime value before adding.
+
+\begin{lemma}\label{lem:clipping}
+There is an absolute constant $C$ such that
+\begin{equation}\label{eq:clipping-bound}
+ \limsup_{X\to\infty}\E_X|Y-Z|^2
+ \le C\left(\frac M{K^2}+M^2\log(2/M)+K^2M^2\right).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The small coefficients have quadratic mass at most $M$, and
+$\sum_{p\in\mathcal T}1/p\le M$. Hence
+\begin{equation}\label{eq:S-fourth}
+ \E_X S^4\ll M+M^2.
+\end{equation}
+Put $T(n)=\#\{p\in\mathcal T:p\mid n\}$. Counting multiples of
+distinct primes gives
+\begin{equation}\label{eq:tail-count}
+ \E_X T(T-1)
+ =\sum_{\substack{p,q\in\mathcal T\\p\ne q}}
+       \frac1X\left\lfloor\frac X{pq}\right\rfloor
+ \le M^2.
+\end{equation}
+We also need
+\begin{equation}\label{eq:mixed-moment}
+ \E_X\bigl(S^2\ind_{T\ge1}\bigr)
+ \ll M^2\log(2/M)+o(1).
+\end{equation}
+For $p\in\mathcal T$, the coefficient of $p$ in $S_0$ is zero,
+so $S_0(pm)=S_0(m)$ for every $m$, including multiples of $p$.
+Writing $y=X/p$ and using \eqref{eq:bounded-moments} at $y$, we get
+\begin{align*}
+ \E_X\bigl(S^2\ind_{p\mid n}\bigr)
+ &=\frac1p\frac1y\sum_{m\le y}|S_0(m)-a_X|^2\\
+ &\ll\frac1p\left(M+
+           |a_X-\mu_{S_0}(y)|^2\right).
+\end{align*}
+At $y=1$, we have $S_0(1)=\mu_{S_0}(1)=0$, so the same bound follows
+from the mean-shift term. By Cauchy--Schwarz,
+\[
+ |a_X-\mu_{S_0}(X/p)|^2
+ \le M\sum_{X/p<q\le X}\frac1q.
+\]
+Now use $\ind_{T\ge1}\le\sum_{p\in\mathcal T}\ind_{p\mid n}$,
+sum over $p\in\mathcal T$, and apply
+Lemma~\ref{lem:tail-weight}. This proves \eqref{eq:mixed-moment}.
+
+First replace the input to the clipping by the sum of its prime
+contributions, and write
+\[
+ Y_*(n)=\clip\left(S(n)+
+                  \sum_{\substack{p\mid n\\p\in\mathcal T}}u_p\right).
+\]
+If $T(n)=0$, the difference $Y_*(n)-Z(n)$ vanishes for $|S(n)|\le K$
+and otherwise has absolute value at most $|S(n)|$. Its squared
+contribution is at most $\E_X S^4/K^2$.
+If $T(n)=1$, with unique tail value $v$, the Lipschitz property of
+$\clip$ gives
+\[
+ |\clip(S+v)-S-\clip(v)|\le2|S|.
+\]
+If $T(n)\ge2$, boundedness of $\clip$ gives
+\[
+ |Y_*(n)-Z(n)|^2\le C S(n)^2+C K^2T(n)(T(n)-1).
+\]
+Equations \eqref{eq:S-fourth}--\eqref{eq:mixed-moment} therefore imply
+\begin{equation}\label{eq:strong-clipping}
+ \E_X|Y_*-Z|^2
+ \ll\frac M{K^2}+M^2\log(2/M)+K^2M^2+o(1).
+\end{equation}
+
+We next compare $Y$ and $Y_*$. If $p^k\Vert n$ with $k\ge2$, its
+contribution to the difference between the two unclipped expressions is
+\[
+ \frac{f(p^k)-f(p)}{s_X}-c_X(k-1)\log p.
+\]
+This tends to zero for each fixed prime power. Moreover,
+$\sum_{p,k\ge2}p^{-k}<\infty$. Given $\varepsilon>0$, choose a
+finite set of prime powers so that the sum of $p^{-k}$ outside the set
+is less than $\varepsilon$. Uniformly in $X$, the proportion of
+integers divisible by any of those excluded prime powers is at most
+$\varepsilon$. On the complement, only the fixed finite set can
+contribute, and its total contribution tends uniformly to zero.
+Thus the unclipped difference tends to zero in probability.
+The function $\clip$ is bounded and Lipschitz, so
+\[
+ \E_X|Y-Y_*|^2=o(1).
+\]
+Together with \eqref{eq:strong-clipping}, this proves the lemma.
+\end{proof}
+
+\begin{lemma}\label{lem:variance-lower}
+There are absolute constants $c_0,C_0>0$ such that
+\begin{equation}\label{eq:variance-lower}
+ \liminf_{X\to\infty}\E_X|z_X-\mu_{z_X}(X)|^2
+ \ge c_0M-C_0K^2M^2.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Write $v_p=\clip(u_p)$. Since $K>1$, \eqref{eq:mass} implies
+\begin{equation}\label{eq:clipped-mass}
+ M-o(1)\le\sum_{p\le X}\frac{v_p^2}{p}\le K^2M.
+\end{equation}
+On $p\notin\mathcal T$ we have $v_p=u_p$, so
+\eqref{eq:stationarity} gives
+\begin{equation}\label{eq:projection-numerator}
+ \left|\sum_{p\le X}\frac{v_p\log p}{p}\right|
+ \le |c_X|+KM\log X.
+\end{equation}
+Using $\sum_{p\le X}(\log p)^2/p\sim\tfrac12(\log X)^2$, we obtain
+\begin{align}
+ \inf_{b\in\R}\sum_{p\le X}\frac{(v_p-b\log p)^2}{p}
+ &=\sum_{p\le X}\frac{v_p^2}{p}
+   -\frac{\bigl(\sum_{p\le X}v_p\log p/p\bigr)^2}
+          {\sum_{p\le X}(\log p)^2/p}\notag\\
+ &\ge M-C K^2M^2-o(1).\label{eq:projection}
+\end{align}
+Apply \eqref{eq:ruzsa}, dropping the nonnegative $b^2$ term and the
+terms with $k\ge2$ from its right-hand side.
+For each fixed prime $p$, $v_p\to0$, because $s_X\to\infty$ and
+$c_X\to0$. Therefore \eqref{eq:center-difference} and dominated
+convergence give $A_0(z_X,X)-\mu_{z_X}(X)\to0$.
+The second moments are uniformly bounded by
+\eqref{eq:bounded-moments} and \eqref{eq:clipped-mass}; changing the
+center consequently changes the second moment by $o(1)$.
+Combining this with \eqref{eq:projection} proves
+\eqref{eq:variance-lower}.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+Suppose first, as in Sections~4 and~5, that $f$ has no finite
+concentration. The function $Y$ in \eqref{eq:Y-and-Z} is bounded
+between $-K$ and $K$. If $f(n+1)\ge f(n)$, monotonicity and
+Lipschitz continuity of $\clip$ imply
+\[
+ (Y(n)-Y(n+1))_+\le |c_X|\log(1+1/n),
+\]
+where $t_+=\max\{t,0\}$. At a decrease of $f$, the same quantity
+is at most $2K$. Telescoping the signed increments gives
+\begin{equation}\label{eq:variation}
+ \sum_{n<X}|Y(n+1)-Y(n)|
+ \le2K+4KD_f(X)+2|c_X|\log X=o(X).
+\end{equation}
+For each fixed $H$, every difference $Y(n)-Y(n-j)$ is bounded by
+the sum of the $j$ intervening absolute increments. Since $|Y|\le K$,
+\eqref{eq:variation} yields
+\begin{equation}\label{eq:Y-short}
+ \frac1X\sum_{H\le n\le X}|Y(n)-\mathcal A_HY(n)|^2\longrightarrow0.
+\end{equation}
+
+Let $m_X=\mu_{z_X}(X)-a_X$. Then $Z-m_X=z_X-\mu_{z_X}(X)$, and
+\begin{equation}\label{eq:four-terms}
+ Z-m_X=(Z-Y)+(Y-\mathcal A_HY)
+            +\mathcal A_H(Y-Z)+(\mathcal A_H Z-m_X).
+\end{equation}
+The square of the right-hand side is at most four times the sum of
+the four squared terms. Jensen's inequality gives the contraction
+\[
+ \frac1X\sum_{H\le n\le X}|\mathcal A_H(Y-Z)(n)|^2
+ \le\frac1X\sum_{n\le X}|Y(n)-Z(n)|^2.
+\]
+The prime coefficients of $z_X$ are bounded by $K$ and have quadratic
+mass at most $K^2M$, so Lemma~\ref{lem:short} applies to the last
+term of \eqref{eq:four-terms}. The first $H$ indices contribute $o(1)$
+to the centered second moment: this follows directly from
+\eqref{eq:bounded-moments} and Cauchy--Schwarz. Taking $X\to\infty$
+and then $H\to\infty$ in \eqref{eq:four-terms}, and using
+\eqref{eq:Y-short}, we obtain
+\begin{align}
+ \limsup_X\E_X|z_X-\mu_{z_X}(X)|^2
+ &\le8\limsup_X\E_X|Y-Z|^2\notag\\
+ &\le C_1\left(\frac M{K^2}+M^2\log(2/M)+K^2M^2\right)
+       \label{eq:variance-upper}
+\end{align}
+for an absolute constant $C_1$.
+
+Choose $K>1$ so large that $C_1/K^2<c_0/4$, where $c_0$ is from
+Lemma~\ref{lem:variance-lower}. Next choose $0<M<1/4$ so small that
+\[
+ C_1M\log(2/M)+(C_1+C_0)K^2M<c_0/4.
+\]
+With these fixed choices, \eqref{eq:variance-upper} contradicts
+\eqref{eq:variance-lower}. Hence $f$ has finite concentration.
+
+Erd\H{o}s's Theorem~V now gives a constant $c$ for which the additive
+remainder $r(n)=f(n)-c\log n$ satisfies
+\[
+ \sum_p\frac{\min\{r(p)^2,1\}}p<\infty.
+\]
+By his Theorem~X, the differences $f(n+1)-f(n)$ have a limiting
+distribution, and this distribution has no negative mass only if
+$r$ is identically zero. For each $\varepsilon>0$, our hypothesis
+gives
+\[
+ \frac1X\#\{n\le X:f(n+1)-f(n)<-\varepsilon\}
+ \le\frac{D_f(X)}X\longrightarrow0.
+\]
+The limiting distribution therefore has no mass on $(-\infty,0)$.
+It follows that $f(n)=c\log n$ for all $n$. Finally, $c<0$ would
+give a decrease at every integer, so $c\ge0$.\qed
+
+\section*{Declaration of generative AI use}
+OpenAI GPT-6 Astra, accessed through Codex, was used to develop the
+mathematical arguments and draft this manuscript. A separate instance
+of the same model reviewed the proof and its use of the cited results.
+This draft is provided for human review; the model review is not a
+substitute for review by the author or for peer review.
+
+\begin{thebibliography}{9}
+
+\bibitem{Erdos}
+P.~Erd\H{o}s,
+\emph{On the distribution function of additive functions},
+Ann. of Math. (2) \textbf{47} (1946), no.~1, 1--20.
+\url{https://combinatorica.hu/~p_erdos/1946-06.pdf}.
+
+\bibitem{Hildebrand}
+A.~Hildebrand,
+\emph{Sur les moments d'une fonction additive},
+Ann. Inst. Fourier (Grenoble) \textbf{33} (1983), no.~3, 1--22.
+\url{https://www.numdam.org/item/AIF_1983__33_3_1_0/}.
+
+\bibitem{Mangerel}
+A.~P.~Mangerel,
+\emph{Additive functions in short intervals, gaps and a conjecture of Erd\H{o}s},
+Ramanujan J. \textbf{59} (2022), 1023--1090.
+\href{https://doi.org/10.1007/s11139-022-00623-y}{doi:10.1007/s11139-022-00623-y}.
+Preprint: \href{https://arxiv.org/abs/2108.12351}{arXiv:2108.12351}.
+
+\bibitem{Problem1122}
+\emph{Erd\H{o}s Problem \#1122}, Erd\H{o}s Problems website,
+\url{https://www.erdosproblems.com/1122}, accessed September~7, 2026.
+
+\end{thebibliography}
+\end{document}
