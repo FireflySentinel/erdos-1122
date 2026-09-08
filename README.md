@@ -1,49 +1,61 @@
-# Erdős Problem #1122: additive functions that decrease on a density-zero set
+# Erdős Problem #1122: additive functions monotone off a density-zero set
 
-Preprint answering [Erdős Problem #1122](https://www.erdosproblems.com/1122) in the
-affirmative. Mangerel [[Ma22](https://arxiv.org/abs/2108.12351)] proved the exact conclusion
-for completely additive functions under a stronger bound on the number of decreases,
-$D_f(X)\ll X/(\log X)^{2+c}$, together with a technical condition on the values $f(p)$.
-The manuscript treats general additive functions under the density-zero hypothesis.
+[Preprint](paper/PROOF.pdf) on [Erdős Problem #1122](https://www.erdosproblems.com/1122),
+answering it in the affirmative for every additive function. Mangerel
+[[Ma22](https://arxiv.org/abs/2108.12351)] obtained the exact conclusion under the stronger
+bound $D_f(X)\ll X/(\log X)^{2+c}$ together with a technical condition on the values
+$f(p)$; both extra hypotheses are removed here, and the constant is shown to be
+nonnegative.
+
+Two results of Erdős reduce the theorem to *finite concentration*: some interval of a
+fixed length holds a positive proportion of the values $f(n)$, $n\le X$, for arbitrarily
+large $X$. Ruzsa's second-moment estimate and Elliott's high-power Turán–Kubilius
+inequality give a positive variance for a clipped strongly additive comparison, while the
+density hypothesis and Mangerel's first-moment theorem for short intervals force the same
+variance to vanish.
+
+## Build and check
+
+With [Elan](https://github.com/leanprover/elan) installed, run from the repository root:
+
+```sh
+lake exe cache get
+lake build
+lake env lean -DwarningAsError=true Check.lean
+LEAN_NUM_THREADS=2 lake env leanchecker Erdos1122
+```
 
 ## Exact statement
 
-**Theorem 1.** Let $f\colon\mathbb N\to\mathbb R$ be additive. If
+**Theorem 1.1.** Let $f\colon\mathbb N\to\mathbb R$ be additive, and let $D_f(X)$ count
+the $n\le X$ with $f(n+1)<f(n)$. If $D_f(X)=o(X)$, then there is a constant $c\ge0$ such
+that $f(n)=c\log n$ for every $n\in\mathbb N$.
 
-$$D_f(X) := \#\{n \le X : f(n+1) < f(n)\} = o(X),$$
+No restriction is placed on the values of $f$ at higher prime powers, and the set of
+decreases is only assumed to have density zero, with no rate.
 
-then there is a constant $c\ge0$ such that $f(n)=c\log n$ for every $n\in\mathbb N$.
+This is a partial formalization: Theorem 1.1 itself is not proved in Lean. The cited
+analytic results enter as explicit hypotheses of the formalized statements.
+[FORMALIZATION.md](FORMALIZATION.md) states those hypotheses and lists what remains
+outside Lean. [Check.lean](Check.lean) guards the axiom dependencies of the formalized
+lemmas to `propext`, `Classical.choice`, and `Quot.sound`.
 
-No restriction is placed on the values of $f$ at higher prime powers.
+## Proof correspondence
 
-## Method
-
-Two results of Erdős reduce the theorem to *finite concentration*: that some interval of
-a fixed length holds a positive proportion of the values $f(n)$, $n\le X$, for arbitrarily
-large $X$. Assume this fails. Normalizing $f$ and subtracting a logarithmic term makes the
-truncated quadratic mass of the prime values a fixed small number, and the minimizing
-logarithmic coefficient gives an orthogonality identity. A bounded clipping of the
-normalized function is then compared with the strongly additive function obtained by
-clipping its prime values. Ruzsa's second-moment estimate and Elliott's high-power
-Turán–Kubilius inequality give the clipped function a positive variance, while the density
-hypothesis and Mangerel's first-moment theorem for short intervals give an incompatible
-upper bound for the same variance.
-
-## Contents
-
-The manuscript is available as [PDF](paper/PROOF.pdf) and [LaTeX source](paper/PROOF.tex).
-
-Lean proofs in [`Erdos1122/`](Erdos1122) cover the finite minimizer and its
-stationary identity, the ordered constant choices and variance limits, a conditional
-proof of Lemma 3.1 from explicit Mertens and Chebyshev bounds, the higher-prime-power
-union bound, and the clipping, projection, moment, and averaging estimates.
-See [FORMALIZATION.md](FORMALIZATION.md) for exact hypotheses, remaining steps of
-Lemma 2.1, and build instructions. **The full main theorem is not formalized in Lean.**
+| Manuscript | Lean source |
+|---|---|
+| Lemma 2.1, first-to-second-moment transfer and assembly from dyadic bands | [ShortIntervals.lean](Erdos1122/ShortIntervals.lean) |
+| Lemma 2.1, first- and fourth-moment interpolation | [Interpolation.lean](Erdos1122/Interpolation.lean) |
+| Lemma 3.1, prime-tail weight, conditional on explicit Mertens and Chebyshev bounds | [PrimeHarmonic.lean](Erdos1122/PrimeHarmonic.lean), [PrimeTail.lean](Erdos1122/PrimeTail.lean), [PrimeMoment.lean](Erdos1122/PrimeMoment.lean) |
+| Lemma 4.1, finite minimizer and the stationary identity | [Minimizer.lean](Erdos1122/Minimizer.lean) |
+| §4, weighted quadratic projection and its lower bound | [Projection.lean](Erdos1122/Projection.lean) |
+| §5, clipping bounds and the finite tail error | [Clipping.lean](Erdos1122/Clipping.lean) |
+| §5, union bound over higher prime powers | [PrimePowers.lean](Erdos1122/PrimePowers.lean) |
+| §5, window discrepancy from total variation | [Variation.lean](Erdos1122/Variation.lean), [Averaging.lean](Erdos1122/Averaging.lean) |
+| §6, ordered choice of $K$ and $M$, and the variance contradiction | [Constants.lean](Erdos1122/Constants.lean), [Limits.lean](Erdos1122/Limits.lean) |
 
 ## Use of generative AI
 
 GPT-6 Astra was used to generate the mathematical proofs and draft the manuscript.
 GPT-5.6 Sol and Claude Opus 5 were used only for editorial review of the exposition.
-The author reviewed the final manuscript and takes full responsibility for its content.
-
-GPT-6 Astra also generated the Lean code and its documentation; Lean checked the proof terms.
+The Lean formalization was generated using OpenAI Codex (GPT-6).
