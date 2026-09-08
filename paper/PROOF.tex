@@ -76,20 +76,19 @@ analytic input used here.
 We say that $f$ has \emph{finite concentration} if there are constants
 $d>0$ and $R<\infty$ such that, for arbitrarily large $X$, some interval
 of length $R$ contains at least $dX$ of the values $f(n)$, $n\le X$.
-The interval is allowed to depend on $X$. Two results of Erd\H{o}s reduce
-Theorem~\ref{thm:main} to finite concentration. Theorem~V of
+The interval is allowed to depend on $X$. Results of Erd\H{o}s and
+Hildebrand reduce Theorem~\ref{thm:main} to finite concentration. Theorem~V of
 \cite{Erdos} states that finite concentration is equivalent to the
 existence of $c\in\R$ for which
 \begin{equation}\label{eq:classical-concentration}
  \sum_p\frac{\min\{(f(p)-c\log p)^2,1\}}p<\infty.
 \end{equation}
-Theorem~X of the same paper implies that, under
-\eqref{eq:classical-concentration}, the limiting distribution of
-$f(n+1)-f(n)$ has no mass on $(-\infty,0)$ only when
-$f(n)=c\log n$ for all $n$. Both results apply to general additive
-functions, with no restriction on their values at higher prime powers.
-Theorem~X is stated without proof in \cite[p.~17]{Erdos}; the source
-of this final distribution implication is discussed below.
+Under \eqref{eq:classical-concentration}, Hildebrand's Theorem~1
+\cite{Hildebrand} gives a symmetric limiting distribution for
+$f(n+1)-f(n)$. If this distribution has no negative mass, it is a point
+mass at zero, and Hildebrand's corollary forces $f$ to be a multiple of
+the logarithm. These results apply to general additive functions, with
+no restriction on their values at higher prime powers.
 
 It therefore suffices to prove finite concentration. Assuming the
 contrary, we normalize $f$ and subtract a logarithmic term so that the
@@ -129,14 +128,22 @@ and
  B_j(z,X)^j=\sum_{p^k\le X}\frac{|z(p^k)|^j}{p^k}\quad(j=2,4).
 \]
 Ruzsa's second-moment estimate \cite{Ruzsa}, in the form recorded by
-Mangerel \cite[Lemma~3.3]{Mangerel}, gives
+Mangerel \cite[Lemma~3.3]{Mangerel}, gives, above an absolute threshold,
 \begin{equation}\label{eq:ruzsa}
  \E_X|z-A_0(z,X)|^2
  \asymp\inf_{b\in\R}\left(b^2+
        \sum_{p^k\le X}\frac{|z(p^k)-b\log(p^k)|^2}{p^k}\right).
 \end{equation}
+We use the lower comparison only as $X\to\infty$. The upper bound with
+$b=0$ extends to $X\ge2$ after changing the absolute constant. Indeed,
+for fixed $B\ge2$ and $2\le X\le B$, the prime-power expansion of $z(n)$
+and finite Cauchy--Schwarz give
+\[
+ \E_X|z-A_0(z,X)|^2
+ \le 2\bigl(B\lfloor B\rfloor+\#\{p^k\le B:k\ge1\}\bigr)B_2(z,X)^2.
+\]
 Elliott's high-power Tur\'an--Kubilius inequality
-\cite[Theorem~1]{Elliott}, with exponent $4$, gives
+\cite[Theorem~1]{Elliott}, with exponent $4$, gives, for every real $X\ge2$,
 \[
  \E_X|z-\widetilde A_0(z,X)|^4
  \ll B_2(z,X)^4+B_4(z,X)^4.
@@ -620,17 +627,25 @@ remainder $r(n)=f(n)-c\log n$ satisfies
 \[
  \sum_p\frac{\min\{r(p)^2,1\}}p<\infty.
 \]
-Erd\H{o}s's Theorem~X gives a limiting distribution for
-$f(n+1)-f(n)$, and absence of mass on $(-\infty,0)$ forces $r$ to be
-identically zero. For each
-$\varepsilon>0$, the hypothesis gives
+Hildebrand's Theorem~1 \cite{Hildebrand} gives a limiting distribution
+for $f(n+1)-f(n)$, with characteristic function
+\[
+ \prod_p\left(1-\frac2p+2\left(1-\frac1p\right)
+     \Re\sum_{k\ge1}\frac{e^{it r(p^k)}}{p^k}\right).
+\]
+Every factor is real, so uniqueness of characteristic functions makes
+the distribution symmetric. For each $\varepsilon>0$, the hypothesis gives
 \[
  \frac1X\#\{n\le X:f(n+1)-f(n)<-\varepsilon\}
  \le\frac{D_f(X)}X\longrightarrow0.
 \]
-The limiting distribution therefore has no mass on $(-\infty,0)$.
-It follows that $f(n)=c\log n$ for all $n$. Finally, $c<0$ would
-give a decrease at every integer, so $c\ge0$.\qed
+The limiting distribution therefore has no mass on $(-\infty,0)$,
+and symmetry makes it a point mass at zero. Thus, for every
+$\varepsilon>0$, the set of $n$ with $|f(n+1)-f(n)|>\varepsilon$
+has density zero. Equivalently, the differences tend to zero on a set
+of density one. Hildebrand's corollary \cite[pp.~258--259]{Hildebrand}
+now gives $f(n)=d\log n$ for some real $d$ and all $n$.
+Finally, $d<0$ would give a decrease at every integer, so $d\ge0$.\qed
 
 \begin{remark}
 All estimates for prime sums used above follow from Chebyshev's bounds;
@@ -640,11 +655,8 @@ neither Mertens's theorem nor the prime number theorem is needed.
 \begin{remark}
 Erd\H{o}s states Theorems~IX and~X without proof on page~17 of
 \cite{Erdos}; Theorem~XI subsequently uses Theorem~X.
-A later source for the distribution argument is Hildebrand's
-Erd\H{o}s--Wintner theorem for differences \cite{Hildebrand}.
-Its limiting distribution is symmetric, so absence of mass on
-$(-\infty,0)$ makes it a point mass at zero. Hildebrand's density-one
-characterization of the logarithm then gives the required conclusion.
+The argument above uses Hildebrand's proved Theorem~1, its formula~(1.4),
+and its corollary in place of that announcement.
 \end{remark}
 
 \section*{Declaration of generative AI use}
@@ -652,7 +664,7 @@ GPT-6 Astra was used to generate the mathematical proofs and draft the
 manuscript. GPT-5.6 Sol and Claude Opus 5 were used only for editorial
 review of the exposition. The author reviewed the final manuscript and
 takes full responsibility for its content. The accompanying Lean~4
-formalization checks the implication from the five cited results, which
+formalization checks the implication from the cited analytic inputs, which
 remain explicit hypotheses; it does not formalize their proofs.
 The Lean code was generated with OpenAI Codex (GPT-6).
 

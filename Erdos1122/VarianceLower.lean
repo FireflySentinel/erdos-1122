@@ -35,7 +35,7 @@ including the actual Ruzsa infimum and its change of center. -/
 theorem projection_instance : ProjectionInstance := by
   intro hR
   obtain ⟨Ctk, hCtk, hTK⟩ := stronglyAdditive_second_moment hR
-  obtain ⟨c₀, C, hc₀, _hC, hR⟩ := hR
+  obtain ⟨c₀, C, X₀, hc₀, _hC, hX₀, hR⟩ := hR
   refine ⟨c₀ / 2, (c₀ / 2) * (8 / log 2), by positivity, by positivity, ?_⟩
   intro f _hf K M hK hM _hMq N
   have hK0 : 0 ≤ K := by linarith
@@ -56,7 +56,7 @@ theorem projection_instance : ProjectionInstance := by
     simp only [zero_pow (by decide : 2 ≠ 0), sub_zero]
     ring_nf
   have hpoint : ∀ᶠ X in atTop, A X ≤ N.variance K X := by
-    filter_upwards [N.comparison_prime_projection K hK.le, eventually_ge_atTop (3 : ℝ)] with X hp hX
+    filter_upwards [N.comparison_prime_projection K hK.le, eventually_ge_atTop X₀] with X hp hX
     have hinf : L X ≤ ruzsaInfimum (N.comparison K X) X := by
       apply le_csInf (Set.range_nonempty _)
       rintro _ ⟨b, rfl⟩

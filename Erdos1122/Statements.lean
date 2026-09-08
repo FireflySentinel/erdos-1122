@@ -75,11 +75,12 @@ def logarithmicResidual (f : ℕ → ℝ) (c : ℝ) (n : ℕ) : ℝ :=
 def ruzsaInfimum (f : ℕ → ℝ) (X : ℝ) : ℝ :=
   sInf (Set.range (fun c : ℝ => c ^ 2 + primePowerMoment (logarithmicResidual f c) X 2))
 
-/-- The two-sided estimate recorded by Mangerel; constants are absolute.
-The additional comparison with Ruzsa's explicit coefficient is not needed. -/
+/-- The two-sided estimate recorded by Mangerel, with an absolute starting
+cutoff quantified before the function. The additional comparison with Ruzsa's
+explicit coefficient is not needed. -/
 def Ruzsa : Prop :=
-  ∃ c C : ℝ, 0 < c ∧ 0 < C ∧ ∀ f : ℕ → ℝ, IsAdditive f →
-    ∀ X : ℝ, 3 ≤ X →
+  ∃ c C X₀ : ℝ, 0 < c ∧ 0 < C ∧ 3 ≤ X₀ ∧
+    ∀ f : ℕ → ℝ, IsAdditive f → ∀ X : ℝ, X₀ ≤ X →
       c * ruzsaInfimum f X ≤ initialMean (fun n => |f n - weightedCenter f X| ^ 2) X ∧
       initialMean (fun n => |f n - weightedCenter f X| ^ 2) X ≤ C * ruzsaInfimum f X
 

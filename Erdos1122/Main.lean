@@ -5,8 +5,9 @@ import Erdos1122.MixedMoment
 import Erdos1122.VarianceLower
 import Erdos1122.ClippedComparison
 import Erdos1122.WindowAssembly
+import Erdos1122.HildebrandBridge
 
-/-! # The main implication from the five cited theorems
+/-! # The main implication from the cited theorems
 
 The proof chooses all constants before the cutoff limits, applies the actual
 short-interval theorem to the clipped prime-divisor family, obtains finite
@@ -23,10 +24,11 @@ set_option autoImplicit false
 noncomputable section
 
 /-- The entire chain to Erdős Problem 1122, conditional on exactly the
-five cited theorems. No intermediate arithmetic hypothesis remains. -/
+cited theorems. No intermediate arithmetic hypothesis remains. -/
 theorem Statements.main_of_cited
-    (hM : Mangerel) (hR : Ruzsa) (hE : Elliott) (hV : ErdosV) (hX : ErdosX) :
+    (hM : Mangerel) (hR : Ruzsa) (hE : Elliott) (hV : ErdosV) (hH : Hildebrand) :
     ErdosProblem1122 := by
+  have hX := hildebrand_implies_erdosX hH
   intro f hf hdec
   apply logarithmic_of_finite_concentration hV hX f hf _ hdec
   by_contra hno

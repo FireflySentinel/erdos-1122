@@ -296,5 +296,36 @@ an admitted proof or adding an unlisted axiom makes this file fail to compile.
 -- This checks the complete interface as well as its axiom dependencies.
 example : Erdos1122.Statements.Mangerel → Erdos1122.Statements.Ruzsa →
     Erdos1122.Statements.Elliott → Erdos1122.Statements.ErdosV →
-    Erdos1122.Statements.ErdosX → Erdos1122.Statements.ErdosProblem1122 :=
+    Erdos1122.Statements.Hildebrand → Erdos1122.Statements.ErdosProblem1122 :=
   Erdos1122.Statements.main_of_cited
+
+/-- info: 'Erdos1122.hildebrand_implies_erdosX' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.hildebrand_implies_erdosX
+
+/-- info: 'Erdos1122.hildebrand_limiting_law_symmetric' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.hildebrand_limiting_law_symmetric
+
+/-- info: 'Erdos1122.density_one_zero_of_tail_counts' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.density_one_zero_of_tail_counts
+
+/-- info: 'Erdos1122.eq_dirac_zero_of_symmetric_nonnegative' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.eq_dirac_zero_of_symmetric_nonnegative
+
+/-- info: 'Erdos1122.tail_counts_tendsto_of_dirac_limit' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.tail_counts_tendsto_of_dirac_limit
+
+/-- info: 'Erdos1122.logarithmic_coefficient_unique' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.logarithmic_coefficient_unique
+
+/-- info: 'Erdos1122.second_moment_finite_cutoff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.second_moment_finite_cutoff
+
+example : Erdos1122.Statements.Hildebrand → Erdos1122.Statements.ErdosX :=
+  Erdos1122.hildebrand_implies_erdosX

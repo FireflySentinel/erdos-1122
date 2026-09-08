@@ -4,7 +4,7 @@
 
 ```lean
 Erdos1122.Statements.main_of_cited :
-  Mangerel → Ruzsa → Elliott → ErdosV → ErdosX → ErdosProblem1122
+  Mangerel → Ruzsa → Elliott → ErdosV → Hildebrand → ErdosProblem1122
 ```
 
 There are **no intermediate arithmetic hypotheses** in this theorem. Its
@@ -12,7 +12,8 @@ conclusion is the original statement: every real additive function whose
 set of decreases has density zero equals `c * log n` on every positive
 integer, for some `c ≥ 0`.
 
-The five cited results are propositions supplied as theorem hypotheses.
+The cited results are propositions supplied as theorem hypotheses.
+`Hildebrand` is the conjunction of his differences theorem and its corollary.
 Their proofs are not formalized in this repository. Thus Lean checks the
 implication from those precise statements, not an unconditional proof of
 all the cited mathematics. Checking the statements against the literature
@@ -21,18 +22,21 @@ remains part of reviewing the manuscript.
 ## Cited inputs and their sources
 
 [`Statements.lean`](Erdos1122/Statements.lean) defines positive-integer
-coprime additivity, `decreaseCount`, the problem, and the five inputs.
+coprime additivity, `decreaseCount`, the problem, and the moment and
+concentration inputs. [`HildebrandStatements.lean`](Erdos1122/HildebrandStatements.lean)
+defines the two Hildebrand propositions.
 The constants in the moment and short-interval estimates are quantified
 before the function and the cutoff. In `Mangerel`, the window is an integer
 with `10 ≤ H` and `(H : ℝ) ≤ X / 100`. The cutoff `X` is real throughout.
 
 | Proposition | Source and convention |
 |---|---|
-| `Mangerel` | [Mangerel, Theorem 1.1](https://arxiv.org/abs/2108.12351), specialized to real additive functions. The backward window and dyadic mean are actual finite sums. |
+| `Mangerel` | [Mangerel, Theorem 1.1](https://doi.org/10.1007/s11139-022-00623-y), specialized to real additive functions. The backward window and dyadic mean are actual finite sums. |
 | `Ruzsa` | The two-sided second-moment estimate in Mangerel, published Lemma 3.3 (arXiv v1, Lemma 2.3), attributed to [Ruzsa, 1983](https://doi.org/10.1007/978-3-0348-5438-2_50). Its center has the factor `1 - 1/p`. |
 | `Elliott` | [Elliott, 1980, Theorem 1](https://doi.org/10.4153/CJM-1980-068-0), at exponent four. The original article's definition of `A(x)` on p. 893 is the unweighted prime-power center. |
 | `ErdosV` | [Erdős, 1946](https://combinatorica.hu/~p_erdos/1946-06.pdf), Theorem V and the converse in the following paragraph: finite concentration is equivalent to a summable truncated prime residual for some logarithmic coefficient. |
-| `ErdosX` | The distribution-existence and negative-support clauses of Theorem X in the same article. These concern all positive integers, including higher prime powers. |
+| `HildebrandTheorem` | [Hildebrand, 1988, Theorem 1](https://doi.org/10.1090/S0002-9947-1988-0965752-X), pp. 257–258: the weak-convergence criterion and the characteristic-function formula (1.4). |
+| `HildebrandCorollary` | The corollary on pp. 258–259 of the same paper: convergence of the increments to zero on a density-one set forces a logarithm. Its proof is printed there. |
 
 The two prime-power centers are kept distinct:
 
@@ -60,18 +64,66 @@ prime center, including the finite cases `1 ≤ X < 2` and `2 ≤ X < 3`.
 This is an upper-bound transfer; it is not presented as an equivalence of
 the entire two-sided Ruzsa statements at arbitrary centers.
 
-**Source status of Erdős X.** On p. 17, Erdős explicitly announces
-Theorems IX and X without proof; the subsequent proof of Theorem XI uses
-Theorem X. A reviewer should not expect a proof of X in those pages.
-A later source for a proved replacement is
-[Hildebrand's 1988 Erdős–Wintner theorem for differences](https://doi.org/10.1090/S0002-9947-1988-0965752-X),
-together with symmetry of the limiting distribution. A symmetric
-probability distribution with no mass on the negative half-line must be
-a point mass at zero; Hildebrand's density-one characterization then
-forces a logarithm. This repository retains Erdős's announced statement
-as `ErdosX`; it does not claim to have formalized its derivation from
-Hildebrand. In the Lean definition, empirical distributions converge at
-continuity points of a right-continuous distribution function.
+**Cutoff ranges.** Elliott's original Theorem 1 explicitly states uniformity
+for real `X ≥ 2`. Mangerel's published Theorem 1.1 states the integer range
+`10 ≤ H ≤ X/100`, which already requires `X ≥ 1000`; no additional
+starting threshold is stated there. Ruzsa's proposition quantifies
+absolute constants `c, C, X₀`, with
+`X₀ ≥ 3`, before the function, and assumes the two-sided estimate only
+for `X ≥ X₀`. The lower bound is used only eventually.
+
+[`FiniteCutoffMoment.lean`](Erdos1122/FiniteCutoffMoment.lean) supplies
+all smaller scales for the upper bound. For `0 < X ≤ B`, the additive
+prime-power expansion and finite Cauchy–Schwarz give
+
+\[
+ \mathbb E_X|f-A_w(f,X)|^2
+ \le 2\bigl(B\lfloor B\rfloor+\#\{(p,k):p\text{ prime},\ k\ge1,\ p^k\le B\}\bigr)
+       \sum_{p^k\le X}|f(p^k)|^2/p^k.
+\]
+
+The constant depends on `B` alone. Taking `B = X₀` therefore extends the
+upper estimate without a new cited input or a finite-range lower estimate.
+
+## The Hildebrand bridge
+
+[`HildebrandBridge.lean`](Erdos1122/HildebrandBridge.lean) proves
+`hildebrand_implies_erdosX : Hildebrand → ErdosX`. Thus `ErdosX` remains
+a useful intermediate statement, but it is no longer a hypothesis of the
+main theorem. Erdős announced Theorems IX and X without proof on p. 17
+of his 1946 paper, and subsequently used X in XI; the present argument
+uses Hildebrand's proved theorem and corollary instead.
+
+The theorem proposition includes both directions of the weak-convergence
+criterion and the formula, for `h(n) = f(n) - c log n`,
+
+\[
+ \widehat\mu(t)=\prod_p\left(1-\frac2p+
+  2(1-1/p)\operatorname{Re}\sum_{k\ge1}
+       \frac{e^{it h(p^k)}}{p^k}\right).
+\]
+
+The product is a limit over primes in their natural order. The definition
+uses a probability measure and its actual characteristic function; it does
+not assume symmetry. Weak convergence is expressed at continuity points
+of the right-continuous cumulative distribution function. The original
+normalization by `floor X` and the repository's normalization by `X`
+have the same limit because `floor X / X → 1`.
+
+[`SymmetricDistribution.lean`](Erdos1122/SymmetricDistribution.lean)
+proves that the real characteristic-function limit makes the measure
+invariant under `x ↦ -x`, by uniqueness of characteristic functions.
+A symmetric probability measure with no negative mass is `dirac 0`.
+The same file proves that this limiting law makes every fixed-tolerance
+exceptional set have density zero.
+[`DensityOne.lean`](Erdos1122/DensityOne.lean) extracts one density-one
+set on which the ordinary limit is zero. It chooses a cutoff for each
+tolerance and uses the nesting of exceptional sets to control their union
+by the last active tolerance. This supplies the literal hypothesis of
+`HildebrandCorollary`; density-one extraction is not an extra assumption.
+Finally, [`LogarithmicRigidity.lean`](Erdos1122/LogarithmicRigidity.lean)
+identifies the logarithmic coefficient using divergence of the reciprocal
+prime series and proves the reverse implication in `ErdosX`.
 
 ## Arithmetic propositions and their proofs
 
@@ -187,7 +239,7 @@ lake env lean -DwarningAsError=true Check.lean
 LEAN_NUM_THREADS=2 lake env leanchecker Erdos1122
 ```
 
-[`Check.lean`](Check.lean) checks both the exact five-input type of
+[`Check.lean`](Check.lean) checks both the exact input type of
 `main_of_cited` and the axiom dependencies of the main theorem and its
 arithmetic components. The permitted dependencies are `propext`,
 `Classical.choice`, and `Quot.sound`. There are no admitted proofs,

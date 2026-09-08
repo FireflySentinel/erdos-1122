@@ -1,5 +1,6 @@
 import Erdos1122.CenterShift
 import Erdos1122.AdditiveExpansion
+import Erdos1122.FiniteCutoffMoment
 
 /-! # Turán--Kubilius at either center, from the stated Ruzsa theorem -/
 
@@ -61,13 +62,22 @@ theorem ruzsa_second_moment_both_centers (hR : Ruzsa) :
         C * primePowerMoment f X 2 ∧
       initialMean (fun n => (f n - unweightedCenter f X) ^ 2) X ≤
         C * primePowerMoment f X 2 := by
-  obtain ⟨c, C, _, hC, hR⟩ := hR
-  refine ⟨2 * C + 2, by positivity, ?_⟩
+  obtain ⟨c, C, X₀, _, hC, hX₀, hR⟩ := hR
+  let B := 2 * ((⌊X₀⌋₊ : ℝ) * X₀ + (primePowerIndices X₀).card)
+  let A := max C B
+  have hA : 0 < A := hC.trans_le (le_max_left _ _)
+  refine ⟨2 * A + 2, by positivity, ?_⟩
   intro f hf X hX
-  have hh := (hR f hf X hX).2.trans
-    (mul_le_mul_of_nonneg_left (ruzsaInfimum_le_second f X) hC.le)
-  simp only [sq_abs] at hh
   have hn : 0 ≤ primePowerMoment f X 2 := by unfold primePowerMoment; positivity
+  have hh : initialMean (fun n => (f n - weightedCenter f X) ^ 2) X ≤
+      A * primePowerMoment f X 2 := by
+    by_cases hlarge : X₀ ≤ X
+    · have hh := (hR f hf X hlarge).2.trans
+        (mul_le_mul_of_nonneg_left (ruzsaInfimum_le_second f X) hC.le)
+      simp only [sq_abs] at hh
+      exact hh.trans (mul_le_mul_of_nonneg_right (le_max_left _ _) hn)
+    · exact (second_moment_finite_cutoff f hf X₀ X (by linarith) (le_of_not_ge hlarge)).trans
+        (mul_le_mul_of_nonneg_right (le_max_right _ _) hn)
   have hs := second_moment_center_shift f (unweightedCenter f X) (weightedCenter f X)
     X (by linarith)
   have he := center_shift_sq_le f X (by linarith)
