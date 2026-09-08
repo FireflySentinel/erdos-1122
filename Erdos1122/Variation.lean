@@ -1,4 +1,5 @@
 import Erdos1122.Averaging
+import Mathlib.Algebra.BigOperators.Intervals
 
 /-!
 # Total variation and short windows
@@ -116,6 +117,64 @@ theorem sum_square_window_discrepancy_le (f : ℕ → ℝ) (N H : ℕ) (hH : 0 <
       exact mul_le_mul_of_nonneg_left (sum_abs_window_discrepancy_le f N H hH)
         (by positivity)
     _ = 2 * K * (H : ℝ) * totalVariation f (N + H) := by ring
+
+def backwardWindowAverage (H : ℕ) (f : ℕ → ℝ) (n : ℕ) : ℝ :=
+  (∑ j ∈ range H, f (n - j)) / (H : ℝ)
+
+theorem backwardWindowAverage_reflect (f : ℕ → ℝ) (H B n : ℕ) :
+    backwardWindowAverage H f (B - n) =
+      windowAverage H (fun m => f (B - m)) n := by
+  simp only [backwardWindowAverage, windowAverage, Nat.sub_sub]
+
+theorem totalVariation_reflect (f : ℕ → ℝ) (B : ℕ) :
+    totalVariation (fun n => f (B - n)) (B + 1) = totalVariation f B := by
+  unfold totalVariation
+  rw [sum_range_succ]
+  dsimp only
+  rw [show B - (B + 1) = 0 by omega, Nat.sub_self, sub_self, abs_zero, add_zero]
+  calc
+    _ = ∑ n ∈ range B, |f (B - 1 - n + 1) - f (B - 1 - n)| := by
+      apply sum_congr rfl
+      intro n hn
+      have hnB := mem_range.mp hn
+      have h₁ : B - (n + 1) = B - 1 - n := by omega
+      have h₂ : B - n = B - 1 - n + 1 := by omega
+      simp only [h₁, h₂, abs_sub_comm]
+    _ = _ := sum_range_reflect (fun n => |f (n + 1) - f n|) B
+
+/-- Backward windows on precisely the indices `H, ..., H + N - 1`.
+The finite bound has the same constant as its forward counterpart. -/
+theorem sum_square_backward_discrepancy_le (f : ℕ → ℝ) (N H : ℕ) (hH : 0 < H)
+    (K : ℝ) (hK : 0 ≤ K) (hb : ∀ m < N + H, |f m| ≤ K) :
+    (∑ n ∈ range N, (f (H + n) - backwardWindowAverage H f (H + n)) ^ 2)
+      ≤ 2 * K * (H : ℝ) * totalVariation f (N + H) := by
+  let B := N + H - 1
+  have hB : B + 1 = N + H := by dsimp [B]; omega
+  have hb' : ∀ m < N + H, |f (B - m)| ≤ K := by
+    intro m _
+    apply hb
+    omega
+  have h := sum_square_window_discrepancy_le (fun m => f (B - m)) N H hH K hK hb'
+  rw [← hB, totalVariation_reflect] at h
+  have he : (∑ n ∈ range N, (f (B - n) -
+      windowAverage H (fun m => f (B - m)) n) ^ 2) =
+      ∑ n ∈ range N, (f (H + n) - backwardWindowAverage H f (H + n)) ^ 2 := by
+    simp_rw [← backwardWindowAverage_reflect]
+    rw [← sum_range_reflect (fun n =>
+      (f (H + n) - backwardWindowAverage H f (H + n)) ^ 2) N]
+    apply sum_congr rfl
+    intro n hn
+    have hnN := mem_range.mp hn
+    have heq : B - n = H + (N - 1 - n) := by dsimp [B]; omega
+    rw [heq]
+  rw [he] at h
+  apply h.trans
+  apply mul_le_mul_of_nonneg_left _ (by positivity)
+  unfold totalVariation
+  apply sum_le_sum_of_subset_of_nonneg
+  · exact range_mono (by omega)
+  · intro _ _ _
+    exact abs_nonneg _
 
 end
 

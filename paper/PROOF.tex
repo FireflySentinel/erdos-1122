@@ -257,29 +257,49 @@ Here $M$ is fixed in the term $o(1)$.
 \end{lemma}
 
 \begin{proof}
-We use the standard prime harmonic-sum and prime-counting estimates; see,
-for example, \cite{Tenenbaum}. For $p\le X^{1-M}$, the inner sum is at most
-$\log(1/M)+o(1)$. These primes
-contribute at most $M\log(1/M)+o(1)$.
-
-For $p>X^{1-M}$, discard the restriction $p\in\mathcal T$ and
-interchange the sums. The terms with $q>X^M$ are bounded by
+Write $P(y)=\sum_{p\le y}1/p$. We use Mertens' estimate and
+Chebyshev's bound in the forms
 \[
- \left(\sum_{X^{1-M}<p\le X}\frac1p\right)
- \left(\sum_{X^M<q\le X}\frac1q\right)
- \ll M\log(2/M)+o(1).
+ |P(y)-\log\log y-B|\le\frac A{\log y},\qquad
+ \vartheta(y):=\sum_{p\le y}\log p\le Dy\quad(y\ge2),
 \]
-For $q\le X^M$, the condition $X/p<q$ implies $p>X/q$.
-The bound $\pi(t)\ll t/\log t$ and partial summation give,
-uniformly for $2\le q\le X^M$,
+where $A\ge0$ and $B$ are absolute constants, and $D=\log4$ is
+admissible; see \cite{Tenenbaum}. Take $X$ large enough that $X^M\ge2$.
+Interchanging the sums, the expression in \eqref{eq:tail-weight} is
 \[
- \sum_{X/q<p\le X}\frac1p\ll\frac{\log q}{\log X}.
+ \sum_{q\le X}\frac1q
+       \sum_{\substack{p\in\mathcal T\\X/q<p}}\frac1p.
 \]
-Their total contribution is therefore
+For $q>X^M$, bound the inner sum by $M$. This part is at most
 \[
- \ll\frac1{\log X}\sum_{q\le X^M}\frac{\log q}{q}\ll M.
+ M\bigl(P(X)-P(X^M)\bigr)
+ \le M\log(1/M)+\frac{A(M+1)}{\log X}.
 \]
-This proves \eqref{eq:tail-weight}.
+For $2\le q\le X^M$, put $v=\log q/\log X\le M<1/4$ and
+discard the restriction $p\in\mathcal T$. Since
+$\log(X/q)\ge\tfrac12\log X$ and $X/q\ge2$, Mertens' estimate gives
+\begin{align*}
+ P(X)-P(X/q)
+ &\le-\log(1-v)+\frac{3A}{\log X}\\
+ &\le\left(2+\frac{3A}{\log2}\right)\frac{\log q}{\log X}.
+\end{align*}
+Here we used $-\log(1-v)\le2v$ and $\log q\ge\log2$.
+Partial summation gives
+\[
+ \sum_{q\le y}\frac{\log q}{q}
+ =\frac{\vartheta(y)}y+\int_2^y\frac{\vartheta(t)}{t^2}\,dt
+ \le D(1+\log y).
+\]
+Thus the part with $q\le X^M$ is at most
+$\left(2+3A/\log2\right)D\left(1+1/\log2\right)M$.
+Combining the two parts proves the explicit bound
+\[
+ \sum_{p\in\mathcal T}\frac1p\sum_{X/p<q\le X}\frac1q
+ \le C M\log(2/M)+\frac{A(M+1)}{\log X},
+ \qquad
+ C=1+\frac{(2+3A/\log2)D(1+1/\log2)}{\log2}.
+\]
+In particular, $C$ is independent of $M$, $X$, and $\mathcal T$.
 \end{proof}
 
 \section{Normalization}
@@ -312,9 +332,11 @@ No $u_p$ has absolute value exactly $1$.
 
 \begin{proof}
 The expression in braces in \eqref{eq:W} is continuous and coercive
-as a function of $c$, so its minimum is attained. The minimum is
-continuous in $s>0$, since minimizers remain bounded when $s$ varies
-over a compact subinterval. On writing $\lambda=sc$, the expression
+as a function of $c$, so its minimum is attained. Every minimizer
+satisfies $c^2\le\sum_{p\le X}1/p$, by comparison with $c=0$.
+The minimum can therefore be taken over a fixed compact interval,
+independent of $s$, and is continuous in $s>0$.
+On writing $\lambda=sc$, the expression
 becomes
 \[
  \frac{\lambda^2}{s^2}
@@ -343,14 +365,23 @@ nonzero number $c$, Fatou's lemma on the fixed primes would give
 \]
 which is impossible. Thus $c_X\to0$, and \eqref{eq:mass} follows.
 
-Finally, consider differentiation at the minimizer. At a point
-where $|f(p)/s_X-c\log p|=1$, the derivative of the corresponding
-summand has a downward jump of size $2\log p/p$ as $c$ increases.
-Coincident jumps add. A local minimum of a continuous piecewise
-differentiable function has left derivative at most zero and right
-derivative at least zero, so a downward jump excludes a local minimum.
-Consequently no such point is a minimizer. Differentiating
-\eqref{eq:W} at $c_X$ gives \eqref{eq:stationarity}.
+It remains to prove the stationary identity and exclude equality at
+the truncation threshold. Let $G(c)$ denote the expression in braces
+in \eqref{eq:W}, with $s=s_X$. For any subset $J$ of the primes at most
+$X$, the quadratic
+\[
+ Q_J(c)=c^2+\sum_{p\in J}\frac{(f(p)/s_X-c\log p)^2}{p}
+             +\sum_{\substack{p\le X\\p\notin J}}\frac1p
+\]
+lies above $G(c)$. Choose $J=\{p\le X:|u_p|<1\}$. Then
+$Q_J(c_X)=G(c_X)$, so $c_X$ also minimizes $Q_J$. The equation
+$Q_J'(c_X)=0$ is exactly \eqref{eq:stationarity}.
+If $|u_p|=1$ for some $p$, the quadratic $Q_{J\cup\{p\}}$ also
+touches $G$ at $c_X$ and must have derivative zero there, contradicting
+\[
+ Q_{J\cup\{p\}}'(c_X)-Q_J'(c_X)
+ =-\frac{2u_p\log p}{p}\ne0.\qedhere
+\]
 \end{proof}
 
 \section{Clipping the normalized function}

@@ -6,8 +6,8 @@ import Mathlib.Tactic
 # Finite averaging and variation
 
 The averaging contraction and bounded-variation estimates behind Section 6.
-Windows are indexed forwards; reversing the indexing gives the backward
-windows used in the paper.
+Windows here are indexed forwards. `Variation.lean` proves the backward
+reindexing identity and its quantitative consequence.
 -/
 
 namespace Erdos1122
@@ -35,6 +35,17 @@ theorem finite_mean_square_le {ι : Type*} (t : Finset ι) (f : ι → ℝ)
 
 def windowAverage (H : ℕ) (f : ℕ → ℝ) (n : ℕ) : ℝ :=
   (∑ j ∈ range H, f (n + j)) / (H : ℝ)
+
+/-- The fourth-power Jensen step in (2.8). -/
+theorem finite_mean_fourth_le {ι : Type*} (t : Finset ι) (f : ι → ℝ)
+    (ht : 0 < t.card) :
+    ((∑ i ∈ t, f i) / (t.card : ℝ)) ^ 4
+      ≤ (∑ i ∈ t, (f i) ^ 4) / (t.card : ℝ) := by
+  have h₂ := finite_mean_square_le t f ht
+  have h₄ := finite_mean_square_le t (fun i => f i ^ 2) ht
+  have hsq := mul_self_le_mul_self (sq_nonneg ((∑ i ∈ t, f i) / (t.card : ℝ))) h₂
+  simp only [← pow_two, ← pow_mul] at hsq h₄
+  exact hsq.trans (by simpa using h₄)
 
 theorem shifted_sum_le (f : ℕ → ℝ) (hf : ∀ n, 0 ≤ f n)
     (N H j : ℕ) (hj : j < H) :
@@ -81,6 +92,24 @@ theorem window_average_contraction (f : ℕ → ℝ) (N H : ℕ) (hH : 0 < H) :
       exact shifted_square_sum_le f N H j (mem_range.mp hj)
     _ = ∑ m ∈ range (N + H), f m ^ 2 := by
       simp [hHr.ne']
+
+theorem window_average_fourth_contraction (f : ℕ → ℝ) (N H : ℕ) (hH : 0 < H) :
+    (∑ n ∈ range N, (windowAverage H f n) ^ 4)
+      ≤ ∑ m ∈ range (N + H), f m ^ 4 := by
+  have hHr : (0 : ℝ) < H := by exact_mod_cast hH
+  calc
+    _ ≤ ∑ n ∈ range N, (∑ j ∈ range H, f (n + j) ^ 4) / (H : ℝ) := by
+      apply sum_le_sum
+      intro n _
+      simpa [windowAverage] using
+        finite_mean_fourth_le (range H) (fun j => f (n + j)) (by simpa using hH)
+    _ = (∑ j ∈ range H, ∑ n ∈ range N, f (n + j) ^ 4) / (H : ℝ) := by
+      rw [← sum_div, sum_comm]
+    _ ≤ (∑ _j ∈ range H, ∑ m ∈ range (N + H), f m ^ 4) / (H : ℝ) := by
+      apply div_le_div_of_nonneg_right _ hHr.le
+      exact sum_le_sum fun j hj => shifted_sum_le (fun m => f m ^ 4)
+        (fun _ => by positivity) N H j (mem_range.mp hj)
+    _ = _ := by simp [hHr.ne']
 
 theorem four_term_square_le (a b c d : ℝ) :
     (a + b + c + d) ^ 2 ≤ 4 * (a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2) := by

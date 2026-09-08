@@ -108,3 +108,67 @@ an admitted proof or adding an unlisted axiom makes this file fail to compile.
 /-- info: 'Erdos1122.higher_prime_power_union_bound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
 #print axioms Erdos1122.higher_prime_power_union_bound
+
+/-- info: 'Erdos1122.finite_mean_fourth_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.finite_mean_fourth_le
+
+/-- info: 'Erdos1122.window_average_fourth_contraction' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.window_average_fourth_contraction
+
+/-- info: 'Erdos1122.backwardWindowAverage_reflect' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.backwardWindowAverage_reflect
+
+/-- info: 'Erdos1122.totalVariation_reflect' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.totalVariation_reflect
+
+/-- info: 'Erdos1122.sum_square_backward_discrepancy_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.sum_square_backward_discrepancy_le
+
+/-- info: 'Erdos1122.scaledMinimum_attained' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.scaledMinimum_attained
+
+/-- info: 'Erdos1122.scaledMinimum_continuousOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.scaledMinimum_continuousOn
+
+/-- info: 'Erdos1122.scaledMinimum_antitoneOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.scaledMinimum_antitoneOn
+
+/-- info: 'Erdos1122.scaledMinimum_tendsto_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.scaledMinimum_tendsto_zero
+
+/-- info: 'Erdos1122.scaledMinimum_exists_scale' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.scaledMinimum_exists_scale
+
+/-- info: 'Erdos1122.scales_tendsto_atTop_of_level' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.scales_tendsto_atTop_of_level
+
+/-- info: 'Erdos1122.dyadic_divisor_center_identity_real' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.dyadic_divisor_center_identity_real
+
+/-- info: 'Erdos1122.prime_divisor_indicator_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.prime_divisor_indicator_le
+
+/-- info: 'Erdos1122.primeDivisorCount_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.primeDivisorCount_factorial
+
+/-- info: 'Erdos1122.prime_divisor_factorial_mean_le_real' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.prime_divisor_factorial_mean_le_real
+
+/-- info: 'Erdos1122.primeLogMoment_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.primeLogMoment_le

@@ -37,21 +37,26 @@ decreases is only assumed to have density zero, with no rate.
 This is a partial formalization: Theorem 1.1 itself is not proved in Lean. The cited
 analytic results enter as explicit hypotheses of the formalized statements.
 [FORMALIZATION.md](FORMALIZATION.md) states those hypotheses and lists what remains
-outside Lean. [Check.lean](Check.lean) guards the axiom dependencies of the formalized
+outside Lean. Chebyshev’s bound now comes from mathlib; Mertens remains an
+explicit input of the prime-tail lemma. [Check.lean](Check.lean) guards the axiom dependencies of the formalized
 lemmas to `propext`, `Classical.choice`, and `Quot.sound`.
 
 ## Proof correspondence
 
 | Manuscript | Lean source |
 |---|---|
+| Theorem 1.1 and the five cited inputs: proposition definitions and unproved assembly target | [Statements.lean](Erdos1122/Statements.lean) |
 | Lemma 2.1, first-to-second-moment transfer and assembly from dyadic bands | [ShortIntervals.lean](Erdos1122/ShortIntervals.lean) |
 | Lemma 2.1, first- and fourth-moment interpolation | [Interpolation.lean](Erdos1122/Interpolation.lean) |
-| Lemma 3.1, prime-tail weight, conditional on explicit Mertens and Chebyshev bounds | [PrimeHarmonic.lean](Erdos1122/PrimeHarmonic.lean), [PrimeTail.lean](Erdos1122/PrimeTail.lean), [PrimeMoment.lean](Erdos1122/PrimeMoment.lean) |
+| Lemma 3.1, prime-tail weight, conditional only on an explicit Mertens bound | [PrimeHarmonic.lean](Erdos1122/PrimeHarmonic.lean), [PrimeTail.lean](Erdos1122/PrimeTail.lean), [PrimeMoment.lean](Erdos1122/PrimeMoment.lean) |
 | Lemma 4.1, finite minimizer and the stationary identity | [Minimizer.lean](Erdos1122/Minimizer.lean) |
-| §4, weighted quadratic projection and its lower bound | [Projection.lean](Erdos1122/Projection.lean) |
+| Lemma 4.1, scale continuity, monotonicity, and intermediate-value attainment | [Scale.lean](Erdos1122/Scale.lean) |
+| (2.7), exact floor identity; (5.4), prime-divisor factorial moment | [FiniteCounting.lean](Erdos1122/FiniteCounting.lean) |
+| (2.8), fourth-power Jensen and window contraction | [Averaging.lean](Erdos1122/Averaging.lean) |
+| §5, weighted quadratic projection and its lower bound | [Projection.lean](Erdos1122/Projection.lean) |
 | §5, clipping bounds and the finite tail error | [Clipping.lean](Erdos1122/Clipping.lean) |
 | §5, union bound over higher prime powers | [PrimePowers.lean](Erdos1122/PrimePowers.lean) |
-| §5, window discrepancy from total variation | [Variation.lean](Erdos1122/Variation.lean), [Averaging.lean](Erdos1122/Averaging.lean) |
+| §6, forward and backward window discrepancy from total variation | [Variation.lean](Erdos1122/Variation.lean), [Averaging.lean](Erdos1122/Averaging.lean) |
 | §6, ordered choice of $K$ and $M$, and the variance contradiction | [Constants.lean](Erdos1122/Constants.lean), [Limits.lean](Erdos1122/Limits.lean) |
 
 ## Use of generative AI

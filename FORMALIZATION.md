@@ -6,6 +6,40 @@ Lemma 3.1. **It does not contain a Lean proof of the full Erdős Problem 1122.**
 Cited analytic results enter as explicit theorem hypotheses. No numerical
 sampling is involved.
 
+## Problem and cited statements
+
+[`Statements.lean`](Erdos1122/Statements.lean) defines the original problem,
+including coprime additivity on positive integers, the count $D_f(X)$, its
+density-zero hypothesis, and the conclusion $f(n)=c\log n$ with $c\ge0$.
+It also defines the real-valued forms of the five cited inputs:
+
+- `Mangerel`: Theorem 1.1, with an absolute constant quantified before
+  the function, real cutoff $X$, and integer window $10\le H\le X/100$.
+- `Ruzsa`: the two-sided second-moment estimate recorded in Mangerel,
+  Lemma 3.3 (Lemma 2.3 in arXiv v1), with center $A_0$.
+- `Elliott`: Theorem 1 at exponent four, with its original center
+  $\widetilde A_0$, without the factor $1-1/p$.
+- `ErdosV`: finite concentration and its equivalent truncated prime sum,
+  from Theorem V and the converse in the following paragraph.
+- `ErdosX`: existence of the limiting difference distribution and its
+  negative-support characterization, the parts of Theorem X used here.
+  Empirical distributions converge at continuity points, using the standard
+  right-continuous distribution convention. No condition on higher prime
+  powers has been added.
+
+The assembly target is explicitly defined as
+
+```lean
+main_of_cited : Prop :=
+  Mangerel → Ruzsa → Elliott → ErdosV → ErdosX → ErdosProblem1122
+```
+
+These are definitions of propositions, not proofs of them. In particular,
+`main_of_cited` is not a proved theorem. The implemented prime-tail lemma
+still takes a Mertens estimate as input, so `main_of_cited_and_mertens`
+records that additional dependency. Proving the five-input target will
+also require discharging that Mertens input.
+
 ## What is proved
 
 - [`Minimizer.lean`](Erdos1122/Minimizer.lean) proves the finite-dimensional
@@ -28,6 +62,14 @@ sampling is involved.
   unverified smooth point. The original weights $1/p$ and slopes $\log p$
   satisfy the positivity and nonzero-slope conditions.
 
+- [`Scale.lean`](Erdos1122/Scale.lean) proves that the minimum of
+  $c^2+\sum_i w_i\min\{(a_i/s-c\ell_i)^2,1\}$ is continuous and
+  nonincreasing for $s>0$, and tends to zero as $s\to\infty$.
+  If its value at $s_0>0$ exceeds $M>0$, it attains $M$ at some $s>s_0$.
+  The proof confines all minimizers to one compact interval independent
+  of $s$. A separate theorem proves $s_X\to\infty$ from fixed-scale
+  divergence and the level equation, with both inputs explicit.
+
 - [`Constants.lean`](Erdos1122/Constants.lean) proves that, given
   $c_0>0$ and arbitrary real $C_0,C_1$, one can first fix $K>1$ so that
   every sufficiently small positive $M<1/4$ satisfies
@@ -44,11 +86,14 @@ sampling is involved.
 - [`PrimeHarmonic.lean`](Erdos1122/PrimeHarmonic.lean), together with
   [`PrimeTail.lean`](Erdos1122/PrimeTail.lean) and
   [`PrimeMoment.lean`](Erdos1122/PrimeMoment.lean), proves Lemma 3.1
-  conditional on the following precise Mertens and Chebyshev bounds:
+  conditional only on the following precise Mertens bound:
 
   $$\left|\sum_{p\le y}\frac1p-\log\log y-B\right|
-       \le\frac A{\log y},\qquad
-    \vartheta(y)\le Dy\quad(y\ge2),\qquad A,D\ge0.$$
+       \le\frac A{\log y}\quad(y\ge2),\qquad A\ge0.$$
+
+  Chebyshev's bound is supplied by mathlib's
+  `Chebyshev.theta_le_log4_mul_x`, with $D=\log4$; it is no longer an
+  external hypothesis.
 
   The code proves the Abel partial-summation identity for
   $\sum_{p\le y}(\log p)/p$, the local prime-harmonic estimates, and the
@@ -59,7 +104,7 @@ sampling is involved.
 
   where
 
-  $$C=1+\frac{(2+3A/\log2)D(1+1/\log2)}{\log2}.$$
+  $$C=1+\frac{(2+3A/\log2)(\log4)(1+1/\log2)}{\log2}.$$
 
   Here $0<M<1/4$, $X\ge2$, $X^M\ge2$, and
   $\sum_{p\in T}1/p\le M$. The theorem `primeTailKernel_eventually`
@@ -80,6 +125,17 @@ sampling is involved.
   arrays with Mangerel's short averages, proving the particular dyadic
   cover, and deriving the center-error limits remain outside Lean.
   Those inputs are visible hypotheses of the assembly theorem.
+
+- [`FiniteCounting.lean`](Erdos1122/FiniteCounting.lean) proves the exact
+  floor-counting identity (2.7), for real as well as integer cutoffs.
+  It also proves
+
+  $$\mathbb E_X[T(T-1)]\le M^2,\qquad
+    \mathbf1_{T(n)\ge1}\le\sum_{p\in\mathcal T}\mathbf1_{p\mid n},$$
+
+  where $T(n)$ counts the primes of $\mathcal T$ dividing $n$ and
+  $\sum_{p\in\mathcal T}1/p\le M$. The factorial-moment bound counts
+  multiples of products of distinct primes; it assumes no independence.
 
 - [`PrimePowers.lean`](Erdos1122/PrimePowers.lean) proves
 
@@ -120,8 +176,9 @@ sampling is involved.
   This is the polynomial form of the first- and fourth-moment interpolation
   used in Lemma 2.1.
 
-- [`Averaging.lean`](Erdos1122/Averaging.lean) proves finite mean-square
-  contraction, the four-term comparison, and the identity expressing total
+- [`Averaging.lean`](Erdos1122/Averaging.lean) proves finite mean-square and
+  fourth-power Jensen inequalities and window contractions, including the
+  Jensen step in (2.8), the four-term comparison, and the identity expressing total
   variation in terms of negative increments and the endpoint difference.
 
 - [`Variation.lean`](Erdos1122/Variation.lean) proves the quantitative estimate
@@ -132,8 +189,9 @@ sampling is involved.
   $$
 
   for positive integer $H$ and $|Y(m)|\le K$ on $m<N+H$.
-  Here $A_H$ uses forward windows. Reindexing gives the backward-window
-  convention of the manuscript. The estimate supplies the finite inequality
+  Here $A_H$ uses forward windows. The file also proves the reflection
+  identity and the backward-window bound, with the same constant, on
+  exactly the indices $H,\ldots,H+N-1$. The estimate supplies the finite inequality
   behind its passage from small total variation to small window discrepancy.
 
 ## What remains outside Lean
@@ -141,8 +199,8 @@ sampling is involved.
 The Erdős concentration and difference-distribution theorems, the Ruzsa
 and Elliott moment estimates, and Mangerel's theorem are not proved here.
 The Mertens bound is a hypothesis of the conditional prime-tail result.
-The varying-scale construction of $s_X,c_X$ in Lemma 4.1, its convergence
-arguments, the mixed moment over tail primes, the remaining arithmetic
+The fixed-scale divergence from failure of concentration and the
+convergence $c_X\to0$ in Lemma 4.1, the mixed moment over tail primes, the remaining arithmetic
 steps of Lemma 2.1, and the instantiation of the final variance comparison
 for the manuscript's functions remain outside Lean. These are arguments
 in [`paper/PROOF.pdf`](paper/PROOF.pdf).

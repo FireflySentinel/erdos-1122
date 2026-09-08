@@ -51,10 +51,10 @@ theorem primeLogMoment_partial_summation (y : ℝ) (hy : 2 ≤ y) :
     ext t
     exact deriv_inv
 
-/-- Partial summation from a Chebyshev bound. The constant is independent of `y`. -/
-theorem primeLogMoment_le_of_theta_bound (A y : ℝ) (hA : 0 ≤ A) (hy : 2 ≤ y)
-    (hθ : ∀ t, 2 ≤ t → Chebyshev.theta t ≤ A * t) :
-    primeLogMoment y ≤ A * (1 + log y) := by
+/-- The prime moment bound using mathlib’s proved Chebyshev inequality. -/
+theorem primeLogMoment_le (y : ℝ) (hy : 2 ≤ y) :
+    primeLogMoment y ≤ (log 4) * (1 + log y) := by
+  have hA : 0 ≤ log (4 : ℝ) := (log_pos (by norm_num)).le
   have hcont : ContinuousOn (fun t : ℝ => (t ^ 2)⁻¹) (Set.uIcc 2 y) := by
     rw [Set.uIcc_of_le hy]
     intro t ht
@@ -63,23 +63,23 @@ theorem primeLogMoment_le_of_theta_bound (A y : ℝ) (hA : 0 ≤ A) (hy : 2 ≤ 
     exact ContinuousAt.continuousWithinAt (by fun_prop)
   have hi : IntervalIntegrable (fun t => Chebyshev.theta t / t ^ 2) volume 2 y := by
     simpa only [div_eq_mul_inv] using Chebyshev.theta_mono.intervalIntegrable.mul_continuousOn hcont
-  have hc : ContinuousOn (fun t : ℝ => A / t) (Set.uIcc 2 y) := by
+  have hc : ContinuousOn (fun t : ℝ => (log 4) / t) (Set.uIcc 2 y) := by
     rw [Set.uIcc_of_le hy]
     intro t ht
     have ht0 : t ≠ 0 := by linarith [ht.1]
     exact ContinuousAt.continuousWithinAt (by fun_prop)
   have hint := integral_mono_on hy hi hc.intervalIntegrable (fun t ht => by
     have ht0 : 0 < t := by linarith [ht.1]
-    have hh := div_le_div_of_nonneg_right (hθ t ht.1) (sq_nonneg t)
-    have heq : A * t / t ^ 2 = A / t := by field_simp
+    have hh := div_le_div_of_nonneg_right (Chebyshev.theta_le_log4_mul_x (by linarith [ht.1])) (sq_nonneg t)
+    have heq : (log 4) * t / t ^ 2 = (log 4) / t := by field_simp
     exact hh.trans_eq heq)
-  have heval : (∫ t in 2..y, A / t) = A * log (y / 2) := by
+  have heval : (∫ t in 2..y, (log 4) / t) = (log 4) * log (y / 2) := by
     simp_rw [div_eq_mul_inv]
     rw [intervalIntegral.integral_const_mul, integral_inv_of_pos (by norm_num) (by linarith)]
     rfl
   rw [heval] at hint
-  have hfront : Chebyshev.theta y / y ≤ A := by
-    exact (div_le_iff₀ (by linarith : 0 < y)).2 (hθ y hy)
+  have hfront : Chebyshev.theta y / y ≤ (log 4) := by
+    exact (div_le_iff₀ (by linarith : 0 < y)).2 (Chebyshev.theta_le_log4_mul_x (by linarith))
   rw [primeLogMoment_partial_summation y hy]
   have hlog : log (y / 2) ≤ log y := by
     rw [log_div (by linarith) (by norm_num)]

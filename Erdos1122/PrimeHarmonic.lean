@@ -130,12 +130,11 @@ theorem primeHarmonic_small_tail (A B X M q : ℝ) (hA : 0 ≤ A)
   nlinarith only [hmain, hlogbound, herr, hmul]
 
 /-- The small-prime logarithmic moment; the coefficient is independent of `M`. -/
-theorem normalized_primeLogMoment_bound (D X M : ℝ) (hD : 0 ≤ D)
-    (hθ : ∀ t, 2 ≤ t → Chebyshev.theta t ≤ D * t)
+theorem normalized_primeLogMoment_bound (X M : ℝ)
     (hX : 2 ≤ X) (hM1 : M ≤ 1) (hXM : 2 ≤ X ^ M) :
     (∑ p ∈ Nat.primesLE ⌊X⌋₊, if log p / log X ≤ M
       then (1 / (p : ℝ)) * (log p / log X) else 0) ≤
-      (D * (1 + 1 / log 2)) * M := by
+      ((log 4) * (1 + 1 / log 2)) * M := by
   have hxpos : 0 < X := by linarith
   have hlog : 0 < log X := log_pos (by linarith)
   have hlog2 : 0 < log (2 : ℝ) := log_pos (by norm_num)
@@ -152,10 +151,10 @@ theorem normalized_primeLogMoment_bound (D X M : ℝ) (hD : 0 ≤ D)
     simp only [normalized_log_le_iff X p M (by linarith) hp0]
     split_ifs <;> ring
   rw [heq]
-  have hmoment := primeLogMoment_le_of_theta_bound D (X ^ M) hD hXM hθ
+  have hmoment := primeLogMoment_le (X ^ M) hXM
   have hscale : log 2 ≤ log (X ^ M) := log_le_log (by norm_num) hXM
   have hratio : 1 ≤ log (X ^ M) / log 2 := (le_div_iff₀ hlog2).2 (by simpa using hscale)
-  have hm := mul_le_mul_of_nonneg_left hratio hD
+  have hm := mul_le_mul_of_nonneg_left hratio (show 0 ≤ log (4 : ℝ) from (log_pos (by norm_num)).le)
   apply (div_le_iff₀ hlog).2
   rw [log_rpow hxpos M] at hmoment hm
   simp only [div_eq_mul_inv] at hmoment hm ⊢
@@ -180,21 +179,20 @@ theorem primeTailKernel_eq_harmonicKernel (T : Finset ℕ) (X : ℝ) (hX : 1 < X
   simp only [add_comm (log p / log X), normalized_log_cross_iff X q p hX hq0 hp0]
 
 /-- Lemma 3.1 with explicit error and constants, conditional only on the
-stated Mertens and Chebyshev bounds. -/
-theorem primeTailKernel_bound (A B D X M : ℝ) (T : Finset ℕ)
-    (hA : 0 ≤ A) (hD : 0 ≤ D) (hmertens : MertensBound A B)
-    (hθ : ∀ t, 2 ≤ t → Chebyshev.theta t ≤ D * t)
+stated Mertens bound; Chebyshev’s inequality is proved in mathlib. -/
+theorem primeTailKernel_bound (A B X M : ℝ) (T : Finset ℕ)
+    (hA : 0 ≤ A) (hmertens : MertensBound A B)
     (hX : 2 ≤ X) (hM : 0 < M) (hMquarter : M < 1 / 4) (hXM : 2 ≤ X ^ M)
     (hT : T ⊆ Nat.primesLE ⌊X⌋₊) (hmass : ∑ p ∈ T, 1 / (p : ℝ) ≤ M) :
     primeTailKernel T X ≤
       M * (log (1 / M) + A / log X + A / (M * log X)) +
-        (2 + 3 * A / log 2) * (D * (1 + 1 / log 2)) * M := by
+        (2 + 3 * A / log 2) * ((log 4) * (1 + 1 / log 2)) * M := by
   rw [primeTailKernel_eq_harmonicKernel T X (by linarith) hT]
   apply harmonicKernel_bound T (Nat.primesLE ⌊X⌋₊)
     (fun p => 1 / (p : ℝ)) (fun p => log p / log X) hT
     (fun _ _ => by positivity) M _ _ _ hM.le (by positivity) hmass
     (primeHarmonic_large_tail A B X M hmertens hX hM (by linarith) hXM) _
-    (normalized_primeLogMoment_bound D X M hD hθ hX (by linarith) hXM)
+    (normalized_primeLogMoment_bound X M hX (by linarith) hXM)
   intro q hq hqM
   have hq2 : (2 : ℝ) ≤ q := by exact_mod_cast (Nat.prime_of_mem_primesLE hq).two_le
   have hqpos : (0 : ℝ) < q := by linarith
@@ -212,19 +210,18 @@ theorem primeTailKernel_bound (A B D X M : ℝ) (T : Finset ℕ)
   exact primeHarmonic_small_tail A B X M q hA hmertens hX hM hMquarter hXM hq2 hqM
 
 /-- An explicit version of `O(M log(2/M)) + o_X(1)`. The displayed constant
-depends on the two cited bounds, and is independent of both `M` and `T`. -/
-theorem primeTailKernel_bound_log (A B D X M : ℝ) (T : Finset ℕ)
-    (hA : 0 ≤ A) (hD : 0 ≤ D) (hmertens : MertensBound A B)
-    (hθ : ∀ t, 2 ≤ t → Chebyshev.theta t ≤ D * t)
+depends only on the Mertens constant, and is independent of both `M` and `T`. -/
+theorem primeTailKernel_bound_log (A B X M : ℝ) (T : Finset ℕ)
+    (hA : 0 ≤ A) (hmertens : MertensBound A B)
     (hX : 2 ≤ X) (hM : 0 < M) (hMquarter : M < 1 / 4) (hXM : 2 ≤ X ^ M)
     (hT : T ⊆ Nat.primesLE ⌊X⌋₊) (hmass : ∑ p ∈ T, 1 / (p : ℝ) ≤ M) :
     primeTailKernel T X ≤
-      (1 + (2 + 3 * A / log 2) * (D * (1 + 1 / log 2)) / log 2) *
+      (1 + (2 + 3 * A / log 2) * ((log 4) * (1 + 1 / log 2)) / log 2) *
         M * log (2 / M) + A * (M + 1) / log X := by
-  have h := primeTailKernel_bound A B D X M T hA hD hmertens hθ hX hM hMquarter hXM hT hmass
+  have h := primeTailKernel_bound A B X M T hA hmertens hX hM hMquarter hXM hT hmass
   have hlog2 : 0 < log (2 : ℝ) := log_pos (by norm_num)
   have hlogX : 0 < log X := log_pos (by linarith)
-  let R := (2 + 3 * A / log 2) * (D * (1 + 1 / log 2))
+  let R := (2 + 3 * A / log 2) * ((log 4) * (1 + 1 / log 2))
   have hR : 0 ≤ R := by dsimp [R]; positivity
   have hratio : 2 ≤ 2 / M := (le_div_iff₀ hM).2 (by linarith)
   have hloglarge : log 2 ≤ log (2 / M) := log_le_log (by norm_num) hratio
@@ -248,19 +245,18 @@ theorem primeTailKernel_error_tendsto (A M : ℝ) :
   tendsto_log_atTop.const_div_atTop (A * (M + 1))
 
 /-- Uniformity over `T` is inside the eventual quantifier. `M` is fixed first. -/
-theorem primeTailKernel_eventually (A B D : ℝ) (hA : 0 ≤ A) (hD : 0 ≤ D)
+theorem primeTailKernel_eventually (A B : ℝ) (hA : 0 ≤ A)
     (hmertens : MertensBound A B)
-    (hθ : ∀ t, 2 ≤ t → Chebyshev.theta t ≤ D * t)
     (M : ℝ) (hM : 0 < M) (hMquarter : M < 1 / 4) :
     ∀ᶠ X : ℝ in Filter.atTop, ∀ T : Finset ℕ,
       T ⊆ Nat.primesLE ⌊X⌋₊ → (∑ p ∈ T, 1 / (p : ℝ)) ≤ M →
       primeTailKernel T X ≤
-        (1 + (2 + 3 * A / log 2) * (D * (1 + 1 / log 2)) / log 2) *
+        (1 + (2 + 3 * A / log 2) * ((log 4) * (1 + 1 / log 2)) / log 2) *
           M * log (2 / M) + A * (M + 1) / log X := by
   filter_upwards [Filter.eventually_ge_atTop (2 : ℝ),
     (tendsto_rpow_atTop hM).eventually (Filter.eventually_ge_atTop (2 : ℝ))] with X hX hXM
   intro T hT hmass
-  exact primeTailKernel_bound_log A B D X M T hA hD hmertens hθ hX hM hMquarter hXM hT hmass
+  exact primeTailKernel_bound_log A B X M T hA hmertens hX hM hMquarter hXM hT hmass
 
 end
 

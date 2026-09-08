@@ -9,3 +9,6 @@ import Erdos1122.Limits
 import Erdos1122.ShortIntervals
 import Erdos1122.PrimeHarmonic
 import Erdos1122.PrimePowers
+import Erdos1122.Statements
+import Erdos1122.Scale
+import Erdos1122.FiniteCounting
