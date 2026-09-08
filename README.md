@@ -20,15 +20,14 @@ No restriction is placed on the values of $f$ at higher prime powers.
 
 Two results of Erdős reduce the theorem to *finite concentration*: that some interval of
 a fixed length holds a positive proportion of the values $f(n)$, $n\le X$, for arbitrarily
-large $X$. Assume this fails. Normalizing $f$ and subtracting a logarithm makes the
-truncated quadratic mass of the prime values equal to a small fixed $M$, and the
-minimizing logarithmic coefficient gives an orthogonality identity. A bounded clipping of
-the normalized function is then compared with the strongly additive function obtained by
-clipping its prime values: their mean-square difference is small enough for the clipped
-function to keep a positive variance, while the density hypothesis makes it almost
-constant on a typical interval of any fixed length. Mangerel's first-moment theorem for
-short intervals, with the moment estimates of Ruzsa and Hildebrand, then forces a variance
-smaller than the moment lower bound permits.
+large $X$. Assume this fails. Normalizing $f$ and subtracting a logarithmic term makes the
+truncated quadratic mass of the prime values a fixed small number, and the minimizing
+logarithmic coefficient gives an orthogonality identity. A bounded clipping of the
+normalized function is then compared with the strongly additive function obtained by
+clipping its prime values. Ruzsa's second-moment estimate and Elliott's high-power
+Turán–Kubilius inequality give the clipped function a positive variance, while the density
+hypothesis and Mangerel's first-moment theorem for short intervals force the same variance
+to vanish.
 
 ## Contents
 
@@ -37,6 +36,6 @@ This preprint carries no Lean formalization.
 
 ## Use of generative AI
 
-The proofs and the first draft were generated with GPT-6 Astra through Codex; a separate
-instance of the same model reviewed the arguments and their use of the cited results.
-The author checked the arguments and is responsible for the content.
+GPT-6 Astra was used to generate the mathematical proofs and draft the manuscript.
+GPT-5.6 Sol and Claude Opus 5 were used only for editorial review of the exposition.
+The author reviewed the final manuscript and takes full responsibility for its content.

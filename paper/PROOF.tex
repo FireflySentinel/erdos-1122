@@ -33,8 +33,8 @@ This answers a conjecture of Erd\H{o}s from 1946, listed as Problem~1122
 on the Erd\H{o}s Problems website. The main step is to deduce finite
 concentration without a growth assumption on the values at prime powers.
 A truncated normalization and a bounded clipping reduce this step to
-Mangerel's first-moment theorem for short intervals and the moment
-estimates of Ruzsa and Hildebrand.
+Mangerel's first-moment theorem for short intervals, Ruzsa's
+second-moment estimate, and Elliott's high-power Tur\'an--Kubilius inequality.
 \end{abstract}
 \maketitle
 
@@ -55,6 +55,16 @@ Let $f\colon\N\to\R$ be additive. If
 then there is a constant $c\ge0$ such that $f(n)=c\log n$ for every
 $n\in\N$.
 \end{theorem}
+
+Erd\H{o}s also proved that $f(n+1)-f(n)=o(1)$ implies
+$f(n)=c\log n$. K\'atai and independently Wirsing weakened this to the
+averaged condition \cite{Katai,Wirsing}:
+\[
+ \frac1X\sum_{n\le X}|f(n+1)-f(n)|\longrightarrow0.
+\]
+Hildebrand later proved Erd\H{o}s's density-one
+version of this assertion \cite{Hildebrand}, while Elliott developed
+broader quantitative and linear-form variants \cite[Ch.~11]{ElliottBook}.
 
 Mangerel established an approximate logarithmic representation under the
 same density hypothesis \cite[Theorem~1.9]{Mangerel}. For completely
@@ -79,17 +89,12 @@ $f(n+1)-f(n)$ has no mass on $(-\infty,0)$ only when
 $f(n)=c\log n$ for all $n$. Both results apply to general additive
 functions, with no restriction on their values at higher prime powers.
 
-The proof below establishes finite concentration by contradiction.
-If it fails, we normalize $f$ and subtract a logarithm so that the
-truncated quadratic mass of the prime values is a small fixed number
-$M$. The minimizing logarithmic coefficient supplies an orthogonality
-identity. We then compare a bounded clipping of the normalized function
-with a strongly additive function obtained by clipping its prime values.
-Their mean-square difference is small enough to retain a positive
-variance. On the other hand, the density hypothesis makes the bounded
-function almost constant on a typical interval of any fixed length.
-Short-interval averaging forces the variance of the strongly additive
-function to be smaller than its moment lower bound permits.
+It therefore suffices to prove finite concentration. Assuming the
+contrary, we normalize $f$ and subtract a logarithmic term so that the
+truncated quadratic mass of its prime values is fixed. After clipping,
+the Ruzsa--Elliott moment estimates give a positive variance for a
+strongly additive approximation, while the density hypothesis and
+Mangerel's short-interval theorem force the same variance to vanish.
 
 \subsection*{Notation}
 Letters $p,q$ denote primes. We write
@@ -112,30 +117,51 @@ may depend on $X$.
 
 For an additive function $z$, define
 \[
- A_0(z,X)=\sum_{p^k\le X}\frac{z(p^k)}{p^k},\qquad
+ A_0(z,X)=\sum_{p^k\le X}\frac{z(p^k)}{p^k}\left(1-\frac1p\right),
+ \qquad
+ \widetilde A_0(z,X)=\sum_{p^k\le X}\frac{z(p^k)}{p^k},
+\]
+and
+\[
  B_j(z,X)^j=\sum_{p^k\le X}\frac{|z(p^k)|^j}{p^k}\quad(j=2,4).
 \]
-We use the following consequences of Hildebrand's moment theorem
-\cite[Th\'eor\`eme~$1^*$, equation~(6)]{Hildebrand}:
-\begin{align}
+Ruzsa's second-moment estimate \cite{Ruzsa}, in the form recorded by
+Mangerel \cite[Lemma~3.3]{Mangerel}, gives
+\begin{equation}\label{eq:ruzsa}
  \E_X|z-A_0(z,X)|^2
- &\asymp\inf_{b\in\R}\left(b^2+
-       \sum_{p^k\le X}\frac{|z(p^k)-b\log(p^k)|^2}{p^k}\right),
-       \label{eq:ruzsa}\\
+ \asymp\inf_{b\in\R}\left(b^2+
+       \sum_{p^k\le X}\frac{|z(p^k)-b\log(p^k)|^2}{p^k}\right).
+\end{equation}
+Elliott's high-power Tur\'an--Kubilius inequality
+\cite[Theorem~1]{Elliott}, with exponent $4$, gives
+\[
+ \E_X|z-\widetilde A_0(z,X)|^4
+ \ll B_2(z,X)^4+B_4(z,X)^4.
+\]
+Since
+\[
+ |\widetilde A_0(z,X)-A_0(z,X)|
+ \le\sum_{p^k\le X}\frac{|z(p^k)|}{p^{k+1}}
+ \ll B_2(z,X),
+\]
+the same bound holds with $A_0$ as center:
+\begin{equation}\label{eq:fourth}
  \E_X|z-A_0(z,X)|^4
- &\ll B_2(z,X)^4+B_4(z,X)^4.\label{eq:fourth}
-\end{align}
-The second-moment equivalence \eqref{eq:ruzsa} is due to Ruzsa;
-Hildebrand's theorem includes it as the case of exponent~$2$.
+ \ll B_2(z,X)^4+B_4(z,X)^4.
+\end{equation}
 
 If $z$ is strongly additive, then
-\begin{equation}\label{eq:center-difference}
- |A_0(z,X)-\mu_z(X)|
- \le\sum_{p\le X}\frac{|a_p|}{p(p-1)}
- \ll\left(\sum_{p\le X}\frac{a_p^2}p\right)^{1/2}.
-\end{equation}
-Also $B_2(z,X)^2\le2\sum_{p\le X}a_p^2/p$, with the analogous
-bound for $B_4$. Thus, if $|a_p|\le L$ and
+\begin{align}
+ |\widetilde A_0(z,X)-\mu_z(X)|
+ &\le\sum_{p\le X}\frac{|a_p|}{p(p-1)},\notag\\
+ |\widetilde A_0(z,X)-A_0(z,X)|
+ &\le\sum_{p^k\le X}\frac{|a_p|}{p^{k+1}}.
+ \label{eq:center-difference}
+\end{align}
+Both quantities are
+$\ll (\sum_{p\le X}a_p^2/p)^{1/2}$. Also
+$B_2(z,X)^2\le2\sum_{p\le X}a_p^2/p$, with the analogous bound for
+$B_4$. Thus, if $|a_p|\le L$ and
 $\sum_{p\le X}a_p^2/p\le V$, then
 \begin{equation}\label{eq:bounded-moments}
  \E_X|z-\mu_z(X)|^2\ll V,\qquad
@@ -173,8 +199,8 @@ $10\le H\le Y/100$,
  \ll\left(\sqrt{\frac{\log\log H}{\log H}}
                 +(\log Y)^{-1/800}\right)\sqrt{2V}.
 \end{equation}
-The estimate is uniform over all additive functions; in particular, it
-applies to the changing family $z_X$.
+Here $B_2(z_X,Y)^2\le 2V$, and the estimate is uniform over additive
+functions, so it applies to the family $z_X$.
 
 Counting multiples of each prime gives
 \begin{equation}\label{eq:dyadic-center}
@@ -203,8 +229,8 @@ Together with \eqref{eq:mangerel} and
 \eqref{eq:discrepancy-fourth}, this proves the required iterated limit
 on each fixed dyadic band $Y\asymp X$.
 
-For completeness, this dyadic conclusion extends to the whole interval
-as follows. On each of finitely many bands with $Y\asymp X$, we have
+This dyadic conclusion extends to the whole interval. On each of
+finitely many bands with $Y\asymp X$, we have
 \[
  |\mu_{z_X}(X)-\mu_{z_X}(Y)|
  \le L\sum_{Y<p\le X}\frac1p=o(1).
@@ -231,8 +257,9 @@ Here $M$ is fixed in the term $o(1)$.
 \end{lemma}
 
 \begin{proof}
-For $p\le X^{1-M}$, the inner sum is at most
-$\log(1/M)+o(1)$ by the prime harmonic-sum estimate. These primes
+We use the standard prime harmonic-sum and prime-counting estimates; see,
+for example, \cite{Tenenbaum}. For $p\le X^{1-M}$, the inner sum is at most
+$\log(1/M)+o(1)$. These primes
 contribute at most $M\log(1/M)+o(1)$.
 
 For $p>X^{1-M}$, discard the restriction $p\in\mathcal T$ and
@@ -296,7 +323,7 @@ becomes
 It follows that $W_X(s)$ is nonincreasing in $s$, and it tends to
 zero as $s\to\infty$ for fixed $X$.
 
-For each fixed $s>0$, we claim that $W_X(s)\to\infty$. Otherwise
+For each fixed $s>0$, $W_X(s)\to\infty$. Otherwise
 some unbounded sequence of $X$ would have bounded $W_X(s)$ and
 bounded minimizers. Pass to a subsequence along which the minimizers
 converge to $c$. Fatou's lemma gives
@@ -316,7 +343,7 @@ nonzero number $c$, Fatou's lemma on the fixed primes would give
 \]
 which is impossible. Thus $c_X\to0$, and \eqref{eq:mass} follows.
 
-It remains to justify differentiation at the minimizer. At a point
+Finally, consider differentiation at the minimizer. At a point
 where $|f(p)/s_X-c\log p|=1$, the derivative of the corresponding
 summand has a downward jump of size $2\log p/p$ as $c$ increases.
 Coincident jumps add. A local minimum of a continuous piecewise
@@ -343,8 +370,8 @@ Coefficients at primes greater than $X$ are set to zero. Define
  Y(n)&=\clip\left(\frac{f(n)}{s_X}-c_X\log n-a_X\right).
  \end{split}
 \end{equation}
-The distinction is that $Y$ clips the value of the additive function,
-whereas $z_X$ clips each prime value before adding.
+Thus $Y$ clips the value of the additive function, whereas $z_X$
+clips the prime contributions individually.
 
 \begin{lemma}\label{lem:clipping}
 There is an absolute constant $C$ such that
@@ -368,32 +395,36 @@ distinct primes gives
        \frac1X\left\lfloor\frac X{pq}\right\rfloor
  \le M^2.
 \end{equation}
-We also need
+Moreover,
 \begin{equation}\label{eq:mixed-moment}
  \E_X\bigl(S^2\ind_{T\ge1}\bigr)
  \ll M^2\log(2/M)+o(1).
 \end{equation}
 For $p\in\mathcal T$, the coefficient of $p$ in $S_0$ is zero,
 so $S_0(pm)=S_0(m)$ for every $m$, including multiples of $p$.
-Writing $y=X/p$ and using \eqref{eq:bounded-moments} at $y$, we get
+Writing $y=X/p$, for $y\ge2$ equation \eqref{eq:bounded-moments} gives
 \begin{align*}
  \E_X\bigl(S^2\ind_{p\mid n}\bigr)
  &=\frac1p\frac1y\sum_{m\le y}|S_0(m)-a_X|^2\\
  &\ll\frac1p\left(M+
            |a_X-\mu_{S_0}(y)|^2\right).
 \end{align*}
-At $y=1$, we have $S_0(1)=\mu_{S_0}(1)=0$, so the same bound follows
-from the mean-shift term. By Cauchy--Schwarz,
+The case $y=1$ is immediate. By Cauchy--Schwarz,
 \[
  |a_X-\mu_{S_0}(X/p)|^2
  \le M\sum_{X/p<q\le X}\frac1q.
 \]
-Now use $\ind_{T\ge1}\le\sum_{p\in\mathcal T}\ind_{p\mid n}$,
-sum over $p\in\mathcal T$, and apply
-Lemma~\ref{lem:tail-weight}. This proves \eqref{eq:mixed-moment}.
+Hence, using $\ind_{T\ge1}\le\sum_{p\in\mathcal T}\ind_{p\mid n}$,
+\begin{align*}
+ \E_X\bigl(S^2\ind_{T\ge1}\bigr)
+ &\ll M\sum_{p\in\mathcal T}\frac1p
+ +M\sum_{p\in\mathcal T}\frac1p
+       \sum_{X/p<q\le X}\frac1q\\
+ &\ll M^2+M^2\log(2/M)+o(1),
+\end{align*}
+by Lemma~\ref{lem:tail-weight}. This proves \eqref{eq:mixed-moment}.
 
-First replace the input to the clipping by the sum of its prime
-contributions, and write
+Set
 \[
  Y_*(n)=\clip\left(S(n)+
                   \sum_{\substack{p\mid n\\p\in\mathcal T}}u_p\right).
@@ -406,7 +437,12 @@ $\clip$ gives
 \[
  |\clip(S+v)-S-\clip(v)|\le2|S|.
 \]
-If $T(n)\ge2$, boundedness of $\clip$ gives
+If $T(n)\ge2$, then
+\[
+ |Y_*(n)-Z(n)|\le |S(n)|+K(T(n)+1)
+ \le |S(n)|+\frac32KT(n),
+\]
+and hence
 \[
  |Y_*(n)-Z(n)|^2\le C S(n)^2+C K^2T(n)(T(n)-1).
 \]
@@ -416,19 +452,25 @@ Equations \eqref{eq:S-fourth}--\eqref{eq:mixed-moment} therefore imply
  \ll\frac M{K^2}+M^2\log(2/M)+K^2M^2+o(1).
 \end{equation}
 
-We next compare $Y$ and $Y_*$. If $p^k\Vert n$ with $k\ge2$, its
+To compare $Y$ and $Y_*$, suppose $p^k\Vert n$ with $k\ge2$. Its
 contribution to the difference between the two unclipped expressions is
 \[
  \frac{f(p^k)-f(p)}{s_X}-c_X(k-1)\log p.
 \]
 This tends to zero for each fixed prime power. Moreover,
-$\sum_{p,k\ge2}p^{-k}<\infty$. Given $\varepsilon>0$, choose a
-finite set of prime powers so that the sum of $p^{-k}$ outside the set
-is less than $\varepsilon$. Uniformly in $X$, the proportion of
-integers divisible by any of those excluded prime powers is at most
-$\varepsilon$. On the complement, only the fixed finite set can
-contribute, and its total contribution tends uniformly to zero.
-Thus the unclipped difference tends to zero in probability.
+$\sum_{p,k\ge2}p^{-k}<\infty$. Given $\varepsilon>0$, choose a finite set $\mathcal F$ of prime
+powers such that
+\[
+ \sum_{\substack{p^k\notin\mathcal F\\k\ge2}}p^{-k}<\varepsilon.
+\]
+Then, uniformly in $X$,
+\[
+ \frac1X\#\{n\le X:\text{ some }p^k\notin\mathcal F,\ k\ge2,
+                    \text{ divides }n\}<\varepsilon.
+\]
+Outside this exceptional set, only the fixed prime powers in
+$\mathcal F$ contribute, and their total contribution tends uniformly
+to zero. Thus the unclipped difference tends to zero in probability.
 The function $\clip$ is bounded and Lipschitz, so
 \[
  \E_X|Y-Y_*|^2=o(1).
@@ -455,7 +497,9 @@ On $p\notin\mathcal T$ we have $v_p=u_p$, so
  \left|\sum_{p\le X}\frac{v_p\log p}{p}\right|
  \le |c_X|+KM\log X.
 \end{equation}
-Using $\sum_{p\le X}(\log p)^2/p\sim\tfrac12(\log X)^2$, we obtain
+Using the standard estimate
+$\sum_{p\le X}(\log p)^2/p\sim\tfrac12(\log X)^2$
+\cite{Tenenbaum}, we obtain
 \begin{align}
  \inf_{b\in\R}\sum_{p\le X}\frac{(v_p-b\log p)^2}{p}
  &=\sum_{p\le X}\frac{v_p^2}{p}
@@ -477,8 +521,8 @@ Combining this with \eqref{eq:projection} proves
 
 \section{Proof of Theorem~\ref{thm:main}}
 
-Suppose first, as in Sections~4 and~5, that $f$ has no finite
-concentration. The function $Y$ in \eqref{eq:Y-and-Z} is bounded
+Assume for contradiction that $f$ has no finite concentration. The
+function $Y$ in \eqref{eq:Y-and-Z} is bounded
 between $-K$ and $K$. If $f(n+1)\ge f(n)$, monotonicity and
 Lipschitz continuity of $\clip$ imply
 \[
@@ -536,10 +580,11 @@ remainder $r(n)=f(n)-c\log n$ satisfies
 \[
  \sum_p\frac{\min\{r(p)^2,1\}}p<\infty.
 \]
-By his Theorem~X, the differences $f(n+1)-f(n)$ have a limiting
-distribution, and this distribution has no negative mass only if
-$r$ is identically zero. For each $\varepsilon>0$, our hypothesis
-gives
+Erd\H{o}s's Theorem~X gives a limiting distribution for
+$f(n+1)-f(n)$, and absence of mass on $(-\infty,0)$ forces $r$ to be
+identically zero; see also Hildebrand's later Erd\H{o}s--Wintner theorem
+for differences of additive functions \cite{Hildebrand}. For each
+$\varepsilon>0$, the hypothesis gives
 \[
  \frac1X\#\{n\le X:f(n+1)-f(n)<-\varepsilon\}
  \le\frac{D_f(X)}X\longrightarrow0.
@@ -549,13 +594,12 @@ It follows that $f(n)=c\log n$ for all $n$. Finally, $c<0$ would
 give a decrease at every integer, so $c\ge0$.\qed
 
 \section*{Declaration of generative AI use}
-OpenAI GPT-6 Astra, accessed through Codex, was used to develop the
-mathematical arguments and draft this manuscript. A separate instance
-of the same model reviewed the proof and its use of the cited results.
-This draft is provided for human review; the model review is not a
-substitute for review by the author or for peer review.
+GPT-6 Astra was used to generate the mathematical proofs and draft the
+manuscript. GPT-5.6 Sol and Claude Opus 5 were used only for editorial
+review of the exposition. The author reviewed the final manuscript and
+takes full responsibility for its content.
 
-\begin{thebibliography}{9}
+\begin{thebibliography}{99}
 
 \bibitem{Erdos}
 P.~Erd\H{o}s,
@@ -563,11 +607,30 @@ P.~Erd\H{o}s,
 Ann. of Math. (2) \textbf{47} (1946), no.~1, 1--20.
 \url{https://combinatorica.hu/~p_erdos/1946-06.pdf}.
 
+\bibitem{Elliott}
+P.~D.~T.~A.~Elliott,
+\emph{High-power analogues of the Tur\'an--Kubilius inequality, and an application to number theory},
+Canad. J. Math. \textbf{32} (1980), no.~4, 893--907.
+\href{https://doi.org/10.4153/CJM-1980-068-0}{doi:10.4153/CJM-1980-068-0}.
+
+\bibitem{ElliottBook}
+P.~D.~T.~A.~Elliott,
+\emph{Arithmetic Functions and Integer Products},
+Grundlehren der mathematischen Wissenschaften, vol.~272,
+Springer-Verlag, New York, 1985.
+\href{https://doi.org/10.1007/978-1-4613-8548-6}{doi:10.1007/978-1-4613-8548-6}.
+
 \bibitem{Hildebrand}
 A.~Hildebrand,
-\emph{Sur les moments d'une fonction additive},
-Ann. Inst. Fourier (Grenoble) \textbf{33} (1983), no.~3, 1--22.
-\url{https://www.numdam.org/item/AIF_1983__33_3_1_0/}.
+\emph{An Erd\H{o}s--Wintner theorem for differences of additive functions},
+Trans. Amer. Math. Soc. \textbf{310} (1988), no.~1, 257--276.
+\href{https://doi.org/10.1090/S0002-9947-1988-0965752-X}{doi:10.1090/S0002-9947-1988-0965752-X}.
+
+\bibitem{Katai}
+I.~K\'atai,
+\emph{On a problem of P. Erd\H{o}s},
+J. Number Theory \textbf{2} (1970), no.~1, 1--6.
+\href{https://doi.org/10.1016/0022-314X(70)90002-8}{doi:10.1016/0022-314X(70)90002-8}.
 
 \bibitem{Mangerel}
 A.~P.~Mangerel,
@@ -576,8 +639,30 @@ Ramanujan J. \textbf{59} (2022), 1023--1090.
 \href{https://doi.org/10.1007/s11139-022-00623-y}{doi:10.1007/s11139-022-00623-y}.
 Preprint: \href{https://arxiv.org/abs/2108.12351}{arXiv:2108.12351}.
 
+\bibitem{Ruzsa}
+I.~Z.~Ruzsa,
+\emph{On the variance of additive functions},
+in P.~Erd\H{o}s, L.~Alp\'ar, G.~Hal\'asz, and A.~S\'ark\H{o}zy (eds.),
+\emph{Studies in Pure Mathematics: To the Memory of Paul Tur\'an},
+Birkh\"auser, Basel, 1983, pp.~577--586.
+\href{https://doi.org/10.1007/978-3-0348-5438-2_50}{doi:10.1007/978-3-0348-5438-2\_50}.
+
+\bibitem{Tenenbaum}
+G.~Tenenbaum,
+\emph{Introduction to Analytic and Probabilistic Number Theory},
+3rd ed., Graduate Studies in Mathematics, vol.~163,
+American Mathematical Society, Providence, RI, 2015.
+
+\bibitem{Wirsing}
+E.~Wirsing,
+\emph{Characterization of the logarithm as an additive function},
+in \emph{1969 Number Theory Institute},
+Proc. Sympos. Pure Math., vol.~20,
+American Mathematical Society, Providence, RI, 1971, pp.~375--381.
+
 \bibitem{Problem1122}
-\emph{Erd\H{o}s Problem \#1122}, Erd\H{o}s Problems website,
+T.~F.~Bloom,
+\emph{Erd\H{o}s Problem \#1122},
 \url{https://www.erdosproblems.com/1122}, accessed September~7, 2026.
 
 \end{thebibliography}
