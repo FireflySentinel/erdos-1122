@@ -6,17 +6,12 @@ import Mathlib.Topology.Algebra.InfiniteSum.Real
 /-!
 # The problem and the cited analytic inputs
 
-These are definitions of propositions, not assertions that those propositions
-have been proved. No cited result is installed as an axiom. Arithmetic functions
-are real-valued, the specialization used in the manuscript. Their value at zero
-is immaterial: every arithmetic sum and conclusion concerns positive integers.
+The cited results are propositions supplied as hypotheses, not axioms.
+Arithmetic functions are real-valued; sums and conclusions concern positive integers.
 
-Sources: Mangerel, arXiv:2108.12351, Theorem 1.1 and Lemma 2.3 in v1
-(Lemma 3.3 in the published paper); Elliott, doi:10.4153/CJM-1980-068-0,
-Theorem 1 with exponent four; Erdős, *On the distribution function of
-additive functions*, Ann. of Math. 47 (1946), Theorem V and its following
-converse, and the distribution-existence and negative-support clauses of
-Theorem X. The other conclusions of Theorem X are not needed or asserted here.
+Sources: Mangerel (2022), Theorem 1.1 and Lemma 3.3 (Ruzsa's estimate);
+Erdős (1946), Theorem V and its following converse. The intermediate `ErdosX`
+statement is proved from Hildebrand's results in `HildebrandBridge.lean`.
 -/
 
 namespace Erdos1122.Statements
@@ -56,7 +51,7 @@ def weightedCenter (f : ℕ → ℝ) (X : ℝ) : ℝ :=
   ∑ q ∈ primePowerIndices X,
     f (q.1 ^ q.2) / ((q.1 ^ q.2 : ℕ) : ℝ) * (1 - 1 / (q.1 : ℝ))
 
-/-- Elliott's original center, without the factor `1 - 1/p`. -/
+/-- The prime-power center without the factor `1 - 1/p`. -/
 def unweightedCenter (f : ℕ → ℝ) (X : ℝ) : ℝ :=
   ∑ q ∈ primePowerIndices X, f (q.1 ^ q.2) / ((q.1 ^ q.2 : ℕ) : ℝ)
 
@@ -83,11 +78,6 @@ def Ruzsa : Prop :=
     ∀ f : ℕ → ℝ, IsAdditive f → ∀ X : ℝ, X₀ ≤ X →
       c * ruzsaInfimum f X ≤ initialMean (fun n => |f n - weightedCenter f X| ^ 2) X ∧
       initialMean (fun n => |f n - weightedCenter f X| ^ 2) X ≤ C * ruzsaInfimum f X
-
-def Elliott : Prop :=
-  ∃ C : ℝ, 0 < C ∧ ∀ f : ℕ → ℝ, IsAdditive f → ∀ X : ℝ, 2 ≤ X →
-    initialMean (fun n => |f n - unweightedCenter f X| ^ 4) X ≤
-      C * (primePowerMoment f X 2 ^ 2 + primePowerMoment f X 4)
 
 def FiniteConcentration (f : ℕ → ℝ) : Prop :=
   ∃ d R : ℝ, 0 < d ∧ 0 < R ∧ ∀ Y : ℝ, ∃ X : ℝ, Y ≤ X ∧ 1 ≤ X ∧

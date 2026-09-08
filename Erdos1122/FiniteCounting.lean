@@ -47,18 +47,6 @@ theorem divisorSum_dyadic_sum (P : Finset ℕ) (a : ℕ → ℝ) (Y : ℕ) :
   rw [Nat.div_div_eq_div_mul]
   ring
 
-/-- An exact identity, including both floor errors. There is no asymptotic
-estimate or bound on the coefficients in this statement. -/
-theorem dyadic_divisor_center_identity (P : Finset ℕ) (a : ℕ → ℝ) (Y : ℕ) :
-    (2 / (Y : ℝ)) * (∑ n ∈ Ioc (Y / 2) Y, divisorSum P a n) -
-        (∑ p ∈ P, a p / (p : ℝ)) =
-      ∑ p ∈ P, a p * ((2 / (Y : ℝ)) *
-        ((Y / p : ℕ) - ((Y / (2 * p) : ℕ) : ℝ)) - 1 / (p : ℝ)) := by
-  rw [divisorSum_dyadic_sum, mul_sum, ← sum_sub_distrib]
-  apply sum_congr rfl
-  intro p _
-  ring
-
 /-- Equation (2.7), with a real cutoff and the manuscript's normalization.
 Taking `P` to be the primes at most `Y` gives its strongly additive form. -/
 theorem dyadic_divisor_center_identity_real (P : Finset ℕ) (a : ℕ → ℝ) (Y : ℝ) :
@@ -145,18 +133,6 @@ theorem prime_divisor_factorial_moment (P : Finset ℕ) (hP : ∀ p ∈ P, p.Pri
         _ = ∑ p ∈ P, ∑ q ∈ P, 1 / (p : ℝ) * (1 / (q : ℝ)) :=
           sum_product P P (fun q : ℕ × ℕ => 1 / (q.1 : ℝ) * (1 / (q.2 : ℝ)))
         _ = _ := by rw [← sum_mul_sum, pow_two]
-
-theorem prime_divisor_factorial_mean_le (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
-    (X : ℕ) (hX : 0 < X) (M : ℝ)
-    (hmass : (∑ p ∈ P, 1 / (p : ℝ)) ≤ M) :
-    (∑ n ∈ Ioc 0 X,
-      (primeDivisorCount P n : ℝ) * ((primeDivisorCount P n : ℝ) - 1)) / (X : ℝ) ≤ M ^ 2 := by
-  have hXr : (0 : ℝ) < X := by exact_mod_cast hX
-  apply (div_le_iff₀ hXr).2
-  apply (prime_divisor_factorial_moment P hP X).trans
-  rw [mul_comm (M ^ 2)]
-  apply mul_le_mul_of_nonneg_left _ hXr.le
-  exact pow_le_pow_left₀ (sum_nonneg (fun _ _ => by positivity)) hmass 2
 
 theorem prime_divisor_factorial_mean_le_real (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
     (X M : ℝ) (hX : 0 < X) (hmass : (∑ p ∈ P, 1 / (p : ℝ)) ≤ M) :

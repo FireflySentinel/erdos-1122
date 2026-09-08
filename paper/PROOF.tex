@@ -10,9 +10,6 @@
 \numberwithin{equation}{section}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\theoremstyle{remark}
-\newtheorem{remark}[theorem]{Remark}
 \newcommand{\N}{\mathbb N}
 \newcommand{\R}{\mathbb R}
 \newcommand{\E}{\mathbb E}
@@ -34,7 +31,7 @@ on the Erd\H{o}s Problems website. The main step is to deduce finite
 concentration without a growth assumption on the values at prime powers.
 A truncated normalization and a bounded clipping reduce this step to
 Mangerel's first-moment theorem for short intervals, Ruzsa's
-second-moment estimate, and a directly proved fourth-moment bound.
+second-moment estimate, and Elliott's fourth-moment inequality.
 \end{abstract}
 \maketitle
 
@@ -56,48 +53,37 @@ then there is a constant $c\ge0$ such that $f(n)=c\log n$ for every
 $n\in\N$.
 \end{theorem}
 
-Erd\H{o}s also proved that $f(n+1)-f(n)=o(1)$ implies
-$f(n)=c\log n$. K\'atai and independently Wirsing weakened this to the
-averaged condition \cite{Katai,Wirsing}:
-\[
- \frac1X\sum_{n\le X}|f(n+1)-f(n)|\longrightarrow0.
-\]
-Hildebrand later proved Erd\H{o}s's density-one
-version of this assertion \cite{Hildebrand}, while Elliott developed
-broader quantitative and linear-form variants \cite[Ch.~11]{ElliottBook}.
+The implication from the four cited results of Mangerel, Ruzsa, Erd\H{o}s
+and Hildebrand to Theorem~\ref{thm:main} has been checked in Lean~4.\footnote{\url{https://github.com/FireflySentinel/erdos-1122}}
 
-Mangerel established an approximate logarithmic representation under the
-same density hypothesis \cite[Theorem~1.9]{Mangerel}. For completely
-additive functions, he obtained the exact conclusion with additional
-assumptions on the values at primes and the number of decreases
-\cite[Corollary~1.7]{Mangerel}. His short-interval theorem is the
-analytic input used here.
+Erd\H{o}s proved that $f(n+1)-f(n)=o(1)$ forces $f=c\log$;
+K\'atai and Wirsing independently weakened this to
+$X^{-1}\sum_{n\le X}|f(n+1)-f(n)|\to0$ \cite{Katai,Wirsing}.
+Hildebrand proved the density-one version \cite{Hildebrand}, supplying
+the distribution result Erd\H{o}s had announced without proof
+\cite[p.~17]{Erdos}; see also Elliott \cite[Ch.~11]{ElliottBook}.
+Mangerel obtained an approximate logarithmic representation under the
+present density hypothesis \cite[Theorem~1.9]{Mangerel}, and the exact
+conclusion for completely additive functions under additional conditions
+on prime values and decreases \cite[Corollary~1.7]{Mangerel}.
 
 We say that $f$ has \emph{finite concentration} if there are constants
 $d>0$ and $R<\infty$ such that, for arbitrarily large $X$, some interval
 of length $R$ contains at least $dX$ of the values $f(n)$, $n\le X$.
-The interval is allowed to depend on $X$. Results of Erd\H{o}s and
-Hildebrand reduce Theorem~\ref{thm:main} to finite concentration. Theorem~V of
-\cite{Erdos} states that finite concentration is equivalent to the
-existence of $c\in\R$ for which
+The interval may depend on $X$. Erd\H{o}s's Theorem~V
+\cite{Erdos} makes finite concentration equivalent to the existence
+of $c\in\R$ such that
 \begin{equation}\label{eq:classical-concentration}
  \sum_p\frac{\min\{(f(p)-c\log p)^2,1\}}p<\infty.
 \end{equation}
-Under \eqref{eq:classical-concentration}, Hildebrand's Theorem~1
-\cite{Hildebrand} gives a symmetric limiting distribution for
-$f(n+1)-f(n)$. If this distribution has no negative mass, it is a point
-mass at zero, and Hildebrand's corollary forces $f$ to be a multiple of
-the logarithm. These results apply to general additive functions, with
-no restriction on their values at higher prime powers.
-
-It therefore suffices to prove finite concentration. Assuming the
-contrary, we normalize $f$ and subtract a logarithmic term so that the
-truncated quadratic mass of its prime values is fixed. After clipping,
-Ruzsa's second-moment estimate and a finite fourth-moment bound give a
-positive variance for a
-strongly additive approximation, while the density hypothesis and
-Mangerel's short-interval theorem force the same variance to satisfy an
-incompatible upper bound.
+Under \eqref{eq:classical-concentration}, Hildebrand gives a symmetric
+limiting law for $f(n+1)-f(n)$; the density hypothesis and his corollary
+then force $f=c\log$. Thus it suffices to prove finite concentration.
+Assuming the contrary, we normalize $f$ modulo a logarithmic term to fix
+its truncated quadratic prime mass. Ruzsa and Elliott give positive
+variance after clipping, whereas Mangerel's short-interval theorem and
+the density hypothesis give an incompatible upper bound. Higher prime
+powers require no growth restriction.
 
 \subsection*{Notation}
 Letters $p,q$ denote primes. We write
@@ -106,11 +92,8 @@ Letters $p,q$ denote primes. We write
  \mathcal A_H F(n)=\frac1H\sum_{j=0}^{H-1}F(n-j)\quad(n\ge H).
 \]
 Restricted averages, such as $\E_X(F\ind_{n\ge H})$, retain the
-normalizing factor $1/X$. For a strongly additive function
-$z(n)=\sum_{p\mid n}a_p$, put
-\[
- \mu_z(X)=\sum_{p\le X}\frac{a_p}{p}.
-\]
+normalizing factor $1/X$. For strongly additive $z(n)=\sum_{p\mid n}a_p$,
+put $\mu_z(X)=\sum_{p\le X}a_p/p$.
 All implicit constants are absolute unless a dependence is indicated.
 The constants $K$ and $M$ used in the proof are fixed before $X$ tends
 to infinity. In statements about a family $z_X$, the prime coefficients
@@ -124,10 +107,7 @@ For an additive function $z$, define
  \qquad
  \widetilde A_0(z,X)=\sum_{p^k\le X}\frac{z(p^k)}{p^k},
 \]
-and
-\[
- B_j(z,X)^j=\sum_{p^k\le X}\frac{|z(p^k)|^j}{p^k}\quad(j=2,4).
-\]
+and $B_j(z,X)^j=\sum_{p^k\le X}|z(p^k)|^j/p^k$ for $j=2,4$.
 Ruzsa's second-moment estimate \cite{Ruzsa}, in the form recorded by
 Mangerel \cite[Lemma~3.3]{Mangerel}, gives, above an absolute threshold,
 \begin{equation}\label{eq:ruzsa}
@@ -135,24 +115,15 @@ Mangerel \cite[Lemma~3.3]{Mangerel}, gives, above an absolute threshold,
  \asymp\inf_{b\in\R}\left(b^2+
        \sum_{p^k\le X}\frac{|z(p^k)-b\log(p^k)|^2}{p^k}\right).
 \end{equation}
-We use the lower comparison only as $X\to\infty$. The upper bound with
-$b=0$ extends to $X\ge2$ after changing the absolute constant. Indeed,
-for fixed $B\ge2$ and $2\le X\le B$, the prime-power expansion of $z(n)$
-and finite Cauchy--Schwarz give
-\[
- \E_X|z-A_0(z,X)|^2
- \le 2\bigl(B\lfloor B\rfloor+\#\{p^k\le B:k\ge1\}\bigr)B_2(z,X)^2.
-\]
-For a strongly additive function $z(n)=\sum_{p\mid n}a_p$, we use
+The upper bound with $b=0$ is the Tur\'an--Kubilius inequality, valid
+for all $X\ge2$ \cite[Ch.~III.3]{Tenenbaum}. For a strongly additive
+function $z(n)=\sum_{p\mid n}a_p$, Elliott's inequality
+\cite[Theorem~1]{Elliott}, together with the center estimates below, gives
 \begin{equation}\label{eq:fourth}
  \E_X|z-\mu_z(X)|^4
  \ll \left(\sum_{p\le X}\frac{a_p^2}{p}\right)^2
        +\sum_{p\le X}\frac{a_p^4}{p},\qquad X\ge2.
 \end{equation}
-This special case of Elliott's high-power inequality
-\cite[Theorem~1]{Elliott} has an elementary finite proof, given in
-Appendix~\ref{app:fourth}. We use that proof throughout.
-
 If $z$ is strongly additive, then
 \begin{align}
  |\widetilde A_0(z,X)-\mu_z(X)|
@@ -218,10 +189,8 @@ Jensen's inequality and \eqref{eq:bounded-moments} at $Y$ imply
  \frac2Y\sum_{Y/2<n\le Y}|F_Y(n)|^4
  \ll V^2+L^2V+O_L((\log Y)^{-4}).
 \end{equation}
-To see this, center the backward average at $\mu_{z_X}(Y)$.
-Every index in its inner sums lies in $[1,Y]$ and occurs at most $H$
-times. The remaining constant is estimated by
-\eqref{eq:dyadic-center}.
+Indeed, after centering at $\mu_{z_X}(Y)$, each index lies in $[1,Y]$
+and occurs at most $H$ times; \eqref{eq:dyadic-center} bounds the center shift.
 H\"older's inequality now gives
 \[
  \frac2Y\sum|F_Y|^2
@@ -260,51 +229,26 @@ Here $M$ is fixed in the term $o(1)$.
 \end{lemma}
 
 \begin{proof}
-Write $P(y)=\sum_{p\le y}1/p$. Chebyshev's bound gives
-$\vartheta(t):=\sum_{p\le t}\log p\le Dt$ with $D=\log4$;
-see \cite{Tenenbaum}. Abel summation therefore gives, for $2\le y\le z$,
-\begin{align*}
- P(z)-P(y)
- &=\frac{\vartheta(z)}{z\log z}-\frac{\vartheta(y)}{y\log y}
-   +\int_y^z\frac{\vartheta(t)(\log t+1)}{t^2(\log t)^2}\,dt\\
- &\le D\left(\log\frac{\log z}{\log y}+\frac1{\log y}\right).
-\end{align*}
-Take $X$ large enough that $X^M\ge2$. Interchanging the sums, the
-expression in \eqref{eq:tail-weight} is
+We use Mertens's prime harmonic-sum formula and the standard
+prime-counting bound; see \cite{Tenenbaum}. For $p\le X^{1-M}$, the inner sum is at most
+$\log(1/M)+o(1)$. These primes
+contribute at most $M\log(1/M)+o(1)$.
+
+For $p>X^{1-M}$, discard the restriction $p\in\mathcal T$ and
+interchange the sums. The terms with $q>X^M$ are bounded by
 \[
- \sum_{q\le X}\frac1q
-       \sum_{\substack{p\in\mathcal T\\X/q<p}}\frac1p.
+ \left(\sum_{X^{1-M}<p\le X}\frac1p\right)
+ \left(\sum_{X^M<q\le X}\frac1q\right)
+ \ll M\log(2/M)+o(1).
 \]
-For $q>X^M$, bound the inner sum by $M$. This part is at most
+For $q\le X^M$, the condition $X/p<q$ implies $p>X/q$.
+The bound $\pi(t)\ll t/\log t$ and partial summation give,
+uniformly for $2\le q\le X^M$,
 \[
- M\bigl(P(X)-P(X^M)\bigr)
- \le DM\log(1/M)+\frac D{\log X}.
+ \sum_{X/q<p\le X}\frac1p\ll\frac{\log q}{\log X}.
 \]
-For $2\le q\le X^M$, put $v=\log q/\log X\le M<1/4$ and
-discard the restriction $p\in\mathcal T$. Since
-$\log(X/q)\ge\tfrac12\log X$ and $X/q\ge2$, the same estimate gives
-\begin{align*}
- P(X)-P(X/q)
- &\le D\left(-\log(1-v)+\frac2{\log X}\right)\\
- &\le D\left(2+\frac2{\log2}\right)\frac{\log q}{\log X}.
-\end{align*}
-Here we used $-\log(1-v)\le2v$ and $\log q\ge\log2$.
-Partial summation also gives
-\[
- \sum_{q\le y}\frac{\log q}{q}
- =\frac{\vartheta(y)}y+\int_2^y\frac{\vartheta(t)}{t^2}\,dt
- \le D(1+\log y).
-\]
-Thus the part with $q\le X^M$ is at most
-$D^2\left(2+2/\log2\right)\left(1+1/\log2\right)M$.
-Combining the two parts proves
-\[
- \sum_{p\in\mathcal T}\frac1p\sum_{X/p<q\le X}\frac1q
- \le C M\log(2/M)+\frac D{\log X},
- \qquad
- C=D+\frac{(2+2/\log2)D^2(1+1/\log2)}{\log2}.
-\]
-In particular, $C$ is independent of $M$, $X$, and $\mathcal T$.
+Their total is $\ll(\log X)^{-1}\sum_{q\le X^M}(\log q)/q\ll M$,
+proving \eqref{eq:tail-weight}.
 \end{proof}
 
 \section{Normalization}
@@ -321,11 +265,8 @@ concentration. For $s>0$ define
 For each fixed $M>0$ and all sufficiently large $X$, there are
 $s_X>0$ and a minimizer $c_X$ in \eqref{eq:W} such that
 $W_X(s_X)=M$. They may be chosen so that $s_X\to\infty$; any
-such choices satisfy $c_X\to0$. If
-\[
- u_p=\frac{f(p)}{s_X}-c_X\log p\quad(p\le X),
-\]
-then
+such choices satisfy $c_X\to0$. Put $u_p=f(p)/s_X-c_X\log p$ for
+$p\le X$. Then
 \begin{align}
  \sum_{p\le X}\frac{\min\{u_p^2,1\}}p
  &=M-c_X^2=M-o(1),\label{eq:mass}\\
@@ -496,10 +437,7 @@ contribution to the difference between the two unclipped expressions is
 \]
 This tends to zero for each fixed prime power. Moreover,
 $\sum_{p,k\ge2}p^{-k}<\infty$. Given $\varepsilon>0$, choose a finite set $\mathcal F$ of prime
-powers such that
-\[
- \sum_{\substack{p^k\notin\mathcal F\\k\ge2}}p^{-k}<\varepsilon.
-\]
+powers such that $\sum_{p^k\notin\mathcal F,\,k\ge2}p^{-k}<\varepsilon$.
 Then, uniformly in $X$,
 \[
  \frac1X\#\{n\le X:\text{ some }p^k\notin\mathcal F,\ k\ge2,
@@ -508,11 +446,8 @@ Then, uniformly in $X$,
 Outside this exceptional set, only the fixed prime powers in
 $\mathcal F$ contribute, and their total contribution tends uniformly
 to zero. Thus the unclipped difference tends to zero in probability.
-The function $\clip$ is bounded and Lipschitz, so
-\[
- \E_X|Y-Y_*|^2=o(1).
-\]
-Together with \eqref{eq:strong-clipping}, this proves the lemma.
+Since $\clip$ is bounded and Lipschitz, $\E_X|Y-Y_*|^2=o(1)$;
+combine this with \eqref{eq:strong-clipping}.
 \end{proof}
 
 \begin{lemma}\label{lem:variance-lower}
@@ -534,12 +469,9 @@ On $p\notin\mathcal T$ we have $v_p=u_p$, so
  \left|\sum_{p\le X}\frac{v_p\log p}{p}\right|
  \le |c_X|+KM\log X.
 \end{equation}
-Only the lower bound
-$\sum_{p\le X}(\log p)^2/p\gg(\log X)^2$ is needed here.
-Indeed, Chebyshev's bound $\vartheta(t)\gg t$, followed by partial
-summation with $\log t/t$, gives this bound from
-$\int^X(\log t-1)\,dt/t\asymp(\log X)^2$.
-The quadratic projection identity therefore gives
+By partial summation from Mertens's first theorem,
+$\sum_{p\le X}(\log p)^2/p\sim\tfrac12(\log X)^2$.
+The quadratic projection identity gives
 \begin{align}
  \inf_{b\in\R}\sum_{p\le X}\frac{(v_p-b\log p)^2}{p}
  &=\sum_{p\le X}\frac{v_p^2}{p}
@@ -561,15 +493,12 @@ Combining this with \eqref{eq:projection} proves
 
 \section{Proof of Theorem~\ref{thm:main}}
 
-Assume for contradiction that $f$ has no finite concentration. The
-function $Y$ in \eqref{eq:Y-and-Z} is bounded
-between $-K$ and $K$. If $f(n+1)\ge f(n)$, monotonicity and
-Lipschitz continuity of $\clip$ imply
-\[
- (Y(n)-Y(n+1))_+\le |c_X|\log(1+1/n),
-\]
-where $t_+=\max\{t,0\}$. At a decrease of $f$, the same quantity
-is at most $2K$. Telescoping the signed increments gives
+Assume that $f$ has no finite concentration and take $Y$ from
+\eqref{eq:Y-and-Z}. If $f(n+1)\ge f(n)$, monotonicity and Lipschitz
+continuity of $\clip$ give
+$(Y(n)-Y(n+1))_+\le |c_X|\log(1+1/n)$, where $t_+=\max\{t,0\}$.
+At a decrease of $f$, this quantity is at most $2K$. Since $|Y|\le K$,
+telescoping the signed increments gives
 \begin{equation}\label{eq:variation}
  \sum_{n<X}|Y(n+1)-Y(n)|
  \le2K+4KD_f(X)+2|c_X|\log X=o(X).
@@ -592,13 +521,11 @@ the four squared terms. Jensen's inequality gives the contraction
  \frac1X\sum_{H\le n\le X}|\mathcal A_H(Y-Z)(n)|^2
  \le\frac1X\sum_{n\le X}|Y(n)-Z(n)|^2.
 \]
-The prime coefficients of $z_X$ are bounded by $K$ and have quadratic
-mass at most $K^2M$, so Lemma~\ref{lem:short} applies to the last
-term of \eqref{eq:four-terms}. The first $H$ indices contribute $o(1)$
-to the centered second moment: this follows directly from
-\eqref{eq:bounded-moments} and Cauchy--Schwarz. Taking $X\to\infty$
-and then $H\to\infty$ in \eqref{eq:four-terms}, and using
-\eqref{eq:Y-short}, we obtain
+Lemma~\ref{lem:short} applies to $z_X$, whose prime coefficients are
+bounded by $K$ with quadratic mass at most $K^2M$. The first $H$
+indices contribute $o(1)$ by \eqref{eq:bounded-moments} and
+Cauchy--Schwarz. Taking $X\to\infty$ and then $H\to\infty$ in
+\eqref{eq:four-terms}, and using \eqref{eq:Y-short}, gives
 \begin{align}
  \limsup_X\E_X|z_X-\mu_{z_X}(X)|^2
  &\le8\limsup_X\E_X|Y-Z|^2\notag\\
@@ -615,129 +542,24 @@ Lemma~\ref{lem:variance-lower}. Next choose $0<M<1/4$ so small that
 With these fixed choices, \eqref{eq:variance-upper} contradicts
 \eqref{eq:variance-lower}. Hence $f$ has finite concentration.
 
-Erd\H{o}s's Theorem~V now gives a constant $c$ for which the additive
-remainder $r(n)=f(n)-c\log n$ satisfies
-\[
- \sum_p\frac{\min\{r(p)^2,1\}}p<\infty.
-\]
-Hildebrand's Theorem~1 \cite{Hildebrand} gives a limiting distribution
-for $f(n+1)-f(n)$, with characteristic function
-\[
- \prod_p\left(1-\frac2p+2\left(1-\frac1p\right)
-     \Re\sum_{k\ge1}\frac{e^{it r(p^k)}}{p^k}\right).
-\]
-Every factor is real, so uniqueness of characteristic functions makes
-the distribution symmetric. For each $\varepsilon>0$, the hypothesis gives
-\[
- \frac1X\#\{n\le X:f(n+1)-f(n)<-\varepsilon\}
- \le\frac{D_f(X)}X\longrightarrow0.
-\]
-The limiting distribution therefore has no mass on $(-\infty,0)$,
-and symmetry makes it a point mass at zero. Thus, for every
+Erd\H{o}s's Theorem~V now supplies $c$ satisfying
+\eqref{eq:classical-concentration}. Hildebrand's Theorem~1 gives a limiting distribution for $f(n+1)-f(n)$
+whose characteristic function \cite[(1.4)]{Hildebrand} is a product of
+real factors, hence the law is symmetric. For every $\varepsilon>0$,
+$\#\{n\le X:f(n+1)-f(n)<-\varepsilon\}\le D_f(X)=o(X)$, so this law
+has no negative mass and must be a point mass at zero. Thus, for every
 $\varepsilon>0$, the set of $n$ with $|f(n+1)-f(n)|>\varepsilon$
 has density zero. Equivalently, the differences tend to zero on a set
 of density one. Hildebrand's corollary \cite[pp.~258--259]{Hildebrand}
 now gives $f(n)=d\log n$ for some real $d$ and all $n$.
 Finally, $d<0$ would give a decrease at every integer, so $d\ge0$.\qed
 
-\begin{remark}
-All estimates for prime sums used above follow from Chebyshev's bounds;
-neither Mertens's theorem nor the prime number theorem is needed.
-\end{remark}
-
-\begin{remark}
-Erd\H{o}s states Theorems~IX and~X without proof on page~17 of
-\cite{Erdos}; Theorem~XI subsequently uses Theorem~X.
-The argument above uses Hildebrand's proved Theorem~1, its formula~(1.4),
-and its corollary in place of that announcement.
-\end{remark}
-
-\appendix
-\section{A fourth moment for strongly additive functions}\label{app:fourth}
-
-We prove \eqref{eq:fourth} with an absolute constant and no restriction
-on the coefficients. Fix $X\ge2$ and put
-\[
- V_j=\sum_{p\le X}\frac{|a_p|^j}{p}\quad(j=2,4).
-\]
-For $X\ge16$, let $Y=X^{1/4}$ and split
-\[
- z(n)-\mu_z(X)=S(n)+T(n),\qquad
- S(n)=\sum_{p\le Y}a_p(\ind_{p\mid n}-1/p),\quad
- T(n)=\sum_{Y<p\le X}a_p(\ind_{p\mid n}-1/p).
-\]
-
-First consider $S$. Let $(B_p)_{p\le Y}$ be independent Bernoulli
-variables with $\mathbb P(B_p=1)=1/p$. Expanding the fourth power and
-centering each variable leaves only the fourfold diagonal and the
-three pairings. Hence
-\[
- \mathbb E\left(\sum_{p\le Y}a_p(B_p-1/p)\right)^4
- \le \sum_{p\le Y}\frac{a_p^4}{p}
-       +3\left(\sum_{p\le Y}\frac{a_p^2}{p}\right)^2
- \le V_4+3V_2^2.
-\]
-For any finite set $Q$ of primes,
-\[
- \E_X\prod_{p\in Q}\ind_{p\mid n}
- =\frac1X\left\lfloor\frac{X}{\prod_{p\in Q}p}\right\rfloor
- =\prod_{p\in Q}\frac1p+O(1/X),
-\]
-with error at most $1/X$, including $Q=\varnothing$. Each centered
-product of four indicators expands into sixteen such monomials, whose
-additional coefficients have absolute value at most one. Repeated
-primes cause no change: their indicators are idempotent. Consequently,
-\[
- \left|\E_X S^4-
-  \mathbb E\left(\sum_{p\le Y}a_p(B_p-1/p)\right)^4\right|
- \le \frac{16}{X}\left(\sum_{p\le Y}|a_p|\right)^4.
-\]
-Weighted Cauchy--Schwarz gives
-\[
- \left(\sum_{p\le Y}|a_p|\right)^2
- \le\left(\sum_{p\le Y}\frac{a_p^2}{p}\right)
-        \left(\sum_{p\le Y}p\right)
- \le V_2Y^2.
-\]
-Since $Y^4=X$, it follows that $\E_X S^4\le V_4+19V_2^2$.
-
-For the remaining primes, write
-\[
- A(n)=\sum_{Y<p\mid n}a_p,\qquad b=\sum_{Y<p\le X}\frac{a_p}{p},
- \qquad T(n)=A(n)-b.
-\]
-At most four primes exceeding $Y$ divide an integer $n\le X$.
-Finite H\"older and the count of multiples therefore give
-\[
- |A(n)|^4\le4^3\sum_{Y<p\mid n}a_p^4,
- \qquad \E_X|A|^4\le64V_4.
-\]
-The Chebyshev--Abel estimate used in Section~3 gives
-\[
- \sum_{Y<p\le X}\frac1p
- \le\log4\left(\log\frac{\log X}{\log Y}+\frac1{\log Y}\right)
- \le\log4\left(\log4+\frac1{\log2}\right).
-\]
-Thus $b^4\le V_2^2(\sum_{Y<p\le X}1/p)^2\ll V_2^2$.
-Applying $|u+v|^4\le8(|u|^4+|v|^4)$ to $T=A-b$ and then to
-$S+T$ proves \eqref{eq:fourth} for $X\ge16$.
-
-Finally, if $2\le X<16$, then
-\[
- |z(n)-\mu_z(X)|\le\sum_{p\le X}|a_p|\quad(n\le X),\qquad
- \left(\sum_{p\le X}|a_p|\right)^2\le V_2X^2\le256V_2.
-\]
-Averaging the fourth powers gives the same bound with an absolute
-constant. This proves \eqref{eq:fourth} for all real $X\ge2$.
-
 \section*{Declaration of generative AI use}
-GPT-6 Astra was used to generate the mathematical proofs and draft the
-manuscript. GPT-5.6 Sol and Claude Opus 5 were used only for editorial
-review of the exposition. The author reviewed the final manuscript and
-takes full responsibility for its content. The accompanying Lean~4
-formalization checks the implication from the cited analytic inputs, which
-remain explicit hypotheses; it does not formalize their proofs.
-The Lean code was generated with OpenAI Codex (GPT-6).
+GPT-6 Astra generated proofs and manuscript drafts, GPT-5.6 Sol and
+Claude Opus 5 assisted with editorial review, and OpenAI Codex (GPT-6)
+generated the Lean code. The Lean~4 development checks the implication
+from the stated analytic hypotheses to Theorem~\ref{thm:main}, without
+formalizing the cited theorems.
 
 \begin{thebibliography}{99}
 

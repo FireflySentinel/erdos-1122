@@ -7,7 +7,6 @@ import Erdos1122.Clipping
 Every quantity below is a function from the manuscript. The propositions
 state the arithmetic estimates, including their constant and limit quantifiers.
 Each is discharged in a separate module and then used in `Main.lean`.
-They are definitions, never axioms or admitted theorems.
 -/
 
 namespace Erdos1122

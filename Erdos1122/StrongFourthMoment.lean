@@ -158,10 +158,6 @@ theorem small_prime_fourth (f : ℕ → ℝ) (X Y : ℝ)
 
 def primeFourthTailWeight : ℝ := log 4 * (log 4 + 1 / log 2)
 
-theorem primeFourthTailWeight_nonneg : 0 ≤ primeFourthTailWeight := by
-  unfold primeFourthTailWeight
-  positivity
-
 theorem fourth_tail_reciprocal (X Y : ℝ) (hY : 2 ≤ Y) (hYX : Y ≤ X) (hXY : X = Y ^ 4) :
     (∑ p ∈ primeCutoff X \ primeCutoff Y, primeProbability p) ≤ primeFourthTailWeight := by
   rw [sum_sdiff_eq_sub (primeCutoff_mono (by linarith) hYX)]

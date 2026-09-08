@@ -106,10 +106,6 @@ def dyadicSecondMoment (H : ℕ) (f : ℕ → ℝ) (Y : ℝ) : ℝ :=
   ∑ n ∈ dyadicIndices Y, (2 / Y) *
     (backwardWindowAverage H f n - primeCenter f Y) ^ 2
 
-theorem dyadicSecondMoment_nonneg (H : ℕ) (f : ℕ → ℝ) (Y : ℝ) :
-    0 ≤ dyadicSecondMoment H f Y :=
-  sum_nonneg fun _ hn => mul_nonneg (div_nonneg (by norm_num) (dyadic_member_pos hn).le) (sq_nonneg _)
-
 theorem dyadic_global_center_bound (H : ℕ) (f : ℕ → ℝ) (X δ : ℝ)
     (hX : 0 < X) (hδ : 0 < δ) (hδ1 : δ ≤ 1) :
     (∑ n ∈ dyadicIndices (δ * X), (1 / X) *

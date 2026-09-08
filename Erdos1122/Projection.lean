@@ -6,8 +6,7 @@ import Mathlib.Tactic
 # Weighted quadratic projection
 
 The exact finite-dimensional minimization used for the variance lower bound
-in Section 5 of the manuscript. No assertion about the Ruzsa theorem itself
-is imported as an axiom.
+in Section 5 of the manuscript.
 -/
 
 namespace Erdos1122

@@ -1,6 +1,6 @@
 import Erdos1122.PrimePowerCenter
 
-/-! # Changing between the two cited moment centers -/
+/-! # Changing between weighted and unweighted centers -/
 
 namespace Erdos1122
 
@@ -83,60 +83,6 @@ theorem center_shift_sq_le (f : ℕ → ℝ) (X : ℝ) (hX : 2 ≤ X) :
   simpa only [sq_abs, sq_sqrt hn] using pow_le_pow_left₀ (abs_nonneg _)
     (center_shift_le_sqrt f X hX) 2
 
-/-- Either center may be used for Elliott's fourth-moment upper bound. -/
-def ElliottWeighted : Prop :=
-  ∃ C : ℝ, 0 < C ∧ ∀ f : ℕ → ℝ, IsAdditive f → ∀ X : ℝ, 2 ≤ X →
-    initialMean (fun n => |f n - weightedCenter f X| ^ 4) X ≤
-      C * (primePowerMoment f X 2 ^ 2 + primePowerMoment f X 4)
-
-/-- Finite fourth-moment change of center, before either cited theorem is used. -/
-theorem fourth_moment_center_shift (f : ℕ → ℝ) (a b X : ℝ) (hX : 0 < X) :
-    initialMean (fun n => |f n - a| ^ 4) X ≤
-      8 * initialMean (fun n => |f n - b| ^ 4) X + 8 * (b - a) ^ 4 := by
-  unfold initialMean
-  apply (div_le_iff₀ hX).2
-  have hh : (∑ n ∈ Ioc 0 ⌊X⌋₊, |f n - a| ^ 4) ≤
-      8 * (∑ n ∈ Ioc 0 ⌊X⌋₊, |f n - b| ^ 4) + 8 * X * (b - a) ^ 4 := by
-    calc
-      _ ≤ ∑ n ∈ Ioc 0 ⌊X⌋₊, 8 * (|f n - b| ^ 4 + (b - a) ^ 4) := by
-        apply sum_le_sum
-        intro n _
-        simpa only [abs_pow_four, sub_add_sub_cancel] using two_term_fourth_le (f n - b) (b - a)
-      _ ≤ _ := by
-        simp only [mul_add, sum_add_distrib, ← mul_sum, sum_const, nsmul_eq_mul,
-          Nat.card_Ioc, Nat.sub_zero]
-        nlinarith [mul_le_mul_of_nonneg_right (Nat.floor_le hX.le) (show 0 ≤ (b - a) ^ 4 by positivity)]
-  apply hh.trans_eq
-  field_simp
-
-
-private theorem fourth_bound_change_center (f : ℕ → ℝ) (a b X P Q C : ℝ)
-    (hX : 0 < X) (_hP : 0 ≤ P) (hQ : 0 ≤ Q)
-    (hbound : initialMean (fun n => |f n - b| ^ 4) X ≤ C * (P ^ 2 + Q))
-    (hcenter : (b - a) ^ 2 ≤ P) :
-    initialMean (fun n => |f n - a| ^ 4) X ≤ 8 * (C + 1) * (P ^ 2 + Q) := by
-  have hp := pow_le_pow_left₀ (sq_nonneg (b - a)) hcenter 2
-  have hh := fourth_moment_center_shift f a b X hX
-  nlinarith only [hp, hh, hbound, hQ]
-
-/-- The original and weighted-center forms are equivalent propositions. -/
-theorem elliott_iff_weighted : Elliott ↔ ElliottWeighted := by
-  constructor
-  · rintro ⟨C, hC, hE⟩
-    refine ⟨8 * (C + 1), by positivity, ?_⟩
-    intro f hf X hX
-    apply fourth_bound_change_center f (weightedCenter f X) (unweightedCenter f X) X
-      (primePowerMoment f X 2) (primePowerMoment f X 4) C (by linarith)
-      (by unfold primePowerMoment; positivity) (by unfold primePowerMoment; positivity)
-      (hE f hf X hX)
-    nlinarith [center_shift_sq_le f X hX]
-  · rintro ⟨C, hC, hE⟩
-    refine ⟨8 * (C + 1), by positivity, ?_⟩
-    intro f hf X hX
-    exact fourth_bound_change_center f (unweightedCenter f X) (weightedCenter f X) X
-      (primePowerMoment f X 2) (primePowerMoment f X 4) C (by linarith)
-      (by unfold primePowerMoment; positivity) (by unfold primePowerMoment; positivity)
-      (hE f hf X hX) (center_shift_sq_le f X hX)
 
 end
 

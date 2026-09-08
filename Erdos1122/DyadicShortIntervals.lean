@@ -114,7 +114,7 @@ theorem dyadic_centered_first_bound (hM : Mangerel) (L V : ℝ) :
   nlinarith only [hfirst, hscaled, hcenter, hcomp]
 
 /-- The family is indexed by the original cutoff `X`, even on the band
-ending at `δ X`. Both cited constants remain uniform in that family. -/
+ending at `δ X`. Mangerel's constant remains uniform in that family. -/
 theorem dyadic_short_interval_limit (hM : Mangerel)
     (z : ℝ → ℕ → ℝ) (L V : ℝ) (hL : 0 ≤ L) (hV : 0 ≤ V)
     (hz : ∀ X, IsStronglyAdditive (z X))

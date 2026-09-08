@@ -63,8 +63,7 @@ theorem logarithmic_coefficient_nonnegative (f : ℕ → ℝ) (c : ℝ)
   have hh := (div_lt_iff₀ hpos).1 hsmall
   linarith [Nat.lt_floor_add_one X]
 
-/-- The last implication in the manuscript. The distribution theorem remains
-an explicit proposition hypothesis, and its source status is documented. -/
+/-- Finite concentration and density-zero decreases force a nonnegative logarithm. -/
 theorem logarithmic_of_finite_concentration (hV : ErdosV) (hX : ErdosX)
     (f : ℕ → ℝ) (hf : IsAdditive f) (hconc : FiniteConcentration f)
     (hdec : Tendsto (fun X : ℝ => (decreaseCount f X : ℝ) / X) atTop (𝓝 0)) :

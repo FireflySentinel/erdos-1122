@@ -20,15 +20,15 @@ set_option autoImplicit false
 noncomputable section
 
 /-- Formula (1.4) forces the limiting law to be symmetric. -/
-theorem hildebrand_limiting_law_symmetric (hH : HildebrandTheorem)
-    (f : ℕ → ℝ) (hf : IsAdditive f) (c : ℝ) (hc : TruncatedPrimeSummable f c)
-    (μ : ProbabilityMeasure ℝ)
-    (hD : IsLimitingDistribution (fun n => f (n + 1) - f n) (cdf (μ : Measure ℝ))) :
+theorem hildebrand_limiting_law_symmetric
+    (f : ℕ → ℝ) (c : ℝ) (μ : ProbabilityMeasure ℝ)
+    (hprod : ∀ t : ℝ,
+      Tendsto (fun N : ℕ => ((∏ p ∈ Nat.primesLE N, hildebrandFactor f c p t : ℝ) : ℂ))
+        atTop (𝓝 (charFun (μ : Measure ℝ) t))) :
     (μ : Measure ℝ).map (fun x => -x) = μ := by
   apply measure_reflection_of_real_charFun
   intro t
-  have hprod := (hH f hf).2 μ hD c hc t
-  have hh := Complex.continuous_im.tendsto (charFun (μ : Measure ℝ) t) |>.comp hprod
+  have hh := Complex.continuous_im.tendsto (charFun (μ : Measure ℝ) t) |>.comp (hprod t)
   simp only [Function.comp_def, Complex.ofReal_im] at hh
   exact tendsto_nhds_unique hh tendsto_const_nhds
 
@@ -36,8 +36,8 @@ theorem hildebrand_limiting_law_symmetric (hH : HildebrandTheorem)
 and its proved density-one corollary. -/
 theorem hildebrand_implies_erdosX (hH : Hildebrand) : ErdosX := by
   intro f hf c hc
-  obtain ⟨μ, hD⟩ := (hH.1 f hf).1.2 ⟨c, hc⟩
-  have hsym := hildebrand_limiting_law_symmetric hH.1 f hf c hc μ hD
+  obtain ⟨μ, hD, hprod⟩ := hH.1 f hf c hc
+  have hsym := hildebrand_limiting_law_symmetric f c μ hprod
   refine ⟨cdf (μ : Measure ℝ), hD, ?_⟩
   constructor
   · intro hn

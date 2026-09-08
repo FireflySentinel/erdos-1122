@@ -55,7 +55,7 @@ theorem second_moment_center_shift (f : ℕ → ℝ) (a b X : ℝ) (hX : 0 < X) 
   apply hh.trans_eq
   field_simp
 
-/-- Both the original Ruzsa center and Elliott's center give the same
+/-- The weighted and unweighted centers give the same
 Turán--Kubilius upper bound up to an absolute constant. -/
 theorem ruzsa_second_moment_both_centers (hR : Ruzsa) :
     ∃ C : ℝ, 0 < C ∧ ∀ f : ℕ → ℝ, IsAdditive f → ∀ X : ℝ, 3 ≤ X →

@@ -6,7 +6,7 @@ import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 /-! # Hildebrand's differences theorem and its corollary
 
 Hildebrand (1988), Theorem 1, pp. 257–258, including formula (1.4), and
-its corollary on pp. 258–259. These are propositions, not axioms.
+its corollary on pp. 258–259.
 The corollary uses an actual density-one set. The factor in (1.4) is
 written with exponent `m + 1` so that the series is indexed by `ℕ`.
 -/
@@ -32,17 +32,13 @@ def hildebrandFactor (f : ℕ → ℝ) (c : ℝ) (p : ℕ) (t : ℝ) : ℝ :=
     (∑' m : ℕ, Complex.exp (((t * logarithmicResidual f c (p ^ (m + 1)) : ℝ) : ℂ) * Complex.I) /
       (p : ℂ) ^ (m + 1)).re
 
-/-- Weak convergence criterion and characteristic function, with the product
-in the natural order of the primes. The measure notation fixes the meaning of
-the characteristic function and the right-continuous distribution function. -/
+/-- The sufficient condition in Theorem 1 and formula (1.4), with the product
+in the natural order of the primes and the right-continuous distribution function. -/
 def HildebrandTheorem : Prop :=
-  ∀ f : ℕ → ℝ, IsAdditive f →
-    ((∃ μ : ProbabilityMeasure ℝ,
-        IsLimitingDistribution (fun n => f (n + 1) - f n) (cdf (μ : Measure ℝ))) ↔
-      ∃ c : ℝ, TruncatedPrimeSummable f c) ∧
-    ∀ (μ : ProbabilityMeasure ℝ),
-      IsLimitingDistribution (fun n => f (n + 1) - f n) (cdf (μ : Measure ℝ)) →
-      ∀ c : ℝ, TruncatedPrimeSummable f c → ∀ t : ℝ,
+  ∀ f : ℕ → ℝ, IsAdditive f → ∀ c : ℝ, TruncatedPrimeSummable f c →
+    ∃ μ : ProbabilityMeasure ℝ,
+      IsLimitingDistribution (fun n => f (n + 1) - f n) (cdf (μ : Measure ℝ)) ∧
+      ∀ t : ℝ,
         Tendsto (fun N : ℕ => ((∏ p ∈ Nat.primesLE N, hildebrandFactor f c p t : ℝ) : ℂ))
           atTop (𝓝 (charFun (μ : Measure ℝ) t))
 
