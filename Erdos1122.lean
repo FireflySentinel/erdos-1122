@@ -3,3 +3,9 @@ import Erdos1122.Projection
 import Erdos1122.Averaging
 import Erdos1122.Interpolation
 import Erdos1122.Variation
+import Erdos1122.Minimizer
+import Erdos1122.Constants
+import Erdos1122.Limits
+import Erdos1122.ShortIntervals
+import Erdos1122.PrimeHarmonic
+import Erdos1122.PrimePowers

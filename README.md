@@ -33,10 +33,12 @@ upper bound for the same variance.
 
 The manuscript is available as [PDF](paper/PROOF.pdf) and [LaTeX source](paper/PROOF.tex).
 
-Lean proofs of the clipping estimates, quadratic projection, moment interpolation,
-averaging contraction, and total-variation bounds are included in
-[`Erdos1122/`](Erdos1122). See [FORMALIZATION.md](FORMALIZATION.md) for the precise
-statements and build instructions. **The full main theorem is not formalized in Lean.**
+Lean proofs in [`Erdos1122/`](Erdos1122) cover the finite minimizer and its
+stationary identity, the ordered constant choices and variance limits, a conditional
+proof of Lemma 3.1 from explicit Mertens and Chebyshev bounds, the higher-prime-power
+union bound, and the clipping, projection, moment, and averaging estimates.
+See [FORMALIZATION.md](FORMALIZATION.md) for exact hypotheses, remaining steps of
+Lemma 2.1, and build instructions. **The full main theorem is not formalized in Lean.**
 
 ## Use of generative AI
 
