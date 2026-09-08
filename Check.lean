@@ -241,9 +241,9 @@ an admitted proof or adding an unlisted axiom makes this file fail to compile.
 #guard_msgs in
 #print axioms Erdos1122.projection_instance
 
-/-- info: 'Erdos1122.window_assembly_of_elliott' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'Erdos1122.window_assembly' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
-#print axioms Erdos1122.window_assembly_of_elliott
+#print axioms Erdos1122.window_assembly
 
 /-- info: 'Erdos1122.center_shift' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in
@@ -295,7 +295,7 @@ an admitted proof or adding an unlisted axiom makes this file fail to compile.
 
 -- This checks the complete interface as well as its axiom dependencies.
 example : Erdos1122.Statements.Mangerel → Erdos1122.Statements.Ruzsa →
-    Erdos1122.Statements.Elliott → Erdos1122.Statements.ErdosV →
+    Erdos1122.Statements.ErdosV →
     Erdos1122.Statements.Hildebrand → Erdos1122.Statements.ErdosProblem1122 :=
   Erdos1122.Statements.main_of_cited
 
@@ -329,3 +329,26 @@ example : Erdos1122.Statements.Mangerel → Erdos1122.Statements.Ruzsa →
 
 example : Erdos1122.Statements.Hildebrand → Erdos1122.Statements.ErdosX :=
   Erdos1122.hildebrand_implies_erdosX
+
+/-- info: 'Erdos1122.bernoulli_fourth_sum_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.bernoulli_fourth_sum_le
+
+/-- info: 'Erdos1122.divisor_fourth_moment' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.divisor_fourth_moment
+
+/-- info: 'Erdos1122.stronglyAdditive_fourth_moment_mass_direct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.stronglyAdditive_fourth_moment_mass_direct
+
+/-- info: 'Erdos1122.stronglyAdditive_fourth_moment_mass' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in
+#print axioms Erdos1122.stronglyAdditive_fourth_moment_mass
+
+-- The arithmetic fourth moment has no cited proposition hypothesis.
+example : ∃ C : ℝ, 0 < C ∧ ∀ f : ℕ → ℝ, Erdos1122.IsStronglyAdditive f →
+    ∀ X : ℝ, 2 ≤ X →
+      Erdos1122.Statements.initialMean (fun n => (f n - Erdos1122.primeCenter f X) ^ 4) X ≤
+        C * (Erdos1122.primeMoment f X 2 ^ 2 + Erdos1122.primeMoment f X 4) :=
+  Erdos1122.stronglyAdditive_fourth_moment_mass_direct

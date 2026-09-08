@@ -93,12 +93,11 @@ theorem window_variance_full (z Y : ℕ → ℝ) (a X C : ℝ) (H : ℕ)
   dsimp only [initialMean] at hb
   linarith only [hp, hb]
 
-/-- The last named arithmetic hypothesis follows from Elliott, with no
-additional uniformity or interchange of limits. -/
-theorem window_assembly_of_elliott (hE : Elliott) : WindowAssembly := by
+/-- Window assembly using the direct fourth moment and the variation estimate. -/
+theorem window_assembly : WindowAssembly := by
   intro f _hf hdec K M hK hM _hMq N hdiscrep hshort
   have hK0 : 0 ≤ K := by linarith
-  obtain ⟨C, hC, hfourth⟩ := stronglyAdditive_fourth_moment hE K (K ^ 2 * M) hK0 (by positivity)
+  obtain ⟨C, hC, hfourth⟩ := stronglyAdditive_fourth_moment K (K ^ 2 * M) hK0 (by positivity)
   have h4 : ∀ᶠ X in atTop,
       initialMean (fun n => (N.comparison K X n - primeCenter (N.comparison K X) X) ^ 4) X ≤ C := by
     filter_upwards [N.comparison_mass K hK.le, eventually_ge_atTop (2 : ℝ)] with X hm hX

@@ -4,7 +4,7 @@
 
 ```lean
 Erdos1122.Statements.main_of_cited :
-  Mangerel → Ruzsa → Elliott → ErdosV → Hildebrand → ErdosProblem1122
+  Mangerel → Ruzsa → ErdosV → Hildebrand → ErdosProblem1122
 ```
 
 There are **no intermediate arithmetic hypotheses** in this theorem. Its
@@ -33,7 +33,6 @@ with `10 ≤ H` and `(H : ℝ) ≤ X / 100`. The cutoff `X` is real throughout.
 |---|---|
 | `Mangerel` | [Mangerel, Theorem 1.1](https://doi.org/10.1007/s11139-022-00623-y), specialized to real additive functions. The backward window and dyadic mean are actual finite sums. |
 | `Ruzsa` | The two-sided second-moment estimate in Mangerel, published Lemma 3.3 (arXiv v1, Lemma 2.3), attributed to [Ruzsa, 1983](https://doi.org/10.1007/978-3-0348-5438-2_50). Its center has the factor `1 - 1/p`. |
-| `Elliott` | [Elliott, 1980, Theorem 1](https://doi.org/10.4153/CJM-1980-068-0), at exponent four. The original article's definition of `A(x)` on p. 893 is the unweighted prime-power center. |
 | `ErdosV` | [Erdős, 1946](https://combinatorica.hu/~p_erdos/1946-06.pdf), Theorem V and the converse in the following paragraph: finite concentration is equivalent to a summable truncated prime residual for some logarithmic coefficient. |
 | `HildebrandTheorem` | [Hildebrand, 1988, Theorem 1](https://doi.org/10.1090/S0002-9947-1988-0965752-X), pp. 257–258: the weak-convergence criterion and the characteristic-function formula (1.4). |
 | `HildebrandCorollary` | The corollary on pp. 258–259 of the same paper: convergence of the increments to zero on a density-one set forces a logarithm. Its proof is printed there. |
@@ -55,8 +54,10 @@ additivity assumption,
  \left(\sum_{p^k\le X}|f(p^k)|^2/p^k\right)^{1/2}.
 \]
 
-It also proves `elliott_iff_weighted`, so either center convention for
-Elliott implies the other with an absolute change of constant.
+The auxiliary statement `Elliott` records the general fourth-moment theorem
+with the original unweighted center ([Elliott, 1980, p. 893](https://doi.org/10.4153/CJM-1980-068-0)),
+including its stated range `X ≥ 2`. `elliott_iff_weighted` proves the
+change of convention. Neither form is a hypothesis of `main_of_cited`.
 [`SecondMoment.lean`](Erdos1122/SecondMoment.lean) derives the
 Turán–Kubilius upper bound at both centers from `Ruzsa`, using the
 competitor `c = 0`. It then proves the strongly additive bound at the
@@ -64,8 +65,7 @@ prime center, including the finite cases `1 ≤ X < 2` and `2 ≤ X < 3`.
 This is an upper-bound transfer; it is not presented as an equivalence of
 the entire two-sided Ruzsa statements at arbitrary centers.
 
-**Cutoff ranges.** Elliott's original Theorem 1 explicitly states uniformity
-for real `X ≥ 2`. Mangerel's published Theorem 1.1 states the integer range
+**Cutoff ranges.** Mangerel's published Theorem 1.1 states the integer range
 `10 ≤ H ≤ X/100`, which already requires `X ≥ 1000`; no additional
 starting threshold is stated there. Ruzsa's proposition quantifies
 absolute constants `c, C, X₀`, with
@@ -84,6 +84,34 @@ prime-power expansion and finite Cauchy–Schwarz give
 
 The constant depends on `B` alone. Taking `B = X₀` therefore extends the
 upper estimate without a new cited input or a finite-range lower estimate.
+
+## The direct fourth moment
+
+[`StrongFourthMoment.lean`](Erdos1122/StrongFourthMoment.lean) proves,
+with an absolute constant and for every real strongly additive `f` and
+real `X ≥ 2`,
+
+\[
+ \mathbb E_X|f-\mu_f(X)|^4
+ \le C\left(\left(\sum_{p\le X}\frac{f(p)^2}{p}\right)^2
+             +\sum_{p\le X}\frac{f(p)^4}{p}\right).
+\]
+
+`stronglyAdditive_fourth_moment_mass_direct` has no cited proposition
+hypothesis. It supplies both the small-mass estimate in the clipping
+argument and the uniform fourth moment used in Lemma 2.1.
+
+[`BernoulliFourth.lean`](Erdos1122/BernoulliFourth.lean) proves the finite
+centered fourth-moment bound by its repeated-index cases.
+[`DivisorFourth.lean`](Erdos1122/DivisorFourth.lean) uses coprimality and
+exact counts of multiples to compare these moments with integer averages.
+The complete error is at most `16/X * (sum |a_p|)^4`.
+For `p ≤ Y = X^(1/4)`, weighted Cauchy–Schwarz bounds it by the square
+of the quadratic prime mass. For larger primes, each integer up to `X`
+has at most four such prime factors. Fourth-power Hölder bounds the raw
+moment, while Chebyshev and Cauchy–Schwarz bound the center. The interval
+`2 ≤ X < 16` is handled by the same finite Cauchy estimate.
+Appendix A of the manuscript gives this argument in full.
 
 ## The Hildebrand bridge
 
@@ -136,9 +164,9 @@ main theorem is applied.
 |---|---|---|
 | `NormalizationExists` | `normalization_exists : NormalizationExists`; its definition takes `ErdosV` as input | [NormalizedExistence.lean](Erdos1122/NormalizedExistence.lean) |
 | `Estimate55` | `estimate55_of_ruzsa : Ruzsa → Estimate55` | [MixedMoment.lean](Erdos1122/MixedMoment.lean) |
-| `ClippedComparison` | `clipped_comparison : ClippedComparison`; its definition takes `Elliott` and `Estimate55` as inputs | [ClippedComparison.lean](Erdos1122/ClippedComparison.lean) |
+| `ClippedComparison` | `clipped_comparison : ClippedComparison`; its definition takes `Estimate55` as input | [ClippedComparison.lean](Erdos1122/ClippedComparison.lean) |
 | `ProjectionInstance` | `projection_instance : ProjectionInstance`; its definition takes `Ruzsa` as input | [VarianceLower.lean](Erdos1122/VarianceLower.lean) |
-| `WindowAssembly` | `window_assembly_of_elliott : Elliott → WindowAssembly` | [WindowAssembly.lean](Erdos1122/WindowAssembly.lean) |
+| `WindowAssembly` | `window_assembly : WindowAssembly` | [WindowAssembly.lean](Erdos1122/WindowAssembly.lean) |
 
 The normalization data include positive scales, `s_X → ∞`, `c_X → 0`,
 the prescribed capped quadratic mass, and actual global minimizers.
@@ -154,7 +182,7 @@ primes with sufficiently large reciprocal mass excludes any slope bounded
 away from zero.
 
 [`ShortIntervalTheorem.lean`](Erdos1122/ShortIntervalTheorem.lean)
-proves all of Lemma 2.1 from `Mangerel` and `Elliott`, including the
+proves all of Lemma 2.1 from `Mangerel` alone, including the
 varying family `z_X`, real cutoffs, and the limit in `X` before the integer
 limit in `H`. The dyadic cover, moment transfer, fourth-moment contraction,
 and center errors are proved. In particular, the exact floor identity

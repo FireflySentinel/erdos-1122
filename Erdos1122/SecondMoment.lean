@@ -1,6 +1,7 @@
 import Erdos1122.CenterShift
 import Erdos1122.AdditiveExpansion
 import Erdos1122.FiniteCutoffMoment
+import Erdos1122.StrongFourthMoment
 
 /-! # Turán--Kubilius at either center, from the stated Ruzsa theorem -/
 
@@ -144,27 +145,12 @@ theorem stronglyAdditive_second_moment (hR : Ruzsa) :
   have he := hf.prime_center_error_sq X (by linarith)
   nlinarith only [hh, hp, hs, he]
 
-/-- Elliott's fourth moment with its dependence on the small prime mass
-preserved; this is the moment bound used in the clipping argument. -/
-theorem stronglyAdditive_fourth_moment_mass (hE : Elliott) :
+/-- The direct strongly additive fourth moment, retaining both prime masses. -/
+theorem stronglyAdditive_fourth_moment_mass :
     ∃ C : ℝ, 0 < C ∧ ∀ f : ℕ → ℝ, IsStronglyAdditive f → ∀ X : ℝ, 2 ≤ X →
       initialMean (fun n => (f n - primeCenter f X) ^ 4) X ≤
-        C * (primeMoment f X 2 ^ 2 + primeMoment f X 4) := by
-  obtain ⟨C, hC, hE⟩ := hE
-  refine ⟨32 * C + 128, by positivity, ?_⟩
-  intro f hf X hX
-  have hh := hE f hf.isAdditive X hX
-  simp only [abs_pow_four] at hh
-  have h₂ := hf.primePowerMoment_le X 2
-  have h₄ := hf.primePowerMoment_le X 4
-  have hn : 0 ≤ primePowerMoment f X 2 := by unfold primePowerMoment; positivity
-  have hp := pow_le_pow_left₀ hn h₂ 2
-  have hm := mul_le_mul_of_nonneg_left (add_le_add hp h₄) hC.le
-  have hs := fourth_moment_center_shift f (primeCenter f X) (unweightedCenter f X) X (by linarith)
-  simp only [abs_pow_four] at hs
-  have he := pow_le_pow_left₀ (sq_nonneg _) (hf.prime_center_error_sq X hX) 2
-  have hQ : 0 ≤ primeMoment f X 4 := by unfold primeMoment; positivity
-  nlinarith [mul_nonneg hC.le hQ]
+        C * (primeMoment f X 2 ^ 2 + primeMoment f X 4) :=
+  stronglyAdditive_fourth_moment_mass_direct
 
 /-- The two small-scale cases missing from Ruzsa's range are finite identities. -/
 theorem stronglyAdditive_second_moment_small (f : ℕ → ℝ) (hf : IsStronglyAdditive f)

@@ -118,7 +118,7 @@ theorem abs_pow_four (x : ℝ) : |x| ^ 4 = x ^ 4 := by
 
 /-- A uniform fourth moment at the prime center, derived from Elliott's
 original statement with its different center. -/
-theorem stronglyAdditive_fourth_moment (hE : Elliott) (L V : ℝ) (hL : 0 ≤ L) (hV : 0 ≤ V) :
+theorem stronglyAdditive_fourth_moment_of_elliott (hE : Elliott) (L V : ℝ) (hL : 0 ≤ L) (hV : 0 ≤ V) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ f : ℕ → ℝ, IsStronglyAdditive f → ∀ X : ℝ, 2 ≤ X →
       (∀ p ∈ Nat.primesLE ⌊X⌋₊, |f p| ≤ L) → primeMoment f X 2 ≤ V →
       initialMean (fun n => (f n - primeCenter f X) ^ 4) X ≤ C := by

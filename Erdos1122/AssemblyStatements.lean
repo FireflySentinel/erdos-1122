@@ -83,7 +83,7 @@ def Estimate55 : Prop :=
 /-- The comparison of the clipped original function with the centered,
 strongly additive one, as in Lemma 5.1. -/
 def ClippedComparison : Prop :=
-  Elliott → Estimate55 → ∃ C : ℝ, 0 < C ∧
+  Estimate55 → ∃ C : ℝ, 0 < C ∧
     ∀ f : ℕ → ℝ, IsAdditive f → ∀ K M : ℝ, 1 < K → 0 < M → M < 1 / 4 →
       ∀ N : NormalizedFamily f M,
         IsBoundedUnder (· ≤ ·) atTop (N.discrepancy K) ∧

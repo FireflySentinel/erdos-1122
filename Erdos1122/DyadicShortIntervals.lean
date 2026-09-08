@@ -1,3 +1,4 @@
+import Erdos1122.StrongFourthMoment
 import Erdos1122.BackwardMoments
 import Erdos1122.ShortIntervals
 
@@ -33,16 +34,6 @@ theorem dyadic_weight_mass (Y : ℝ) : (∑ _n ∈ dyadicIndices Y, 2 / Y) ≤ 2
       intro n hn
       exact hY (dyadic_member_pos hn)
     simp [he]
-
-theorem primeMoment_mono (f : ℕ → ℝ) (j : ℕ) {Y X : ℝ} (hYX : Y ≤ X) :
-    primeMoment f Y j ≤ primeMoment f X j := by
-  unfold primeMoment
-  apply sum_le_sum_of_subset_of_nonneg
-  · intro p hp
-    exact Nat.mem_primesLE.2 ⟨(Nat.mem_primesLE.1 hp).1.trans (Nat.floor_le_floor hYX),
-      (Nat.mem_primesLE.1 hp).2⟩
-  · intro _ _ _
-    positivity
 
 theorem dyadic_window_indices (Y : ℝ) (H : ℕ) (hY : 2 ≤ Y)
     (hH : (H : ℝ) ≤ Y / 100) :
@@ -124,7 +115,7 @@ theorem dyadic_centered_first_bound (hM : Mangerel) (L V : ℝ) :
 
 /-- The family is indexed by the original cutoff `X`, even on the band
 ending at `δ X`. Both cited constants remain uniform in that family. -/
-theorem dyadic_short_interval_limit (hM : Mangerel) (hE : Elliott)
+theorem dyadic_short_interval_limit (hM : Mangerel)
     (z : ℝ → ℕ → ℝ) (L V : ℝ) (hL : 0 ≤ L) (hV : 0 ≤ V)
     (hz : ∀ X, IsStronglyAdditive (z X))
     (hcoeff : ∀ X p, p.Prime → |z X p| ≤ L)
@@ -134,7 +125,7 @@ theorem dyadic_short_interval_limit (hM : Mangerel) (hE : Elliott)
       ∑ n ∈ dyadicIndices (δ * X), (2 / (δ * X)) *
         (backwardWindowAverage (H + 1) (z X) n - primeCenter (z X) (δ * X)) ^ 2) atTop)
       atTop (𝓝 0) := by
-  obtain ⟨C, hC, hfourth⟩ := stronglyAdditive_fourth_moment hE L V hL hV
+  obtain ⟨C, hC, hfourth⟩ := stronglyAdditive_fourth_moment L V hL hV
   obtain ⟨A, hA, hfirst⟩ := dyadic_centered_first_bound hM L V
   have hscale : Tendsto (fun X : ℝ => δ * X) atTop atTop := tendsto_id.const_mul_atTop hδ
   let a : ℕ → ℝ := fun H => A * mangerelWindowError (H + 1)

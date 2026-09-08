@@ -44,7 +44,7 @@ theorem divisorSum_stronglyAdditive (P : Finset ℕ) (a : ℕ → ℝ)
 
 /-- Lemma 2.1 remains valid when the prime-mass bound holds eventually.
 Changing a family at bounded cutoffs leaves every inner limsup unchanged. -/
-theorem short_interval_second_moment_eventually (hM : Mangerel) (hE : Elliott)
+theorem short_interval_second_moment_eventually (hM : Mangerel)
     (z : ℝ → ℕ → ℝ) (L V : ℝ) (hL : 0 ≤ L) (hV : 0 ≤ V)
     (hz : ∀ X, IsStronglyAdditive (z X))
     (hcoeff : ∀ X p, p.Prime → |z X p| ≤ L)
@@ -69,7 +69,7 @@ theorem short_interval_second_moment_eventually (hM : Mangerel) (hE : Elliott)
     split_ifs with h
     · exact h
     · simpa [primeMoment] using hV
-  have ht := short_interval_second_moment hM hE z' L V hL hV hz' hcoeff' hmass'
+  have ht := short_interval_second_moment hM z' L V hL hV hz' hcoeff' hmass'
   have he (H : ℕ) : limsup (fun X : ℝ => shortIntervalMoment H (z' X) X 2) atTop =
       limsup (fun X : ℝ => shortIntervalMoment H (z X) X 2) atTop := by
     apply Filter.limsup_congr
@@ -114,11 +114,11 @@ theorem comparison_mass (N : NormalizedFamily f M) (K : ℝ) (hK : 1 ≤ K) :
   exact le_of_eq (by ring)
 
 /-- The actual family in Section 5 satisfies the already proved Lemma 2.1. -/
-theorem comparison_short_intervals (hM : Mangerel) (hE : Elliott)
+theorem comparison_short_intervals (hM : Mangerel)
     (N : NormalizedFamily f M) (K : ℝ) (hK : 1 < K) (hMpos : 0 < M) :
     Tendsto (fun H : ℕ => limsup (fun X : ℝ =>
       shortIntervalMoment H (N.comparison K X) X 2) atTop) atTop (𝓝 0) := by
-  exact short_interval_second_moment_eventually hM hE (N.comparison K) K (K ^ 2 * M)
+  exact short_interval_second_moment_eventually hM (N.comparison K) K (K ^ 2 * M)
     (by linarith) (by positivity) (N.comparison_stronglyAdditive K)
     (N.comparison_coeff K (by linarith)) (N.comparison_mass K hK.le)
 

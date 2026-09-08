@@ -1,6 +1,6 @@
 import Erdos1122.DyadicCover
 
-/-! # Lemma 2.1, conditional only on Mangerel and Elliott
+/-! # Lemma 2.1, conditional only on Mangerel
 
 The family may vary with the real cutoff. The limit in that cutoff is taken
 first, with the integer window held fixed throughout each inner limit.
@@ -13,9 +13,9 @@ open Statements
 
 noncomputable section
 
-/-- The complete short-interval conclusion, with the two cited results as
-hypotheses and no assumed covering or center-error estimates. -/
-theorem short_interval_second_moment (hM : Mangerel) (hE : Elliott)
+/-- The complete short-interval conclusion from Mangerel, including the
+fourth-moment, covering, and center-error estimates. -/
+theorem short_interval_second_moment (hM : Mangerel)
     (z : ℝ → ℕ → ℝ) (L V : ℝ) (hL : 0 ≤ L) (hV : 0 ≤ V)
     (hz : ∀ X, IsStronglyAdditive (z X))
     (hcoeff : ∀ X p, p.Prime → |z X p| ≤ L)
@@ -23,7 +23,7 @@ theorem short_interval_second_moment (hM : Mangerel) (hE : Elliott)
     Tendsto (fun H : ℕ => limsup (fun X : ℝ => shortIntervalMoment H (z X) X 2) atTop)
       atTop (𝓝 0) := by
   apply (tendsto_add_atTop_iff_nat 1).1
-  obtain ⟨C, hC, hfourth⟩ := stronglyAdditive_fourth_moment hE L V hL hV
+  obtain ⟨C, hC, hfourth⟩ := stronglyAdditive_fourth_moment L V hL hV
   let F : ℕ → ℝ → ℝ := fun H X => shortIntervalMoment (H + 1) (z X) X 2
   let band : ℕ → ℕ → ℝ → ℝ := fun j H X =>
     dyadicSecondMoment (H + 1) (z X) (dyadicRatio j * X)
@@ -57,7 +57,7 @@ theorem short_interval_second_moment (hM : Mangerel) (hE : Elliott)
       (fun n => backwardWindowAverage (H + 1) (z X) n - primeCenter (z X) (dyadicRatio j * X))
       (fun _ _ => by positivity) 2 (2 * C) (by norm_num) (dyadic_weight_mass _) hh
   have hBl (j : ℕ) : Tendsto (fun H => limsup (band j H) atTop) atTop (𝓝 0) :=
-    dyadic_short_interval_limit hM hE z L V hL hV hz hcoeff hmass
+    dyadic_short_interval_limit hM z L V hL hV hz hcoeff hmass
       (dyadicRatio j) (dyadicRatio_pos j) (dyadicRatio_le_one j)
   have hcover (H J : ℕ) : limsup (F H) atTop ≤
       (∑ j ∈ range J, limsup (band j H) atTop) + sqrt (dyadicRatio J * C) := by
@@ -88,7 +88,7 @@ theorem short_interval_second_moment (hM : Mangerel) (hE : Elliott)
     linarith [hcover H J]
 
 /-- Lemma 2.1 in the manuscript's normalization and order of limits. -/
-theorem lemma_2_1 (hM : Mangerel) (hE : Elliott)
+theorem lemma_2_1 (hM : Mangerel)
     (z : ℝ → ℕ → ℝ) (L V : ℝ) (hL : 0 ≤ L) (hV : 0 ≤ V)
     (hz : ∀ X, IsStronglyAdditive (z X))
     (hcoeff : ∀ X p, p.Prime → |z X p| ≤ L)
@@ -103,7 +103,7 @@ theorem lemma_2_1 (hM : Mangerel) (hE : Elliott)
     unfold shortIntervalMoment
     rw [← mul_sum]
     ring
-  simpa only [he] using short_interval_second_moment hM hE z L V hL hV hz hcoeff hmass
+  simpa only [he] using short_interval_second_moment hM z L V hL hV hz hcoeff hmass
 
 end
 

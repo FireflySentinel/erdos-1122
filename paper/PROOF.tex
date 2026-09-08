@@ -34,7 +34,7 @@ on the Erd\H{o}s Problems website. The main step is to deduce finite
 concentration without a growth assumption on the values at prime powers.
 A truncated normalization and a bounded clipping reduce this step to
 Mangerel's first-moment theorem for short intervals, Ruzsa's
-second-moment estimate, and Elliott's high-power Tur\'an--Kubilius inequality.
+second-moment estimate, and a directly proved fourth-moment bound.
 \end{abstract}
 \maketitle
 
@@ -93,7 +93,8 @@ no restriction on their values at higher prime powers.
 It therefore suffices to prove finite concentration. Assuming the
 contrary, we normalize $f$ and subtract a logarithmic term so that the
 truncated quadratic mass of its prime values is fixed. After clipping,
-the Ruzsa--Elliott moment estimates give a positive variance for a
+Ruzsa's second-moment estimate and a finite fourth-moment bound give a
+positive variance for a
 strongly additive approximation, while the density hypothesis and
 Mangerel's short-interval theorem force the same variance to satisfy an
 incompatible upper bound.
@@ -142,23 +143,15 @@ and finite Cauchy--Schwarz give
  \E_X|z-A_0(z,X)|^2
  \le 2\bigl(B\lfloor B\rfloor+\#\{p^k\le B:k\ge1\}\bigr)B_2(z,X)^2.
 \]
-Elliott's high-power Tur\'an--Kubilius inequality
-\cite[Theorem~1]{Elliott}, with exponent $4$, gives, for every real $X\ge2$,
-\[
- \E_X|z-\widetilde A_0(z,X)|^4
- \ll B_2(z,X)^4+B_4(z,X)^4.
-\]
-Since
-\[
- |\widetilde A_0(z,X)-A_0(z,X)|
- \le\sum_{p^k\le X}\frac{|z(p^k)|}{p^{k+1}}
- \ll B_2(z,X),
-\]
-the same bound holds with $A_0$ as center:
+For a strongly additive function $z(n)=\sum_{p\mid n}a_p$, we use
 \begin{equation}\label{eq:fourth}
- \E_X|z-A_0(z,X)|^4
- \ll B_2(z,X)^4+B_4(z,X)^4.
+ \E_X|z-\mu_z(X)|^4
+ \ll \left(\sum_{p\le X}\frac{a_p^2}{p}\right)^2
+       +\sum_{p\le X}\frac{a_p^4}{p},\qquad X\ge2.
 \end{equation}
+This special case of Elliott's high-power inequality
+\cite[Theorem~1]{Elliott} has an elementary finite proof, given in
+Appendix~\ref{app:fourth}. We use that proof throughout.
 
 If $z$ is strongly additive, then
 \begin{align}
@@ -170,8 +163,8 @@ If $z$ is strongly additive, then
 \end{align}
 Both quantities are
 $\ll (\sum_{p\le X}a_p^2/p)^{1/2}$. Also
-$B_2(z,X)^2\le2\sum_{p\le X}a_p^2/p$, with the analogous bound for
-$B_4$. Thus, if $|a_p|\le L$ and
+$B_2(z,X)^2\le2\sum_{p\le X}a_p^2/p$. Combining Ruzsa's upper
+bound with \eqref{eq:fourth}, if $|a_p|\le L$ and
 $\sum_{p\le X}a_p^2/p\le V$, then
 \begin{equation}\label{eq:bounded-moments}
  \E_X|z-\mu_z(X)|^2\ll V,\qquad
@@ -658,6 +651,84 @@ Erd\H{o}s states Theorems~IX and~X without proof on page~17 of
 The argument above uses Hildebrand's proved Theorem~1, its formula~(1.4),
 and its corollary in place of that announcement.
 \end{remark}
+
+\appendix
+\section{A fourth moment for strongly additive functions}\label{app:fourth}
+
+We prove \eqref{eq:fourth} with an absolute constant and no restriction
+on the coefficients. Fix $X\ge2$ and put
+\[
+ V_j=\sum_{p\le X}\frac{|a_p|^j}{p}\quad(j=2,4).
+\]
+For $X\ge16$, let $Y=X^{1/4}$ and split
+\[
+ z(n)-\mu_z(X)=S(n)+T(n),\qquad
+ S(n)=\sum_{p\le Y}a_p(\ind_{p\mid n}-1/p),\quad
+ T(n)=\sum_{Y<p\le X}a_p(\ind_{p\mid n}-1/p).
+\]
+
+First consider $S$. Let $(B_p)_{p\le Y}$ be independent Bernoulli
+variables with $\mathbb P(B_p=1)=1/p$. Expanding the fourth power and
+centering each variable leaves only the fourfold diagonal and the
+three pairings. Hence
+\[
+ \mathbb E\left(\sum_{p\le Y}a_p(B_p-1/p)\right)^4
+ \le \sum_{p\le Y}\frac{a_p^4}{p}
+       +3\left(\sum_{p\le Y}\frac{a_p^2}{p}\right)^2
+ \le V_4+3V_2^2.
+\]
+For any finite set $Q$ of primes,
+\[
+ \E_X\prod_{p\in Q}\ind_{p\mid n}
+ =\frac1X\left\lfloor\frac{X}{\prod_{p\in Q}p}\right\rfloor
+ =\prod_{p\in Q}\frac1p+O(1/X),
+\]
+with error at most $1/X$, including $Q=\varnothing$. Each centered
+product of four indicators expands into sixteen such monomials, whose
+additional coefficients have absolute value at most one. Repeated
+primes cause no change: their indicators are idempotent. Consequently,
+\[
+ \left|\E_X S^4-
+  \mathbb E\left(\sum_{p\le Y}a_p(B_p-1/p)\right)^4\right|
+ \le \frac{16}{X}\left(\sum_{p\le Y}|a_p|\right)^4.
+\]
+Weighted Cauchy--Schwarz gives
+\[
+ \left(\sum_{p\le Y}|a_p|\right)^2
+ \le\left(\sum_{p\le Y}\frac{a_p^2}{p}\right)
+        \left(\sum_{p\le Y}p\right)
+ \le V_2Y^2.
+\]
+Since $Y^4=X$, it follows that $\E_X S^4\le V_4+19V_2^2$.
+
+For the remaining primes, write
+\[
+ A(n)=\sum_{Y<p\mid n}a_p,\qquad b=\sum_{Y<p\le X}\frac{a_p}{p},
+ \qquad T(n)=A(n)-b.
+\]
+At most four primes exceeding $Y$ divide an integer $n\le X$.
+Finite H\"older and the count of multiples therefore give
+\[
+ |A(n)|^4\le4^3\sum_{Y<p\mid n}a_p^4,
+ \qquad \E_X|A|^4\le64V_4.
+\]
+The Chebyshev--Abel estimate used in Section~3 gives
+\[
+ \sum_{Y<p\le X}\frac1p
+ \le\log4\left(\log\frac{\log X}{\log Y}+\frac1{\log Y}\right)
+ \le\log4\left(\log4+\frac1{\log2}\right).
+\]
+Thus $b^4\le V_2^2(\sum_{Y<p\le X}1/p)^2\ll V_2^2$.
+Applying $|u+v|^4\le8(|u|^4+|v|^4)$ to $T=A-b$ and then to
+$S+T$ proves \eqref{eq:fourth} for $X\ge16$.
+
+Finally, if $2\le X<16$, then
+\[
+ |z(n)-\mu_z(X)|\le\sum_{p\le X}|a_p|\quad(n\le X),\qquad
+ \left(\sum_{p\le X}|a_p|\right)^2\le V_2X^2\le256V_2.
+\]
+Averaging the fourth powers gives the same bound with an absolute
+constant. This proves \eqref{eq:fourth} for all real $X\ge2$.
 
 \section*{Declaration of generative AI use}
 GPT-6 Astra was used to generate the mathematical proofs and draft the

@@ -9,8 +9,8 @@ nonnegative.
 
 Results of Erdős and Hildebrand reduce the theorem to *finite concentration*: some interval of a
 fixed length holds a positive proportion of the values $f(n)$, $n\le X$, for arbitrarily
-large $X$. Ruzsa's second-moment estimate and Elliott's high-power Turán–Kubilius
-inequality give a positive variance for a clipped strongly additive comparison, while the
+large $X$. Ruzsa's second-moment estimate and a directly proved fourth-moment
+bound give a positive variance for a clipped strongly additive comparison, while the
 density hypothesis and Mangerel's first-moment theorem for short intervals force the same
 variance to satisfy an incompatible upper bound.
 
@@ -35,7 +35,7 @@ No restriction is placed on the values of $f$ at higher prime powers, and the se
 decreases is only assumed to have density zero, with no rate.
 
 Lean proves the full implication from the cited analytic inputs to Theorem 1.1:
-`main_of_cited` takes `Mangerel`, `Ruzsa`, `Elliott`, `ErdosV`, and `Hildebrand`
+`main_of_cited` takes `Mangerel`, `Ruzsa`, `ErdosV`, and `Hildebrand`
 as hypotheses. No intermediate arithmetic hypothesis remains. The cited
 theorems themselves are not proved in this repository.
 [FORMALIZATION.md](FORMALIZATION.md) gives their exact scope and source
@@ -44,9 +44,11 @@ characteristic-function formula, and its density-one corollary. The bridge
 `hildebrand_implies_erdosX` is proved; Erdős’s unproved announcement is no
 longer an external input. Ruzsa is assumed only above an absolute cutoff,
 with the small-scale upper bound supplied by a finite Cauchy estimate.
+The strongly additive fourth moment is proved directly by finite expansion,
+counting multiples, and Chebyshev; Elliott is not an external input.
 Lemma 3.1 and the prime-sum lower bound in (5.10) use Chebyshev alone;
 there is no Mertens input. [Check.lean](Check.lean) checks the complete
-five-input interface and guards its axiom dependencies to `propext`,
+four-input interface and guards its axiom dependencies to `propext`,
 `Classical.choice`, and `Quot.sound`. CI also runs the builtin Lean 4
 `leanchecker` to replay the project declarations.
 
@@ -57,7 +59,8 @@ five-input interface and guards its axiom dependencies to `propext`,
 | Theorem 1.1 from the stated analytic inputs | [Main.lean](Erdos1122/Main.lean), [Statements.lean](Erdos1122/Statements.lean) |
 | Hildebrand’s theorem and corollary imply the required Erdős X statement | [HildebrandStatements.lean](Erdos1122/HildebrandStatements.lean), [HildebrandBridge.lean](Erdos1122/HildebrandBridge.lean) |
 | Finite-cutoff upper bound, without an extra analytic input | [FiniteCutoffMoment.lean](Erdos1122/FiniteCutoffMoment.lean) |
-| Lemma 2.1 in full, conditional on Mangerel and Elliott | [ShortIntervalTheorem.lean](Erdos1122/ShortIntervalTheorem.lean), [DyadicShortIntervals.lean](Erdos1122/DyadicShortIntervals.lean), [DyadicCover.lean](Erdos1122/DyadicCover.lean) |
+| Fourth moment, including its quadratic and quartic prime-mass dependence | [StrongFourthMoment.lean](Erdos1122/StrongFourthMoment.lean), [DivisorFourth.lean](Erdos1122/DivisorFourth.lean), [BernoulliFourth.lean](Erdos1122/BernoulliFourth.lean) |
+| Lemma 2.1 in full, conditional on Mangerel | [ShortIntervalTheorem.lean](Erdos1122/ShortIntervalTheorem.lean), [DyadicShortIntervals.lean](Erdos1122/DyadicShortIntervals.lean), [DyadicCover.lean](Erdos1122/DyadicCover.lean) |
 | Lemma 2.1, first- and fourth-moment interpolation | [Interpolation.lean](Erdos1122/Interpolation.lean) |
 | Lemma 3.1, unconditional prime-tail weight | [PrimeHarmonic.lean](Erdos1122/PrimeHarmonic.lean), [PrimeReciprocal.lean](Erdos1122/PrimeReciprocal.lean), [PrimeMoment.lean](Erdos1122/PrimeMoment.lean) |
 | Lemma 4.1, finite minimizer and the stationary identity | [Minimizer.lean](Erdos1122/Minimizer.lean) |

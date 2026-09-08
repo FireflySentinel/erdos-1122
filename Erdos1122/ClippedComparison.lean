@@ -100,8 +100,8 @@ set_option maxHeartbeats 800000 in
 /-- Lemma 5.1 with all finite clipping cases, the mixed moment, and the
 higher-prime-power comparison assembled. -/
 theorem clipped_comparison : ClippedComparison := by
-  intro hE h55
-  obtain ⟨E, hEpos, hE⟩ := stronglyAdditive_fourth_moment_mass hE
+  intro h55
+  obtain ⟨E, hEpos, hE⟩ := stronglyAdditive_fourth_moment_mass
   obtain ⟨C55, hC55, h55⟩ := h55
   let C : ℝ := 4 * E + 8 * C55 + 18
   have hC : 0 < C := by dsimp [C]; positivity

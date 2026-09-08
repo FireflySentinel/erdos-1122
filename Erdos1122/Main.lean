@@ -23,23 +23,22 @@ open Statements
 set_option autoImplicit false
 noncomputable section
 
-/-- The entire chain to Erdős Problem 1122, conditional on exactly the
-cited theorems. No intermediate arithmetic hypothesis remains. -/
+/-- The full implication to Erdős Problem 1122 from the stated analytic inputs. -/
 theorem Statements.main_of_cited
-    (hM : Mangerel) (hR : Ruzsa) (hE : Elliott) (hV : ErdosV) (hH : Hildebrand) :
+    (hM : Mangerel) (hR : Ruzsa) (hV : ErdosV) (hH : Hildebrand) :
     ErdosProblem1122 := by
   have hX := hildebrand_implies_erdosX hH
   intro f hf hdec
   apply logarithmic_of_finite_concentration hV hX f hf _ hdec
   by_contra hno
   obtain ⟨c₀, C₀, hc₀, _hC₀, hlower⟩ := projection_instance hR
-  obtain ⟨C, _hC, hupper⟩ := clipped_comparison hE (estimate55_of_ruzsa hR)
+  obtain ⟨C, _hC, hupper⟩ := clipped_comparison (estimate55_of_ruzsa hR)
   obtain ⟨K, M, hK, hMpos, hquarter, hstrict⟩ := choose_constants c₀ C₀ (8 * C) hc₀
   obtain ⟨N⟩ := normalization_exists hV f hf hno M hMpos
   obtain ⟨hvarBound, hlow⟩ := hlower f hf K M hK hMpos hquarter N
   obtain ⟨herrBound, herr⟩ := hupper f hf K M hK hMpos hquarter N
-  have hshort := N.comparison_short_intervals hM hE K hK hMpos
-  have hcomp := window_assembly_of_elliott hE f hf hdec K M hK hMpos hquarter N herrBound hshort
+  have hshort := N.comparison_short_intervals hM K hK hMpos
+  have hcomp := window_assembly f hf hdec K M hK hMpos hquarter N herrBound hshort
   have hnonneg (X : ℝ) : 0 ≤ N.variance K X :=
     initialMean_square_nonneg (fun n => N.comparison K X n - primeCenter (N.comparison K X) X) X
   have hbelow : IsBoundedUnder (· ≥ ·) atTop (N.variance K) := by
