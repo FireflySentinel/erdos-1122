@@ -28,9 +28,9 @@ University of Chicago\\
 \begin{abstract}
 We prove that a real additive function which decreases on a set of
 natural density zero is a nonnegative constant multiple of the logarithm.
-This answers a conjecture of Erd\H{o}s from 1946, listed as Problem~1122
+This settles a conjecture of Erd\H{o}s from 1946, listed as Problem~1122
 on the Erd\H{o}s Problems website. The main step is to deduce finite
-concentration without a growth assumption on the values at prime powers.
+concentration without a growth assumption on the prime values.
 A truncated normalization and a bounded clipping reduce this step to
 Mangerel's first-moment theorem for short intervals, Ruzsa's
 second-moment estimate, and Elliott's fourth-moment inequality.
@@ -41,8 +41,8 @@ second-moment estimate, and Elliott's fourth-moment inequality.
 A function $f\colon\N\to\R$ is \emph{additive} if
 $f(ab)=f(a)+f(b)$ whenever $(a,b)=1$. Erd\H{o}s proved that an additive
 function which is nondecreasing on $\N$ must be a constant multiple of
-$\log n$. He asked whether the same conclusion follows when the set of
-decreases has natural density zero \cite[p.~3]{Erdos}. The question is
+$\log n$. He conjectured that the same conclusion holds when the set of
+decreases has natural density zero \cite[p.~3]{Erdos}. The conjecture is
 also recorded as Erd\H{o}s Problem~1122 \cite{Problem1122}.
 
 \begin{theorem}\label{thm:main}
@@ -54,8 +54,10 @@ then there is a constant $c\ge0$ such that $f(n)=c\log n$ for every
 $n\in\N$.
 \end{theorem}
 
-The implication from the four cited results of Mangerel, Ruzsa, Erd\H{o}s
-and Hildebrand to Theorem~\ref{thm:main} has been checked in Lean~4.\footnote{\url{https://github.com/FireflySentinel/erdos-1122}}
+A Lean~4 formalization of Theorem~\ref{thm:main} takes the results of
+Mangerel, Ruzsa, Erd\H{o}s and Hildebrand as hypotheses.\footnote{The
+fourth-moment and prime-sum estimates are proved in the formalization;
+see \url{https://github.com/FireflySentinel/erdos-1122}.}
 
 Erd\H{o}s proved that $f(n+1)-f(n)=o(1)$ forces $f=c\log$;
 K\'atai and Wirsing independently weakened this to
@@ -81,10 +83,10 @@ Under \eqref{eq:classical-concentration}, Hildebrand gives a symmetric
 limiting law for $f(n+1)-f(n)$; the density hypothesis and his corollary
 then force $f=c\log$. Thus it suffices to prove finite concentration.
 Assuming the contrary, we normalize $f$ modulo a logarithmic term to fix
-its truncated quadratic prime mass. Ruzsa and Elliott give positive
-variance after clipping, whereas Mangerel's short-interval theorem and
-the density hypothesis give an incompatible upper bound. Higher prime
-powers require no growth restriction.
+its truncated quadratic prime mass. Ruzsa gives a positive lower bound
+for the variance after clipping, while Elliott supplies the fourth-moment
+control needed to combine Mangerel's short-interval estimate with the
+density hypothesis and obtain an incompatible upper bound.
 
 \subsection*{Notation}
 Letters $p,q$ denote primes. We write
@@ -92,8 +94,7 @@ Letters $p,q$ denote primes. We write
  \E_X F=\frac1X\sum_{n\le X}F(n),\qquad
  \mathcal A_H F(n)=\frac1H\sum_{j=0}^{H-1}F(n-j)\quad(n\ge H).
 \]
-Restricted averages, such as $\E_X(F\ind_{n\ge H})$, retain the
-normalizing factor $1/X$. For strongly additive $z(n)=\sum_{p\mid n}a_p$,
+For strongly additive $z(n)=\sum_{p\mid n}a_p$,
 put $\mu_z(X)=\sum_{p\le X}a_p/p$.
 All implicit constants are absolute unless a dependence is indicated.
 The constants $K$ and $M$ used in the proof are fixed before $X$ tends
@@ -108,9 +109,10 @@ For an additive function $z$, define
  \qquad
  \widetilde A_0(z,X)=\sum_{p^k\le X}\frac{z(p^k)}{p^k},
 \]
-and $B_j(z,X)^j=\sum_{p^k\le X}|z(p^k)|^j/p^k$ for $j=2,4$.
+and $B_2(z,X)^2=\sum_{p^k\le X}|z(p^k)|^2/p^k$.
 Ruzsa's second-moment estimate \cite{Ruzsa}, in the form recorded by
-Mangerel \cite[Lemma~3.3]{Mangerel}, gives, above an absolute threshold,
+Mangerel \cite[Lemma~3.3]{Mangerel}, gives, for all sufficiently large $X$
+and uniformly in $z$,
 \begin{equation}\label{eq:ruzsa}
  \E_X|z-A_0(z,X)|^2
  \asymp\inf_{b\in\R}\left(b^2+
@@ -190,8 +192,14 @@ Jensen's inequality and \eqref{eq:bounded-moments} at $Y$ imply
  \frac2Y\sum_{Y/2<n\le Y}|F_Y(n)|^4
  \ll V^2+L^2V+O_L((\log Y)^{-4}).
 \end{equation}
-Indeed, after centering at $\mu_{z_X}(Y)$, each index lies in $[1,Y]$
-and occurs at most $H$ times; \eqref{eq:dyadic-center} bounds the center shift.
+Indeed, with $\mu=\mu_{z_X}(Y)$, Jensen's inequality gives
+\[
+ |\mathcal A_H(z_X-\mu)(n)|^4
+ \le \mathcal A_H(|z_X-\mu|^4)(n).
+\]
+Since $H\le Y/100<Y/2$, each index in these windows lies in $[1,Y]$
+and occurs at most $H$ times when we sum over $Y/2<n\le Y$.
+Equation \eqref{eq:dyadic-center} bounds the center shift.
 H\"older's inequality now gives
 \[
  \frac2Y\sum|F_Y|^2
@@ -202,8 +210,8 @@ Together with \eqref{eq:mangerel} and
 \eqref{eq:discrepancy-fourth}, this proves the required iterated limit
 on each fixed dyadic band $Y\asymp X$.
 
-This dyadic conclusion extends to the whole interval. On each of
-finitely many bands with $Y\asymp X$, we have
+To extend this conclusion to the whole interval, fix $\eta=2^{-r}$.
+On each of the $r$ dyadic bands covering $(\eta X,X]$, we have
 \[
  |\mu_{z_X}(X)-\mu_{z_X}(Y)|
  \le L\sum_{Y<p\le X}\frac1p=o(1).
@@ -211,8 +219,11 @@ finitely many bands with $Y\asymp X$, we have
 The omitted initial segment $H\le n\le\eta X$ contributes
 $O_{L,V}(\sqrt\eta)$ to \eqref{eq:short-limit}: apply
 Cauchy--Schwarz and Jensen, using the fourth-moment bound
-\eqref{eq:bounded-moments} at $X$. First take $X\to\infty$,
-then $H\to\infty$, and finally $\eta\downarrow0$.
+\eqref{eq:bounded-moments} at $X$. Given $\varepsilon>0$, first choose
+$\eta$ so that this bound is less than $\varepsilon/2$. The band
+estimates then give $H_0$ such that, for every integer $H\ge H_0$,
+their combined contribution is less than $\varepsilon/2$ for all
+$X\ge X_0(\varepsilon,\eta,H)$. This proves \eqref{eq:short-limit}.
 \end{proof}
 
 \section{A weighted estimate for a set of primes}
@@ -265,8 +276,8 @@ concentration. For $s>0$ define
 \begin{lemma}\label{lem:normalization}
 For each fixed $M>0$ and all sufficiently large $X$, there are
 $s_X>0$ and a minimizer $c_X$ in \eqref{eq:W} such that
-$W_X(s_X)=M$. They may be chosen so that $s_X\to\infty$; any
-such choices satisfy $c_X\to0$. Put $u_p=f(p)/s_X-c_X\log p$ for
+$W_X(s_X)=M$. Then necessarily $s_X\to\infty$, and any corresponding
+minimizers satisfy $c_X\to0$. Put $u_p=f(p)/s_X-c_X\log p$ for
 $p\le X$. Then
 \begin{align}
  \sum_{p\le X}\frac{\min\{u_p^2,1\}}p
@@ -304,7 +315,7 @@ truncated square sum. Erd\H{o}s's Theorem~V would therefore give
 finite concentration of $f$, contrary to the assumption.
 
 Continuity now supplies $s_X$ with $W_X(s_X)=M$. Monotonicity and
-the preceding claim imply $s_X\to\infty$. We have
+the preceding claim imply $s_X\to\infty$ for every such choice. We have
 $|c_X|\le\sqrt M$. If a subsequential limit of $c_X$ were a
 nonzero number $c$, Fatou's lemma on the fixed primes would give
 \[
@@ -342,19 +353,19 @@ Let $\clip(t)=\max\{-K,\min\{t,K\}\}$ and set
  S(n)&=S_0(n)-a_X.
 \end{align*}
 Coefficients at primes greater than $X$ are set to zero. Define
-\begin{equation}\label{eq:Y-and-Z}
+\begin{equation}\label{eq:clipped-and-Z}
  \begin{split}
  z_X(n)&=\sum_{p\mid n}\clip(u_p),\qquad Z(n)=z_X(n)-a_X,\\
- Y(n)&=\clip\left(\frac{f(n)}{s_X}-c_X\log n-a_X\right).
+ g_X(n)&=\clip\left(\frac{f(n)}{s_X}-c_X\log n-a_X\right).
  \end{split}
 \end{equation}
-Thus $Y$ clips the value of the additive function, whereas $z_X$
+Thus $g_X$ clips the value of the additive function, whereas $z_X$
 clips the prime contributions individually.
 
 \begin{lemma}\label{lem:clipping}
 There is an absolute constant $C$ such that
 \begin{equation}\label{eq:clipping-bound}
- \limsup_{X\to\infty}\E_X|Y-Z|^2
+ \limsup_{X\to\infty}\E_X|g_X-Z|^2
  \le C\left(\frac M{K^2}+M^2\log(2/M)+K^2M^2\right).
 \end{equation}
 \end{lemma}
@@ -405,10 +416,10 @@ by Lemma~\ref{lem:tail-weight}. This proves \eqref{eq:mixed-moment}.
 
 Set
 \[
- Y_*(n)=\clip\left(S(n)+
+ g_X^*(n)=\clip\left(S(n)+
                   \sum_{\substack{p\mid n\\p\in\mathcal T}}u_p\right).
 \]
-If $T(n)=0$, the difference $Y_*(n)-Z(n)$ vanishes for $|S(n)|\le K$
+If $T(n)=0$, the difference $g_X^*(n)-Z(n)$ vanishes for $|S(n)|\le K$
 and otherwise has absolute value at most $|S(n)|$. Its squared
 contribution is at most $\E_X S^4/K^2$.
 If $T(n)=1$, with unique tail value $v$, the Lipschitz property of
@@ -418,20 +429,20 @@ $\clip$ gives
 \]
 If $T(n)\ge2$, then
 \[
- |Y_*(n)-Z(n)|\le |S(n)|+K(T(n)+1)
+ |g_X^*(n)-Z(n)|\le |S(n)|+K(T(n)+1)
  \le |S(n)|+\frac32KT(n),
 \]
 and hence
 \[
- |Y_*(n)-Z(n)|^2\le C S(n)^2+C K^2T(n)(T(n)-1).
+ |g_X^*(n)-Z(n)|^2\le C S(n)^2+C K^2T(n)(T(n)-1).
 \]
 Equations \eqref{eq:S-fourth}--\eqref{eq:mixed-moment} therefore imply
 \begin{equation}\label{eq:strong-clipping}
- \E_X|Y_*-Z|^2
+ \E_X|g_X^*-Z|^2
  \ll\frac M{K^2}+M^2\log(2/M)+K^2M^2+o(1).
 \end{equation}
 
-To compare $Y$ and $Y_*$, suppose $p^k\Vert n$ with $k\ge2$. Its
+To compare $g_X$ and $g_X^*$, suppose $p^k\Vert n$ with $k\ge2$. Its
 contribution to the difference between the two unclipped expressions is
 \[
  \frac{f(p^k)-f(p)}{s_X}-c_X(k-1)\log p.
@@ -446,8 +457,11 @@ Then, uniformly in $X$,
 \]
 Outside this exceptional set, only the fixed prime powers in
 $\mathcal F$ contribute, and their total contribution tends uniformly
-to zero. Thus the unclipped difference tends to zero in probability.
-Since $\clip$ is bounded and Lipschitz, $\E_X|Y-Y_*|^2=o(1)$;
+to zero. The Lipschitz bound and $|g_X|,|g_X^*|\le K$ therefore give
+\[
+ \limsup_{X\to\infty}\E_X|g_X-g_X^*|^2\le4K^2\varepsilon.
+\]
+Letting $\varepsilon\downarrow0$ yields $\E_X|g_X-g_X^*|^2=o(1)$;
 combine this with \eqref{eq:strong-clipping}.
 \end{proof}
 
@@ -494,42 +508,42 @@ Combining this with \eqref{eq:projection} proves
 
 \section{Proof of Theorem~\ref{thm:main}}
 
-Assume that $f$ has no finite concentration and take $Y$ from
-\eqref{eq:Y-and-Z}. If $f(n+1)\ge f(n)$, monotonicity and Lipschitz
+Assume that $f$ has no finite concentration and take $g_X$ from
+\eqref{eq:clipped-and-Z}. If $f(n+1)\ge f(n)$, monotonicity and Lipschitz
 continuity of $\clip$ give
-$(Y(n)-Y(n+1))_+\le |c_X|\log(1+1/n)$, where $t_+=\max\{t,0\}$.
-At a decrease of $f$, this quantity is at most $2K$. Since $|Y|\le K$,
+$(g_X(n)-g_X(n+1))_+\le |c_X|\log(1+1/n)$, where $t_+=\max\{t,0\}$.
+At a decrease of $f$, this quantity is at most $2K$. Since $|g_X|\le K$,
 telescoping the signed increments gives
 \begin{equation}\label{eq:variation}
- \sum_{n<X}|Y(n+1)-Y(n)|
+ \sum_{n<X}|g_X(n+1)-g_X(n)|
  \le2K+4KD_f(X)+2|c_X|\log X=o(X).
 \end{equation}
-For each fixed $H$, every difference $Y(n)-Y(n-j)$ is bounded by
-the sum of the $j$ intervening absolute increments. Since $|Y|\le K$,
+For each fixed $H$, every difference $g_X(n)-g_X(n-j)$ is bounded by
+the sum of the $j$ intervening absolute increments. Since $|g_X|\le K$,
 \eqref{eq:variation} yields
-\begin{equation}\label{eq:Y-short}
- \frac1X\sum_{H\le n\le X}|Y(n)-\mathcal A_HY(n)|^2\longrightarrow0.
+\begin{equation}\label{eq:clipped-short}
+ \frac1X\sum_{H\le n\le X}|g_X(n)-\mathcal A_H g_X(n)|^2\longrightarrow0.
 \end{equation}
 
 Let $m_X=\mu_{z_X}(X)-a_X$. Then $Z-m_X=z_X-\mu_{z_X}(X)$, and
 \begin{equation}\label{eq:four-terms}
- Z-m_X=(Z-Y)+(Y-\mathcal A_HY)
-            +\mathcal A_H(Y-Z)+(\mathcal A_H Z-m_X).
+ Z-m_X=(Z-g_X)+(g_X-\mathcal A_H g_X)
+            +\mathcal A_H(g_X-Z)+(\mathcal A_H Z-m_X).
 \end{equation}
 The square of the right-hand side is at most four times the sum of
 the four squared terms. Jensen's inequality gives the contraction
 \[
- \frac1X\sum_{H\le n\le X}|\mathcal A_H(Y-Z)(n)|^2
- \le\frac1X\sum_{n\le X}|Y(n)-Z(n)|^2.
+ \frac1X\sum_{H\le n\le X}|\mathcal A_H(g_X-Z)(n)|^2
+ \le\frac1X\sum_{n\le X}|g_X(n)-Z(n)|^2.
 \]
 Lemma~\ref{lem:short} applies to $z_X$, whose prime coefficients are
 bounded by $K$ with quadratic mass at most $K^2M$. The first $H$
 indices contribute $o(1)$ by \eqref{eq:bounded-moments} and
 Cauchy--Schwarz. Taking $X\to\infty$ and then $H\to\infty$ in
-\eqref{eq:four-terms}, and using \eqref{eq:Y-short}, gives
+\eqref{eq:four-terms}, and using \eqref{eq:clipped-short}, gives
 \begin{align}
  \limsup_X\E_X|z_X-\mu_{z_X}(X)|^2
- &\le8\limsup_X\E_X|Y-Z|^2\notag\\
+ &\le8\limsup_X\E_X|g_X-Z|^2\notag\\
  &\le C_1\left(\frac M{K^2}+M^2\log(2/M)+K^2M^2\right)
        \label{eq:variance-upper}
 \end{align}
@@ -543,17 +557,18 @@ Lemma~\ref{lem:variance-lower}. Next choose $0<M<1/4$ so small that
 With these fixed choices, \eqref{eq:variance-upper} contradicts
 \eqref{eq:variance-lower}. Hence $f$ has finite concentration.
 
-Erd\H{o}s's Theorem~V now supplies $c$ satisfying
+Erd\H{o}s's Theorem~V now gives
 \eqref{eq:classical-concentration}. Hildebrand's Theorem~1 gives a limiting distribution for $f(n+1)-f(n)$
 whose characteristic function \cite[(1.4)]{Hildebrand} is a product of
 real factors, hence the law is symmetric. For every $\varepsilon>0$,
-$\#\{n\le X:f(n+1)-f(n)<-\varepsilon\}\le D_f(X)=o(X)$, so this law
-has no negative mass and must be a point mass at zero. Thus, for every
-$\varepsilon>0$, the set of $n$ with $|f(n+1)-f(n)|>\varepsilon$
-has density zero. Equivalently, the differences tend to zero on a set
-of density one. Hildebrand's corollary \cite[pp.~258--259]{Hildebrand}
-now gives $f(n)=d\log n$ for some real $d$ and all $n$.
-Finally, $d<0$ would give a decrease at every integer, so $d\ge0$.\qed
+$\#\{n\le X:f(n+1)-f(n)<-\varepsilon\}\le D_f(X)=o(X)$.
+Since this holds for every $\varepsilon>0$, the limiting law assigns no
+mass to $(-\infty,0)$; by symmetry it is therefore $\delta_0$.
+Hence $f(n+1)-f(n)\to0$ in density, and a standard diagonal argument
+yields a density-one set along which the differences tend to zero.
+Hildebrand's corollary \cite[pp.~258--259]{Hildebrand}
+now gives $f(n)=c\log n$ for some real $c$ and all $n$.
+Finally, $c<0$ would give a decrease at every integer, so $c\ge0$.\qed
 
 \section*{Declaration of generative AI use}
 GPT-6 Astra generated proofs and manuscript drafts, GPT-5.6 Sol and
