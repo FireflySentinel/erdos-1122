@@ -30,7 +30,7 @@ We prove that a real additive function which decreases on a set of
 natural density zero is a nonnegative constant multiple of the logarithm.
 This settles a conjecture of Erd\H{o}s from 1946, listed as Problem~1122
 on the Erd\H{o}s Problems website. The main step is to deduce finite
-concentration without a growth assumption on the prime values.
+concentration without a growth assumption on the values at higher prime powers.
 A truncated normalization and a bounded clipping reduce this step to
 Mangerel's first-moment theorem for short intervals, Ruzsa's
 second-moment estimate, and Elliott's fourth-moment inequality.
@@ -38,6 +38,7 @@ second-moment estimate, and Elliott's fourth-moment inequality.
 
 \section{Introduction}
 
+Throughout, $\N=\{1,2,\ldots\}$.
 A function $f\colon\N\to\R$ is \emph{additive} if
 $f(ab)=f(a)+f(b)$ whenever $(a,b)=1$. Erd\H{o}s proved that an additive
 function which is nondecreasing on $\N$ must be a constant multiple of
@@ -54,19 +55,16 @@ then there is a constant $c\ge0$ such that $f(n)=c\log n$ for every
 $n\in\N$.
 \end{theorem}
 
-A Lean~4 formalization of Theorem~\ref{thm:main} takes the results of
-Mangerel, Ruzsa, Erd\H{o}s and Hildebrand as hypotheses.\footnote{The
-fourth-moment and prime-sum estimates are proved in the formalization;
-see \url{https://github.com/FireflySentinel/erdos-1122}.}
+A Lean~4 formalization of the argument, treating the cited results of
+Mangerel, Ruzsa, Erd\H{o}s, and Hildebrand as hypotheses, is available
+online.\footnote{\url{https://github.com/FireflySentinel/erdos-1122}.}
 
 Erd\H{o}s proved that $f(n+1)-f(n)=o(1)$ forces $f=c\log$.
 K\'atai obtained the same conclusion from
 $X^{-1}\sum_{n\le X}|f(n+1)-f(n)|\to0$ \cite{Katai}.
-Wirsing gave another proof under a weaker hypothesis \cite{Wirsing};
+Wirsing gave another proof \cite{Wirsing};
 see also Elliott \cite[Ch.~11, pp.~244--247]{ElliottBook}.
-Hildebrand proved the density-one version \cite{Hildebrand}, supplying
-the distribution result Erd\H{o}s had announced without proof
-\cite[p.~17]{Erdos}.
+Hildebrand proved the density-one version \cite{Hildebrand}.
 Mangerel obtained an approximate logarithmic representation under the
 present density hypothesis \cite[Theorem~1.9]{Mangerel}, and the exact
 conclusion for completely additive functions under additional conditions
@@ -109,9 +107,8 @@ For an additive function $z$, define
 \[
  A_0(z,X)=\sum_{p^k\le X}\frac{z(p^k)}{p^k}\left(1-\frac1p\right),
  \qquad
- \widetilde A_0(z,X)=\sum_{p^k\le X}\frac{z(p^k)}{p^k},
+ B_2(z,X)^2=\sum_{p^k\le X}\frac{|z(p^k)|^2}{p^k}.
 \]
-and $B_2(z,X)^2=\sum_{p^k\le X}|z(p^k)|^2/p^k$.
 Ruzsa's second-moment estimate \cite{Ruzsa}, in the form recorded by
 Mangerel \cite[Lemma~3.3]{Mangerel}, gives, for all sufficiently large $X$
 and uniformly in $z$,
@@ -121,24 +118,26 @@ and uniformly in $z$,
        \sum_{p^k\le X}\frac{|z(p^k)-b\log(p^k)|^2}{p^k}\right).
 \end{equation}
 The upper bound with $b=0$ is the Tur\'an--Kubilius inequality, valid
-for all $X\ge2$ \cite[Ch.~III.3]{Tenenbaum}. For a strongly additive
-function $z(n)=\sum_{p\mid n}a_p$, Elliott's inequality
-\cite[Theorem~1]{Elliott}, together with the center estimates below, gives
+for all $X\ge2$ \cite[Ch.~III.3]{Tenenbaum}.
+For a strongly additive function $z(n)=\sum_{p\mid n}a_p$, summing
+the geometric series gives
+\[
+ A_0(z,X)-\mu_z(X)=-\sum_{p\le X}a_p p^{-k_p},
+ \qquad k_p=\min\{k\ge1:p^k>X\}.
+\]
+Thus $|A_0(z,X)-\mu_z(X)|\le X^{-1}\sum_{p\le X}|a_p|
+\le(\sum_{p\le X}a_p^2/p)^{1/2}$ by Cauchy--Schwarz and
+$\sum_{p\le X}p\le X^2$. When $|a_p|\le L$, the same difference
+is at most $L\pi(X)/X=o(1)$.
+Elliott's unweighted center differs from $\mu_z(X)$ by at most
+$\sum_{p\le X}|a_p|/[p(p-1)]\ll(\sum_{p\le X}a_p^2/p)^{1/2}$,
+so his fourth-moment inequality \cite[Theorem~1]{Elliott} gives
 \begin{equation}\label{eq:fourth}
  \E_X|z-\mu_z(X)|^4
  \ll \left(\sum_{p\le X}\frac{a_p^2}{p}\right)^2
        +\sum_{p\le X}\frac{a_p^4}{p},\qquad X\ge2.
 \end{equation}
-If $z$ is strongly additive, then
-\begin{align}
- |\widetilde A_0(z,X)-\mu_z(X)|
- &\le\sum_{p\le X}\frac{|a_p|}{p(p-1)},\notag\\
- |\widetilde A_0(z,X)-A_0(z,X)|
- &\le\sum_{p^k\le X}\frac{|a_p|}{p^{k+1}}.
- \label{eq:center-difference}
-\end{align}
-Both quantities are
-$\ll (\sum_{p\le X}a_p^2/p)^{1/2}$. Also
+Also
 $B_2(z,X)^2\le2\sum_{p\le X}a_p^2/p$. Combining Ruzsa's upper
 bound with \eqref{eq:fourth}, if $|a_p|\le L$ and
 $\sum_{p\le X}a_p^2/p\le V$, then
@@ -146,9 +145,6 @@ $\sum_{p\le X}a_p^2/p\le V$, then
  \E_X|z-\mu_z(X)|^2\ll V,\qquad
  \E_X|z-\mu_z(X)|^4\ll V^2+L^2V.
 \end{equation}
-If the coefficients are bounded and $a_p\to0$ for each fixed prime,
-dominated convergence in \eqref{eq:center-difference} gives
-$A_0(z,X)-\mu_z(X)\to0$.
 
 \begin{lemma}\label{lem:short}
 Let $z_X$ be strongly additive functions satisfying
@@ -221,11 +217,8 @@ On each of the $r$ dyadic bands covering $(\eta X,X]$, we have
 The omitted initial segment $H\le n\le\eta X$ contributes
 $O_{L,V}(\sqrt\eta)$ to \eqref{eq:short-limit}: apply
 Cauchy--Schwarz and Jensen, using the fourth-moment bound
-\eqref{eq:bounded-moments} at $X$. Given $\varepsilon>0$, first choose
-$\eta$ so that this bound is less than $\varepsilon/2$. The band
-estimates then give $H_0$ such that, for every integer $H\ge H_0$,
-their combined contribution is less than $\varepsilon/2$ for all
-$X\ge X_0(\varepsilon,\eta,H)$. This proves \eqref{eq:short-limit}.
+\eqref{eq:bounded-moments} at $X$. Take $X\to\infty$, then
+$H\to\infty$; since $\eta$ is arbitrary, \eqref{eq:short-limit} follows.
 \end{proof}
 
 \section{A weighted estimate for a set of primes}
@@ -378,17 +371,17 @@ $\sum_{p\in\mathcal T}1/p\le M$. Hence
 \begin{equation}\label{eq:S-fourth}
  \E_X S^4\ll M+M^2.
 \end{equation}
-Put $T(n)=\#\{p\in\mathcal T:p\mid n\}$. Counting multiples of
+Put $\omega_{\mathcal T}(n)=\#\{p\in\mathcal T:p\mid n\}$. Counting multiples of
 distinct primes gives
 \begin{equation}\label{eq:tail-count}
- \E_X T(T-1)
+ \E_X\omega_{\mathcal T}(\omega_{\mathcal T}-1)
  =\sum_{\substack{p,q\in\mathcal T\\p\ne q}}
        \frac1X\left\lfloor\frac X{pq}\right\rfloor
  \le M^2.
 \end{equation}
 Moreover,
 \begin{equation}\label{eq:mixed-moment}
- \E_X\bigl(S^2\ind_{T\ge1}\bigr)
+ \E_X\bigl(S^2\ind_{\omega_{\mathcal T}\ge1}\bigr)
  \ll M^2\log(2/M)+o(1).
 \end{equation}
 For $p\in\mathcal T$, the coefficient of $p$ in $S_0$ is zero,
@@ -406,9 +399,9 @@ $S_0(1)=\mu_{S_0}(y)=0$. By Cauchy--Schwarz,
  |a_X-\mu_{S_0}(X/p)|^2
  \le M\sum_{X/p<q\le X}\frac1q.
 \]
-Hence, using $\ind_{T\ge1}\le\sum_{p\in\mathcal T}\ind_{p\mid n}$,
+Hence, using $\ind_{\omega_{\mathcal T}\ge1}\le\sum_{p\in\mathcal T}\ind_{p\mid n}$,
 \begin{align*}
- \E_X\bigl(S^2\ind_{T\ge1}\bigr)
+ \E_X\bigl(S^2\ind_{\omega_{\mathcal T}\ge1}\bigr)
  &\ll M\sum_{p\in\mathcal T}\frac1p
  +M\sum_{p\in\mathcal T}\frac1p
        \sum_{X/p<q\le X}\frac1q\\
@@ -421,22 +414,23 @@ Set
  g_X^*(n)=\clip\left(S(n)+
                   \sum_{\substack{p\mid n\\p\in\mathcal T}}u_p\right).
 \]
-If $T(n)=0$, the difference $g_X^*(n)-Z(n)$ vanishes for $|S(n)|\le K$
+If $\omega_{\mathcal T}(n)=0$, the difference $g_X^*(n)-Z(n)$ vanishes for $|S(n)|\le K$
 and otherwise has absolute value at most $|S(n)|$. Its squared
 contribution is at most $\E_X S^4/K^2$.
-If $T(n)=1$, with unique tail value $v$, the Lipschitz property of
+If $\omega_{\mathcal T}(n)=1$, with unique tail value $v$, the Lipschitz property of
 $\clip$ gives
 \[
  |\clip(S+v)-S-\clip(v)|\le2|S|.
 \]
-If $T(n)\ge2$, then
+If $\omega_{\mathcal T}(n)\ge2$, then
 \[
- |g_X^*(n)-Z(n)|\le |S(n)|+K(T(n)+1)
- \le |S(n)|+\frac32KT(n),
+ |g_X^*(n)-Z(n)|\le |S(n)|+K(\omega_{\mathcal T}(n)+1)
+ \le |S(n)|+\frac32K\omega_{\mathcal T}(n),
 \]
 and hence
 \[
- |g_X^*(n)-Z(n)|^2\le C S(n)^2+C K^2T(n)(T(n)-1).
+ |g_X^*(n)-Z(n)|^2\le C S(n)^2+
+ C K^2\omega_{\mathcal T}(n)(\omega_{\mathcal T}(n)-1).
 \]
 Equations \eqref{eq:S-fourth}--\eqref{eq:mixed-moment} therefore imply
 \begin{equation}\label{eq:strong-clipping}
@@ -498,9 +492,8 @@ The quadratic projection identity gives
 \end{align}
 Apply \eqref{eq:ruzsa}, dropping the nonnegative $b^2$ term and the
 terms with $k\ge2$ from its right-hand side.
-For each fixed prime $p$, $v_p\to0$, because $s_X\to\infty$ and
-$c_X\to0$. Therefore \eqref{eq:center-difference} and dominated
-convergence give $A_0(z_X,X)-\mu_{z_X}(X)\to0$.
+Since $|v_p|\le K$, the center estimate in Section~2 gives
+$|A_0(z_X,X)-\mu_{z_X}(X)|\le K\pi(X)/X=o(1)$.
 The second moments are uniformly bounded by
 \eqref{eq:bounded-moments} and \eqref{eq:clipped-mass}; changing the
 center consequently changes the second moment by $o(1)$.
@@ -514,12 +507,13 @@ Assume that $f$ has no finite concentration and take $g_X$ from
 \eqref{eq:clipped-and-Z}. If $f(n+1)\ge f(n)$, monotonicity and Lipschitz
 continuity of $\clip$ give
 $(g_X(n)-g_X(n+1))_+\le |c_X|\log(1+1/n)$, where $t_+=\max\{t,0\}$.
-At a decrease of $f$, this quantity is at most $2K$. Since $|g_X|\le K$,
-telescoping the signed increments gives
+Using $|g_X|\le K$ and telescoping the signed increments gives
 \begin{equation}\label{eq:variation}
  \sum_{n<X}|g_X(n+1)-g_X(n)|
  \le2K+4KD_f(X)+2|c_X|\log X=o(X).
 \end{equation}
+This is where clipping enters: a decrease of $f$ may be arbitrarily
+large, but changes $g_X$ by at most $2K$.
 For each fixed $H$, every difference $g_X(n)-g_X(n-j)$ is bounded by
 the sum of the $j$ intervening absolute increments. Since $|g_X|\le K$,
 \eqref{eq:variation} yields
@@ -564,8 +558,8 @@ Erd\H{o}s's Theorem~V now gives
 whose characteristic function \cite[(1.4)]{Hildebrand} is a product of
 real factors, hence the law is symmetric. For every $\varepsilon>0$,
 $\#\{n\le X:f(n+1)-f(n)<-\varepsilon\}\le D_f(X)=o(X)$.
-Since this holds for every $\varepsilon>0$, the limiting law assigns no
-mass to $(-\infty,0)$; by symmetry it is therefore $\delta_0$.
+The limiting law assigns no mass to $(-\infty,0)$; by symmetry it is
+therefore $\delta_0$.
 Hence $f(n+1)-f(n)\to0$ in density, and a standard diagonal argument
 yields a density-one set along which the differences tend to zero.
 Hildebrand's corollary \cite[pp.~258--259]{Hildebrand}
@@ -575,9 +569,7 @@ Finally, $c<0$ would give a decrease at every integer, so $c\ge0$.\qed
 \section*{Declaration of generative AI use}
 GPT-6 Astra generated proofs and manuscript drafts, GPT-5.6 Sol and
 Claude Opus 5 assisted with editorial review, and OpenAI Codex (GPT-6)
-generated the Lean code. The Lean~4 development checks the implication
-from the stated analytic hypotheses to Theorem~\ref{thm:main}, without
-formalizing the cited theorems.
+generated the Lean code.
 
 \begin{thebibliography}{99}
 
